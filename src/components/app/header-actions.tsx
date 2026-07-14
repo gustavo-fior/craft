@@ -11,8 +11,6 @@ import {
 } from "@phosphor-icons/react";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
-
 import { CopyIcon } from "@/components/app/copy-icon";
 import { Button } from "@/components/ui/button";
 import {
@@ -57,7 +55,6 @@ export function CopyLinkButton() {
   const copy = async () => {
     await navigator.clipboard.writeText(window.location.href);
     playSound("confirm");
-    toast("Link copied");
     setCopied(true);
     clearTimeout(timeout.current);
     timeout.current = setTimeout(() => setCopied(false), 1500);
