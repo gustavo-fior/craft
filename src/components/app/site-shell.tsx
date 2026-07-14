@@ -44,7 +44,7 @@ export function SiteShell({
 
   return (
     <div className="min-h-dvh">
-      <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between p-5 sm:px-8">
+      <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between bg-background/80 p-5 backdrop-blur-sm sm:px-8">
         <div className="flex items-center gap-2">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger
