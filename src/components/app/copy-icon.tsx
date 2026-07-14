@@ -4,6 +4,8 @@ import { CheckCircleIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import type { ReactNode } from "react";
 
+import { cn } from "@/lib/utils";
+
 export function CopyIcon({
   copied,
   icon,
@@ -28,7 +30,13 @@ export function CopyIcon({
           transition={{ type: "spring", duration: 0.3, bounce: 0 }}
         >
           {copied ? (
-            <CheckCircleIcon weight="duotone" className={className} />
+            <CheckCircleIcon
+              weight="duotone"
+              className={cn(
+                "text-emerald-600 dark:text-emerald-400",
+                className,
+              )}
+            />
           ) : (
             icon
           )}
