@@ -1,19 +1,19 @@
+import type { IconProps } from "@phosphor-icons/react";
 import {
-  IconDeviceSpeakerFilled,
-  IconLayoutSidebarFilled,
-  IconPaletteFilled,
-  IconQuoteFilled,
-  IconSparklesFilled,
-  type IconProps,
-} from "@tabler/icons-react";
+  LayoutIcon,
+  PaletteIcon,
+  SparkleIcon,
+  SpeakerHighIcon,
+  TextAaIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import type { Section } from "@/lib/sections";
 
 const icons = {
-  Typography: IconQuoteFilled,
-  Color: IconPaletteFilled,
-  Layout: IconLayoutSidebarFilled,
-  Motion: IconSparklesFilled,
-  Sound: IconDeviceSpeakerFilled,
+  Typography: TextAaIcon,
+  Color: PaletteIcon,
+  Layout: LayoutIcon,
+  Motion: SparkleIcon,
+  Sound: SpeakerHighIcon,
 } as const;
 
 export function SectionIcon({
@@ -21,5 +21,5 @@ export function SectionIcon({
   ...props
 }: { section: Section } & IconProps) {
   const Icon = icons[section];
-  return <Icon {...props} />;
+  return <Icon weight="duotone" {...props} />;
 }

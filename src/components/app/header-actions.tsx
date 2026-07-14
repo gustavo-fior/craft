@@ -1,14 +1,14 @@
 "use client";
 
 import {
-  IconBrandGithub,
-  IconDeviceDesktop,
-  IconLink,
-  IconMoon,
-  IconSun,
-  IconVolume,
-  IconVolumeOff,
-} from "@tabler/icons-react";
+  DesktopIcon,
+  GithubLogoIcon,
+  LinkIcon,
+  MoonIcon,
+  SpeakerHighIcon,
+  SpeakerSlashIcon,
+  SunIcon,
+} from "@phosphor-icons/react";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -67,7 +67,7 @@ export function CopyLinkButton() {
     <Action label="Copy link" onClick={copy}>
       <CopyIcon
         copied={copied}
-        icon={<IconLink className="size-4" />}
+        icon={<LinkIcon weight="duotone" className="size-4" />}
         className="size-4"
       />
     </Action>
@@ -83,7 +83,7 @@ export function ViewInRepoButton({ href }: { href: string }) {
         window.open(href, "_blank", "noopener,noreferrer");
       }}
     >
-      <IconBrandGithub className="size-4" />
+      <GithubLogoIcon weight="duotone" className="size-4" />
     </Action>
   );
 }
@@ -109,11 +109,11 @@ export function ThemeSwitcher() {
       }}
     >
       {!mounted || current === "system" ? (
-        <IconDeviceDesktop className="size-4" />
+        <DesktopIcon weight="duotone" className="size-4" />
       ) : current === "light" ? (
-        <IconSun className="size-4" />
+        <SunIcon weight="duotone" className="size-4" />
       ) : (
-        <IconMoon className="size-4" />
+        <MoonIcon weight="duotone" className="size-4" />
       )}
     </Action>
   );
@@ -134,9 +134,9 @@ export function SoundToggle() {
       }}
     >
       {muted ? (
-        <IconVolumeOff className="size-4" />
+        <SpeakerSlashIcon weight="duotone" className="size-4" />
       ) : (
-        <IconVolume className="size-4" />
+        <SpeakerHighIcon weight="duotone" className="size-4" />
       )}
     </Action>
   );

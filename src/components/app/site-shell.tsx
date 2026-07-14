@@ -1,6 +1,6 @@
 "use client";
 
-import { IconMenu2 } from "@tabler/icons-react";
+import { ListIcon } from "@phosphor-icons/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -54,7 +54,7 @@ export function SiteShell({
                   aria-label="Open navigation"
                   className="md:hidden"
                 >
-                  <IconMenu2 className="size-4" />
+                  <ListIcon weight="duotone" className="size-4" />
                 </Button>
               }
             />

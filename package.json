@@ -12,6 +12,7 @@
     "@content-collections/core": "^0.15.2",
     "@content-collections/mdx": "^0.2.2",
     "@content-collections/next": "^0.2.11",
+    "@phosphor-icons/react": "^2.1.10",
     "@tabler/icons-react": "^3.44.0",
     "@toolwind/corner-shape": "^0.0.8-3",
     "@web-kits/audio": "^0.1.0",

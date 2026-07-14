@@ -1,6 +1,6 @@
 "use client";
 
-import { IconCircleCheckFilled, IconCopy } from "@tabler/icons-react";
+import { CheckCircleIcon, CopyIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 
@@ -37,9 +37,9 @@ export function IconMorphDemo() {
               transition={{ type: "spring", duration: 0.3, bounce: 0 }}
             >
               {checked ? (
-                <IconCircleCheckFilled className="size-4" />
+                <CheckCircleIcon weight="duotone" className="size-4" />
               ) : (
-                <IconCopy className="size-4" />
+                <CopyIcon weight="duotone" className="size-4" />
               )}
             </motion.span>
           </AnimatePresence>
