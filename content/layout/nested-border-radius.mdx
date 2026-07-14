@@ -1,0 +1,42 @@
+---
+title: Nested Border Radius
+description: Outer radius = inner radius + padding.
+section: Layout
+order: 1
+publishedAt: "2026-07-14"
+---
+
+When you put a rounded element inside another rounded element, giving both
+the same radius looks subtly wrong: the gap between the two corners pinches,
+because the outer curve sits farther from the inner one at the corner than
+along the edges.
+
+The rule that fixes it:
+
+> **outer radius = inner radius + padding**
+
+That keeps the two curves concentric — the gap between them stays constant
+all the way around the corner. Flip on naive mode below to feel the pinch.
+
+<NestedRadiusDemo />
+
+## In CSS
+
+Encode the relationship instead of hardcoding both values:
+
+```css
+.card {
+  --radius: 12px;
+  --padding: 16px;
+  padding: var(--padding);
+  border-radius: calc(var(--radius) + var(--padding));
+}
+
+.card > .inner {
+  border-radius: var(--radius);
+}
+```
+
+The same rule works in reverse: if the outer radius is fixed (a phone screen,
+a browser window), the inner radius should be `outer − padding` — and once
+that hits zero, square corners are correct.

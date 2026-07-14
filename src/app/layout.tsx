@@ -1,0 +1,72 @@
+import type { Metadata } from "next";
+import { JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import { allConcepts } from "content-collections";
+
+import { Providers } from "@/components/app/providers";
+import { SiteShell } from "@/components/app/site-shell";
+import { groupBySection } from "@/lib/sections";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+
+import "./globals.css";
+
+const openRunde = localFont({
+  src: [
+    { path: "../../public/fonts/OpenRunde-Regular.woff2", weight: "400" },
+    { path: "../../public/fonts/OpenRunde-Medium.woff2", weight: "500" },
+    { path: "../../public/fonts/OpenRunde-Semibold.woff2", weight: "600" },
+    { path: "../../public/fonts/OpenRunde-Bold.woff2", weight: "700" },
+  ],
+  variable: "--font-open-runde",
+  display: "swap",
+});
+
+const redaction = localFont({
+  src: [
+    { path: "../../public/fonts/Redaction35-Regular.woff2", weight: "400" },
+    { path: "../../public/fonts/Redaction35-Bold.woff2", weight: "700" },
+  ],
+  variable: "--font-redaction-35",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: { default: SITE_NAME, template: `%s — ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  const sections = groupBySection(
+    allConcepts.map(({ title, slug, section, order }) => ({
+      title,
+      slug,
+      section,
+      order,
+    })),
+  );
+  const sourcePaths = Object.fromEntries(
+    allConcepts.map((c) => [c.slug, c.sourcePath]),
+  );
+
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${openRunde.variable} ${redaction.variable} ${jetbrainsMono.variable} antialiased`}
+      >
+        <Providers>
+          <SiteShell sections={sections} sourcePaths={sourcePaths}>
+            {children}
+          </SiteShell>
+        </Providers>
+      </body>
+    </html>
+  );
+}

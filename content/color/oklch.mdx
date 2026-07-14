@@ -1,0 +1,38 @@
+---
+title: OKLCH
+description: A color space where lightness actually means lightness.
+section: Color
+order: 1
+publishedAt: "2026-07-14"
+---
+
+In HSL, two colors with the same "lightness" can look wildly different:
+yellow at 50% lightness glows, blue at 50% looks almost dark. HSL treats the
+RGB cube geometrically and ignores how human eyes weigh different hues.
+
+OKLCH is a **perceptually uniform** color space: equal lightness values look
+equally light, across every hue. Drag the slider — the HSL row shifts in
+apparent brightness from hue to hue, while the OKLCH row stays even.
+
+<OklchDemo />
+
+## Why it matters
+
+- **Palettes**: generate ten hues at the same `L` and `C` and they genuinely
+  read as one family — same weight, same contrast against text.
+- **Dark mode**: adjusting only the lightness channel keeps hue and
+  saturation intact, so colors don't drift as they dim.
+- **Contrast**: because `L` tracks perceived lightness, it's a usable proxy
+  when reasoning about text contrast.
+
+## In CSS
+
+```css
+:root {
+  --accent: oklch(0.7 0.17 250);       /* L 0–1, chroma, hue */
+  --accent-hover: oklch(0.65 0.17 250); /* darker, same color */
+}
+```
+
+Every design token on this site is defined in OKLCH — the neutral grays are
+just `oklch(L 0 0)` with chroma zeroed out.

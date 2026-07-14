@@ -1,0 +1,42 @@
+---
+title: Interface SFX
+description: Sound as a texture, not a notification.
+section: Sound
+order: 1
+publishedAt: "2026-07-14"
+---
+
+Most interfaces are silent, and most that aren't are annoying. The difference
+is scale: good interface sound works like haptics — tiny, quiet confirmations
+of physical actions, not announcements.
+
+<InterfaceSfxDemo />
+
+## Principles
+
+- **Attach sound to user actions**, never to things that merely happen.
+  A click can tick; an incoming update should stay silent.
+- **Keep it short and quiet.** Under 100ms, mixed well below speech volume.
+  If a sound is noticeable in isolation, it's too loud.
+- **Vary by meaning.** Navigation, confirmation, and toggles each get their
+  own voice, so the ear learns the vocabulary without thinking.
+- **Always provide mute**, persisted. Sound is opt-in texture; the site must
+  be complete without it.
+
+## Synthesized, not sampled
+
+This site uses [@web-kits/audio](https://audio.raphaelsalaja.com) to describe
+sounds as plain objects — an oscillator, an envelope, a gain — synthesized by
+the Web Audio API at play time. No audio files, no network requests:
+
+```ts
+const pop = defineSound({
+  source: { type: "sine", frequency: { start: 1200, end: 300 } },
+  envelope: { attack: 0.001, decay: 0.06, sustain: 0, release: 0.03 },
+  gain: 0.2,
+});
+```
+
+A falling sine reads as "dismiss", a rising triangle as "success", filtered
+noise as a mechanical click — three parameters away from a whole sound
+vocabulary.

@@ -1,0 +1,44 @@
+---
+title: Icon Morph
+description: Swapping icons with blur, scale, and a spring.
+section: Motion
+order: 1
+publishedAt: "2026-07-14"
+---
+
+Icons that change state — copy to check, play to pause, menu to close — feel
+abrupt when they swap in a single frame. But a full crossfade is too slow and
+mushy. The sweet spot is a short **blur + scale + fade**, driven by a spring.
+
+The blur is what sells it: as the old icon shrinks it melts out of focus, and
+the new one condenses into sharpness. It reads as transformation, not
+replacement. Toggle the morph off below to feel the difference.
+
+<IconMorphDemo />
+
+## The recipe
+
+```tsx
+<AnimatePresence mode="popLayout" initial={false}>
+  <motion.span
+    key={copied ? "check" : "copy"}
+    initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+    animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+    exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+    transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+  >
+    {copied ? <IconCheck /> : <IconCopy />}
+  </motion.span>
+</AnimatePresence>
+```
+
+Details that matter:
+
+- **`mode="popLayout"`** takes the exiting icon out of layout so the two
+  icons overlap instead of stacking. Wrap in a `relative` container.
+- **`initial={false}`** prevents the animation from firing on first mount.
+- **`bounce: 0`** — a critically damped spring. Icon swaps want snap, not
+  wobble.
+- Keep it around **300ms**; state feedback should never make the user wait.
+
+The copy-link button in this site's header is exactly this component.

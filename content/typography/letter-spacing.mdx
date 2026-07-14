@@ -1,0 +1,40 @@
+---
+title: Letter Spacing
+description: Tracking should tighten as type gets bigger.
+section: Typography
+order: 1
+publishedAt: "2026-07-14"
+---
+
+Fonts are drawn to be read at body sizes. When you scale text up for a
+headline, the space between letters scales up with it — and suddenly the
+headline feels loose and airy in a way the designer never intended.
+
+The fix is simple: **large text gets negative tracking, small text gets a
+little extra**. Try it below.
+
+<LetterSpacingDemo />
+
+## A practical scale
+
+- Display / headlines (32px+): `-0.02em` to `-0.04em`
+- Titles (20–28px): `-0.01em` to `-0.02em`
+- Body (14–18px): `0`
+- Captions and all-caps labels (≤12px): `+0.02em` to `+0.08em`
+
+All-caps text is the big exception in the other direction: capital letters
+were never designed to sit next to each other, so uppercase labels almost
+always want generous positive tracking.
+
+## In CSS
+
+```css
+h1 {
+  font-size: 3rem;
+  letter-spacing: -0.03em; /* em scales with the font size */
+}
+```
+
+Always use `em` units so the tracking stays proportional if the font size
+changes. Tailwind's `tracking-tight` (`-0.025em`) and `tracking-tighter`
+(`-0.05em`) cover most headline cases.
