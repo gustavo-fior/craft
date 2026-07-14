@@ -56,8 +56,7 @@ export default async function ConceptPage({
   return (
     <article>
       <header>
-        <p className="text-xs text-muted-foreground">{concept.section}</p>
-        <h1 className="mt-2 text-xl font-medium text-balance">
+        <h1 className="text-xl font-medium text-balance">
           {concept.title}
         </h1>
         <p className="mt-3 text-sm text-muted-foreground text-pretty">

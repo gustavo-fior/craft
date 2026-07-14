@@ -33,14 +33,10 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
         {sections.map(({ section, concepts }) => (
           <li key={section} className="mt-5">
             <div className="flex items-center gap-1.5 py-1 text-foreground">
-              <SectionIcon
-                section={section}
-                size={13}
-                className="mb-px"
-              />
+              <SectionIcon section={section} size={13} className="mb-px" />
               <span>{section}</span>
             </div>
-            <ul className="flex flex-col">
+            <ul className="flex flex-col mt-1">
               {concepts.map((concept) => {
                 const active = pathname === `/${concept.slug}`;
                 return (

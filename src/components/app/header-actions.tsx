@@ -2,8 +2,8 @@
 
 import {
   DesktopIcon,
-  GithubLogoIcon,
-  LinkIcon,
+  GitPullRequestIcon,
+  LinkSimpleHorizontalIcon,
   MoonIcon,
   SpeakerHighIcon,
   SpeakerSlashIcon,
@@ -64,24 +64,26 @@ export function CopyLinkButton() {
     <Action label="Copy link" onClick={copy}>
       <CopyIcon
         copied={copied}
-        icon={<LinkIcon weight="duotone" className="size-4" />}
+        icon={<LinkSimpleHorizontalIcon weight="duotone" className="size-4" />}
         className="size-4"
       />
     </Action>
   );
 }
 
-export function ViewInRepoButton({ href }: { href: string }) {
+export function ContributeButton({ href }: { href: string }) {
   return (
-    <Action
-      label="View in repo"
+    <Button
+      variant="ghost"
+      size="sm"
       onClick={() => {
         playSound("pop");
         window.open(href, "_blank", "noopener,noreferrer");
       }}
     >
-      <GithubLogoIcon weight="duotone" className="size-4" />
-    </Action>
+      <GitPullRequestIcon weight="duotone" className="size-4" />
+      Contribute
+    </Button>
   );
 }
 

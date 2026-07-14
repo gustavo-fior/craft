@@ -7,10 +7,10 @@ import { useEffect, useState } from "react";
 
 import { CommandMenu } from "@/components/app/command-menu";
 import {
+  ContributeButton,
   CopyLinkButton,
   SoundToggle,
   ThemeSwitcher,
-  ViewInRepoButton,
 } from "@/components/app/header-actions";
 import { SidebarNav } from "@/components/app/sidebar-nav";
 import { Button } from "@/components/ui/button";
@@ -70,8 +70,8 @@ export function SiteShell({
           </Link>
         </div>
         <div className="flex items-center gap-1">
+          <ContributeButton href={repoUrl} />
           <CopyLinkButton />
-          <ViewInRepoButton href={repoUrl} />
           <ThemeSwitcher />
           <SoundToggle />
         </div>
