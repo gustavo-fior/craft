@@ -2,7 +2,7 @@
 
 import {
   DesktopIcon,
-  GitPullRequestIcon,
+  GithubLogoIcon,
   LinkIcon,
   MoonIcon,
   SpeakerHighIcon,
@@ -71,19 +71,17 @@ export function CopyLinkButton() {
   );
 }
 
-export function ContributeButton({ href }: { href: string }) {
+export function ViewInRepoButton({ href }: { href: string }) {
   return (
-    <Button
-      variant="ghost"
-      size="sm"
+    <Action
+      label="View in repo"
       onClick={() => {
         playSound("pop");
         window.open(href, "_blank", "noopener,noreferrer");
       }}
     >
-      <GitPullRequestIcon weight="duotone" className="size-4" />
-      Contribute
-    </Button>
+      <GithubLogoIcon weight="duotone" className="size-4" />
+    </Action>
   );
 }
 
