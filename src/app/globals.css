@@ -187,8 +187,3 @@
     display: none;
   }
 }
-
-/* TEMPORARY: noise toggle (see toggles in site-shell header) */
-html[data-noise="off"] .noise-overlay {
-  display: none;
-}
