@@ -7,6 +7,7 @@ const concepts = defineCollection({
   directory: "content",
   include: "**/*.mdx",
   schema: z.object({
+    content: z.string(),
     title: z.string(),
     description: z.string(),
     section: z.enum(["Typography", "Color", "Layout", "Motion", "Sound"]),
@@ -26,5 +27,5 @@ const concepts = defineCollection({
 });
 
 export default defineConfig({
-  collections: [concepts],
+  content: [concepts],
 });
