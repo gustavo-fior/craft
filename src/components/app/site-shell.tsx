@@ -22,6 +22,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import type { NavSection } from "@/lib/sections";
+import { playSound } from "@/lib/sounds";
 import { githubSourceUrl } from "@/lib/site";
 
 export function SiteShell({
@@ -65,7 +66,11 @@ export function SiteShell({
               <SidebarNav sections={sections} />
             </SheetContent>
           </Sheet>
-          <Link href="/" className="font-redaction text-base text-foreground">
+          <Link
+            href="/"
+            onClick={() => playSound("tick")}
+            className="font-redaction text-base text-foreground"
+          >
             Craft
           </Link>
         </div>
