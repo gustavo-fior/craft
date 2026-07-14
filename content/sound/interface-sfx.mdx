@@ -27,16 +27,24 @@ of physical actions, not announcements.
 
 This site uses [@web-kits/audio](https://audio.raphaelsalaja.com) to describe
 sounds as plain objects — an oscillator, an envelope, a gain — synthesized by
-the Web Audio API at play time. No audio files, no network requests:
+the Web Audio API at play time. The palette is a subset of the
+[Minimal patch](https://audio.raphaelsalaja.com/library/minimal): pure sines,
+tiny envelopes, gains under 0.1. No audio files, no network requests:
 
 ```ts
-const pop = defineSound({
-  source: { type: "sine", frequency: { start: 1200, end: 300 } },
-  envelope: { attack: 0.001, decay: 0.06, sustain: 0, release: 0.03 },
-  gain: 0.2,
+const patch = definePatch({
+  name: "Minimal",
+  sounds: {
+    tick: {
+      source: { type: "sine", frequency: 1200 },
+      envelope: { attack: 0, decay: 0.012, sustain: 0, release: 0.004 },
+      gain: 0.08,
+    },
+  },
 });
+
+patch.play("tick");
 ```
 
-A falling sine reads as "dismiss", a rising triangle as "success", filtered
-noise as a mechanical click — three parameters away from a whole sound
-vocabulary.
+A falling sine reads as "dismiss", two quick ascending sines as "success" —
+three parameters away from a whole sound vocabulary.

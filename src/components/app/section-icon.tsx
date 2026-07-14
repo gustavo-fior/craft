@@ -1,19 +1,19 @@
 import {
-  IconLayout,
-  IconPalette,
-  IconSparkles,
-  IconTypography,
-  IconVolume,
+  IconDeviceSpeakerFilled,
+  IconLayoutSidebarFilled,
+  IconPaletteFilled,
+  IconQuoteFilled,
+  IconSparklesFilled,
   type IconProps,
 } from "@tabler/icons-react";
 import type { Section } from "@/lib/sections";
 
 const icons = {
-  Typography: IconTypography,
-  Color: IconPalette,
-  Layout: IconLayout,
-  Motion: IconSparkles,
-  Sound: IconVolume,
+  Typography: IconQuoteFilled,
+  Color: IconPaletteFilled,
+  Layout: IconLayoutSidebarFilled,
+  Motion: IconSparklesFilled,
+  Sound: IconDeviceSpeakerFilled,
 } as const;
 
 export function SectionIcon({

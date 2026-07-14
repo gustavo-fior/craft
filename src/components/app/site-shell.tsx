@@ -65,11 +65,8 @@ export function SiteShell({
               <SidebarNav sections={sections} />
             </SheetContent>
           </Sheet>
-          <Link
-            href="/"
-            className="font-redaction text-[13px] text-foreground"
-          >
-            Craft
+          <Link href="/" className="font-redaction text-[13px] text-foreground">
+            Craftttt
           </Link>
         </div>
         <div className="flex items-center gap-1">

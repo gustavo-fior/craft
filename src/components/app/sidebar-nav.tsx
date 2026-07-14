@@ -36,7 +36,6 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
               <SectionIcon
                 section={section}
                 size={13}
-                stroke={1.75}
                 className="text-muted-foreground"
               />
               <span>{section}</span>

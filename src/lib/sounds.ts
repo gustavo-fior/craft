@@ -1,34 +1,57 @@
 "use client";
 
-import { defineSound, ensureReady } from "@web-kits/audio";
+import { definePatch, ensureReady } from "@web-kits/audio";
 
-const tick = defineSound({
-  source: { type: "sine", frequency: { start: 2400, end: 1800 } },
-  envelope: { attack: 0.001, decay: 0.03, sustain: 0, release: 0.02 },
-  gain: 0.12,
+// A subset of the "Minimal" patch by Raphael Salaja
+// (audio.raphaelsalaja.com/library/minimal) — quiet sine-based UI feedback.
+const minimal = definePatch({
+  name: "Minimal",
+  sounds: {
+    tick: {
+      source: { type: "sine", frequency: 1200 },
+      envelope: { attack: 0, decay: 0.012, sustain: 0, release: 0.004 },
+      gain: 0.08,
+    },
+    pop: {
+      source: { type: "sine", frequency: { start: 400, end: 200 } },
+      envelope: { attack: 0, decay: 0.04, sustain: 0, release: 0.012 },
+      gain: 0.1,
+    },
+    confirm: {
+      layers: [
+        {
+          source: { type: "sine", frequency: 1000 },
+          envelope: { attack: 0, decay: 0.012, sustain: 0, release: 0.004 },
+          gain: 0.08,
+        },
+        {
+          source: { type: "sine", frequency: 1200 },
+          envelope: { attack: 0, decay: 0.012, sustain: 0, release: 0.004 },
+          delay: 0.035,
+          gain: 0.07,
+        },
+      ],
+    },
+    toggle: {
+      layers: [
+        {
+          source: { type: "sine", frequency: 880 },
+          envelope: { attack: 0, decay: 0.02, sustain: 0, release: 0.006 },
+          gain: 0.08,
+        },
+        {
+          source: { type: "sine", frequency: 1320 },
+          envelope: { attack: 0, decay: 0.02, sustain: 0, release: 0.006 },
+          delay: 0.03,
+          gain: 0.07,
+        },
+      ],
+    },
+  },
 });
 
-const pop = defineSound({
-  source: { type: "sine", frequency: { start: 1200, end: 300 } },
-  envelope: { attack: 0.001, decay: 0.06, sustain: 0, release: 0.03 },
-  gain: 0.2,
-});
-
-const confirm = defineSound({
-  source: { type: "triangle", frequency: { start: 880, end: 1320 } },
-  envelope: { attack: 0.002, decay: 0.09, sustain: 0, release: 0.05 },
-  gain: 0.16,
-});
-
-const toggle = defineSound({
-  source: { type: "noise", color: "white" },
-  filter: { type: "bandpass", frequency: 3200 },
-  envelope: { attack: 0.001, decay: 0.03, sustain: 0, release: 0.01 },
-  gain: 0.14,
-});
-
-export const sounds = { tick, pop, confirm, toggle };
-export type SoundName = keyof typeof sounds;
+export const SOUND_NAMES = ["tick", "pop", "confirm", "toggle"] as const;
+export type SoundName = (typeof SOUND_NAMES)[number];
 
 const MUTE_KEY = "craft-muted";
 
@@ -41,12 +64,17 @@ export function setMuted(muted: boolean) {
   window.localStorage.setItem(MUTE_KEY, String(muted));
 }
 
-export async function playSound(name: SoundName) {
-  if (isMuted()) return;
+/** Plays a sound regardless of the mute toggle (for explicit demos). */
+export async function playSoundAlways(name: SoundName) {
   try {
     await ensureReady();
-    sounds[name]();
+    minimal.play(name);
   } catch {
     // Audio not available (e.g. before user gesture) — stay silent.
   }
+}
+
+export async function playSound(name: SoundName) {
+  if (isMuted()) return;
+  await playSoundAlways(name);
 }
