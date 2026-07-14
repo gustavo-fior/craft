@@ -3,7 +3,7 @@
 import {
   DesktopIcon,
   GitPullRequestIcon,
-  LinkSimpleHorizontalIcon,
+  LinkIcon,
   MoonIcon,
   SpeakerHighIcon,
   SpeakerSlashIcon,
@@ -64,7 +64,7 @@ export function CopyLinkButton() {
     <Action label="Copy link" onClick={copy}>
       <CopyIcon
         copied={copied}
-        icon={<LinkSimpleHorizontalIcon weight="duotone" className="size-4" />}
+        icon={<LinkIcon weight="duotone" className="size-4" />}
         className="size-4"
       />
     </Action>
