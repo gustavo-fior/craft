@@ -12,7 +12,7 @@ OKLCH, text wrapping, letter spacing, icon morphing, interface SFX.
 - [Content Collections](https://content-collections.dev) for typed MDX
 - [Base UI](https://base-ui.com)-based components, [motion](https://motion.dev), [next-themes](https://github.com/pacocoursey/next-themes)
 - [@web-kits/audio](https://audio.raphaelsalaja.com) for synthesized interface sounds
-- Fonts: [Open Runde](https://github.com/lauridskern/open-runde), [Redaction 35](https://www.redaction.us), JetBrains Mono
+- Fonts: [Inter](https://rsms.me/inter/), [Redaction 35](https://www.redaction.us), JetBrains Mono
 
 ## Development
 
@@ -28,4 +28,4 @@ Interactive demos live in `src/components/demos` and are registered in
 
 ## License
 
-MIT. Fonts keep their own licenses (Open Runde and Redaction are SIL OFL).
+MIT. Fonts keep their own licenses (Inter and Redaction are SIL OFL).
