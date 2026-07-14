@@ -109,7 +109,7 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-open-runde);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains-mono);
   --font-redaction: var(--font-redaction-35);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -186,11 +186,6 @@
   &::-webkit-scrollbar {
     display: none;
   }
-}
-
-/* TEMPORARY: font A/B toggle (see font-toggle.tsx) */
-html[data-font="inter"] body {
-  --font-open-runde: var(--font-inter);
 }
 
 /* TEMPORARY: noise toggle (see toggles in site-shell header) */

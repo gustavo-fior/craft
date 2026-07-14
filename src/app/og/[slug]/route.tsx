@@ -21,7 +21,7 @@ export async function GET(
   const description = concept?.description ?? "";
 
   const medium = await readFile(
-    path.join(process.cwd(), "src/assets/OpenRunde-Medium.otf"),
+    path.join(process.cwd(), "src/assets/Inter-Medium.otf"),
   );
 
   return new ImageResponse(
@@ -36,7 +36,7 @@ export async function GET(
           padding: 80,
           background: "#fafafa",
           color: "#333333",
-          fontFamily: "Open Runde",
+          fontFamily: "Inter",
         }}
       >
         <div style={{ fontSize: 28, color: "#8f8f8f" }}>{SITE_NAME}</div>
@@ -49,7 +49,7 @@ export async function GET(
     {
       width: 1200,
       height: 630,
-      fonts: [{ name: "Open Runde", data: medium, weight: 500 }],
+      fonts: [{ name: "Inter", data: medium, weight: 500 }],
     },
   );
 }

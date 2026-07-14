@@ -1,7 +1,7 @@
 "use client";
 
 // TEMPORARY: noise on/off toggle for testing the grain overlay.
-// Remove together with the font toggle once decided.
+// Remove once decided.
 
 import { useState } from "react";
 
@@ -18,9 +18,9 @@ export function NoiseToggle() {
   };
 
   return (
-    <label className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-      Noise
+    <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+      <span>Noise</span>
       <Switch checked={on} onCheckedChange={change} />
-    </label>
+    </div>
   );
 }

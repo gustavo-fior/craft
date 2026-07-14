@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { allConcepts } from "content-collections";
 
@@ -10,14 +10,12 @@ import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 import "./globals.css";
 
-const openRunde = localFont({
+const inter = localFont({
   src: [
-    { path: "../../public/fonts/OpenRunde-Regular.woff2", weight: "400" },
-    { path: "../../public/fonts/OpenRunde-Medium.woff2", weight: "500" },
-    { path: "../../public/fonts/OpenRunde-Semibold.woff2", weight: "600" },
-    { path: "../../public/fonts/OpenRunde-Bold.woff2", weight: "700" },
+    { path: "../../public/fonts/InterVariable.woff2", style: "normal" },
+    { path: "../../public/fonts/InterVariable-Italic.woff2", style: "italic" },
   ],
-  variable: "--font-open-runde",
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -28,12 +26,6 @@ const redaction = localFont({
   ],
   variable: "--font-redaction-35",
   display: "swap",
-});
-
-// TEMPORARY: only here for the font A/B toggle in the header.
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -65,7 +57,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${openRunde.variable} ${redaction.variable} ${jetbrainsMono.variable} ${inter.variable} antialiased`}
+        className={`${inter.variable} ${redaction.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <Providers>
           <SiteShell sections={sections} sourcePaths={sourcePaths}>
