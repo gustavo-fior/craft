@@ -21,10 +21,10 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
             href="/"
             onClick={() => playSound("tick")}
             className={cn(
-              "font-redaction inline-block py-1 text-[13px] transition-colors",
+              "inline-block py-1 transition-colors",
               pathname === "/"
                 ? "text-foreground"
-                : "text-muted-foreground hover:text-foreground",
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             Index
@@ -36,7 +36,7 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
               <SectionIcon
                 section={section}
                 size={13}
-                className="text-muted-foreground"
+                className="text-muted-foreground mb-px"
               />
               <span>{section}</span>
             </div>
@@ -52,7 +52,7 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
                         "inline-block py-1 transition-colors",
                         active
                           ? "text-foreground"
-                          : "text-muted-foreground hover:text-foreground",
+                          : "text-muted-foreground hover:text-foreground"
                       )}
                     >
                       {concept.title}

@@ -43,7 +43,7 @@ export function SiteShell({
 
   return (
     <div className="min-h-dvh">
-      <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between px-5 py-4 sm:px-8">
+      <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between p-5 sm:px-8">
         <div className="flex items-center gap-2">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger
@@ -65,8 +65,8 @@ export function SiteShell({
               <SidebarNav sections={sections} />
             </SheetContent>
           </Sheet>
-          <Link href="/" className="font-redaction text-[13px] text-foreground">
-            Craftttt
+          <Link href="/" className="font-redaction text-base text-foreground">
+            Craft
           </Link>
         </div>
         <div className="flex items-center gap-1">

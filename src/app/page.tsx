@@ -16,7 +16,7 @@ export default function IndexPage() {
 
   return (
     <article>
-      <h1 className="font-redaction text-2xl">Index</h1>
+      <h1 className="text-xl font-medium">Index</h1>
       <p className="mt-3 text-sm text-muted-foreground">{SITE_DESCRIPTION}</p>
       <div className="mt-12 flex flex-col gap-10">
         {sections.map(({ section, concepts }) => (

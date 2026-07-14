@@ -65,7 +65,11 @@ export function CopyLinkButton() {
 
   return (
     <Action label="Copy link" onClick={copy}>
-      <CopyIcon copied={copied} icon={<IconLink className="size-4" />} className="size-4" />
+      <CopyIcon
+        copied={copied}
+        icon={<IconLink className="size-4" />}
+        className="size-4"
+      />
     </Action>
   );
 }
