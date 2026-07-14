@@ -187,3 +187,13 @@
     display: none;
   }
 }
+
+/* TEMPORARY: font A/B toggle (see font-toggle.tsx) */
+html[data-font="inter"] body {
+  --font-open-runde: var(--font-inter);
+}
+
+/* TEMPORARY: noise toggle (see toggles in site-shell header) */
+html[data-noise="off"] .noise-overlay {
+  display: none;
+}

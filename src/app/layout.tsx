@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { allConcepts } from "content-collections";
 
@@ -28,6 +28,12 @@ const redaction = localFont({
   ],
   variable: "--font-redaction-35",
   display: "swap",
+});
+
+// TEMPORARY: only here for the font A/B toggle in the header.
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -59,7 +65,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${openRunde.variable} ${redaction.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${openRunde.variable} ${redaction.variable} ${jetbrainsMono.variable} ${inter.variable} antialiased`}
       >
         <Providers>
           <SiteShell sections={sections} sourcePaths={sourcePaths}>

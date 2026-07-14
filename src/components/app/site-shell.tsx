@@ -6,6 +6,9 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { CommandMenu } from "@/components/app/command-menu";
+import { FontToggle } from "@/components/app/font-toggle";
+import { Noise } from "@/components/app/noise";
+import { NoiseToggle } from "@/components/app/noise-toggle";
 import {
   CopyLinkButton,
   SoundToggle,
@@ -44,6 +47,7 @@ export function SiteShell({
 
   return (
     <div className="min-h-dvh">
+      <Noise />
       <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between bg-background/80 p-5 backdrop-blur-sm sm:px-8">
         <div className="flex items-center gap-2">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -73,6 +77,10 @@ export function SiteShell({
           >
             Craft
           </Link>
+        </div>
+        <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-4">
+          <FontToggle />
+          <NoiseToggle />
         </div>
         <div className="flex items-center gap-1">
           <CopyLinkButton />
