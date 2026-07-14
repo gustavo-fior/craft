@@ -13,7 +13,7 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
   return (
     <nav
       aria-label="Concepts"
-      className="fade-mask-y scrollbar-hidden h-[80vh] overflow-y-auto py-[5vh]"
+      className="fade-mask-y scrollbar-hidden h-[80vh] overflow-y-auto md:py-[5vh] py-[2.8vh]"
     >
       <ul className="flex flex-col gap-1 text-xs">
         <li>

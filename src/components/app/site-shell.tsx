@@ -54,11 +54,11 @@ export function SiteShell({
                   aria-label="Open navigation"
                   className="md:hidden"
                 >
-                  <ListIcon weight="duotone" className="size-4" />
+                  <ListIcon weight="duotone" className="size-4 mb-[3px]" />
                 </Button>
               }
             />
-            <SheetContent side="left" className="w-64 px-6">
+            <SheetContent variant="floating" side="left" className="w-64 px-6">
               <SheetHeader className="sr-only">
                 <SheetTitle>Navigation</SheetTitle>
               </SheetHeader>
