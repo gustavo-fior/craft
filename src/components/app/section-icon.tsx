@@ -1,18 +1,18 @@
 import type { IconProps } from "@phosphor-icons/react";
 import {
   LayoutIcon,
+  LightningIcon,
   PaletteIcon,
+  QuotesIcon,
   SpeakerHighIcon,
-  TextTIcon,
-  WindIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import type { Section } from "@/lib/sections";
 
 const icons = {
-  Typography: TextTIcon,
+  Typography: QuotesIcon,
   Color: PaletteIcon,
   Layout: LayoutIcon,
-  Motion: WindIcon,
+  Motion: LightningIcon,
   Sound: SpeakerHighIcon,
 } as const;
 
