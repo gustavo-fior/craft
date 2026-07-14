@@ -36,7 +36,7 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
               <SectionIcon
                 section={section}
                 size={13}
-                className="text-muted-foreground mb-px"
+                className="mb-px"
               />
               <span>{section}</span>
             </div>

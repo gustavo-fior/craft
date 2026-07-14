@@ -51,7 +51,7 @@ export function CommandMenu({ sections }: { sections: NavSection[] }) {
                 key={concept.slug}
                 onSelect={() => go(`/${concept.slug}`)}
               >
-                <SectionIcon section={section} className="size-4 text-muted-foreground" />
+                <SectionIcon section={section} className="size-4" />
                 {concept.title}
               </CommandItem>
             ))}
