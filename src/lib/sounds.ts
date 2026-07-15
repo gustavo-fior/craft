@@ -22,18 +22,32 @@ const minimal = definePatch({
       envelope: { attack: 0, decay: 0.04, sustain: 0, release: 0.012 },
       gain: 0.1,
     },
-    confirm: {
+    // "Success" from the Retro patch (audio.raphaelsalaja.com/library/retro)
+    // — a rising 8-bit C–E–G–C arpeggio.
+    success: {
       layers: [
         {
-          source: { type: "sine", frequency: 1000 },
-          envelope: { attack: 0, decay: 0.012, sustain: 0, release: 0.004 },
-          gain: 0.08,
+          source: { type: "square", frequency: 523 },
+          envelope: { attack: 0, decay: 0.06, sustain: 0, release: 0.02 },
+          gain: 0.16,
         },
         {
-          source: { type: "sine", frequency: 1200 },
-          envelope: { attack: 0, decay: 0.012, sustain: 0, release: 0.004 },
-          delay: 0.035,
-          gain: 0.07,
+          source: { type: "square", frequency: 659 },
+          envelope: { attack: 0, decay: 0.06, sustain: 0, release: 0.02 },
+          delay: 0.06,
+          gain: 0.14,
+        },
+        {
+          source: { type: "square", frequency: 784 },
+          envelope: { attack: 0, decay: 0.06, sustain: 0, release: 0.02 },
+          delay: 0.12,
+          gain: 0.12,
+        },
+        {
+          source: { type: "square", frequency: 1047 },
+          envelope: { attack: 0, decay: 0.08, sustain: 0, release: 0.025 },
+          delay: 0.18,
+          gain: 0.1,
         },
       ],
     },
@@ -55,7 +69,7 @@ const minimal = definePatch({
   },
 });
 
-export const SOUND_NAMES = ["tick", "pop", "confirm", "toggle", "hover"] as const;
+export const SOUND_NAMES = ["tick", "pop", "success", "toggle", "hover"] as const;
 export type SoundName = (typeof SOUND_NAMES)[number];
 
 const MUTE_KEY = "craft-muted";
