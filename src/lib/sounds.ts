@@ -7,6 +7,11 @@ import { definePatch, ensureReady } from "@web-kits/audio";
 const minimal = definePatch({
   name: "Minimal",
   sounds: {
+    hover: {
+      source: { type: "sine", frequency: 1300 },
+      envelope: { attack: 0, decay: 0.01, sustain: 0, release: 0.004 },
+      gain: 0.04,
+    },
     tick: {
       source: { type: "sine", frequency: 1200 },
       envelope: { attack: 0, decay: 0.012, sustain: 0, release: 0.004 },
@@ -50,7 +55,7 @@ const minimal = definePatch({
   },
 });
 
-export const SOUND_NAMES = ["tick", "pop", "confirm", "toggle"] as const;
+export const SOUND_NAMES = ["tick", "pop", "confirm", "toggle", "hover"] as const;
 export type SoundName = (typeof SOUND_NAMES)[number];
 
 const MUTE_KEY = "craft-muted";

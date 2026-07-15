@@ -9,6 +9,7 @@ const LABELS: Record<SoundName, string> = {
   pop: "Pop — open / dismiss",
   confirm: "Confirm — success",
   toggle: "Toggle — switches",
+  hover: "Hover — nav links",
 };
 
 export function InterfaceSfxDemo() {

@@ -20,6 +20,7 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
           <Link
             href="/"
             onClick={() => playSound("tick")}
+            onMouseEnter={() => playSound("hover")}
             className={cn(
               "inline-block py-1 transition-colors",
               pathname === "/"
@@ -44,6 +45,7 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
                     <Link
                       href={`/${concept.slug}`}
                       onClick={() => playSound("tick")}
+                      onMouseEnter={() => playSound("hover")}
                       className={cn(
                         "inline-block py-1 transition-colors",
                         active
