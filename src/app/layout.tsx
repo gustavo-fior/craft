@@ -43,9 +43,9 @@ const redaction70 = localFont({
   display: "swap",
 });
 
-const redaction100 = localFont({
-  src: [{ path: "../../public/fonts/Redaction100-Regular.woff2", weight: "400" }],
-  variable: "--font-redaction-100",
+const redaction50 = localFont({
+  src: [{ path: "../../public/fonts/Redaction50-Regular.woff2", weight: "400" }],
+  variable: "--font-redaction-50",
   display: "swap",
 });
 
@@ -93,7 +93,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${redaction.variable} ${redaction70.variable} ${redaction100.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${inter.variable} ${redaction.variable} ${redaction70.variable} ${redaction50.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <JsonLd
           data={{

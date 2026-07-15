@@ -5,14 +5,14 @@ import { useEffect, useRef, useState } from "react";
 
 import { playSound } from "@/lib/sounds";
 
-// Redaction's cuts get progressively more degraded (35 → 70 → 100). Every
+// Redaction's cuts get progressively more degraded (35 → 50 → 70). Every
 // ~25s — and on hover — the wordmark glitches through the pixelated cuts
 // and settles back.
 const GLITCH_FRAMES = [
+  "font-redaction50",
   "font-redaction70",
-  "font-redaction100",
+  "font-redaction50",
   "font-redaction70",
-  "font-redaction100",
   "font-redaction",
 ] as const;
 
