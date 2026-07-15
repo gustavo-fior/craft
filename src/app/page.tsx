@@ -1,6 +1,7 @@
 import { allConcepts } from "content-collections";
 import Link from "next/link";
 
+import { ConceptThumbnail } from "@/components/thumbnails";
 import { groupBySection } from "@/lib/sections";
 import { SITE_DESCRIPTION } from "@/lib/site";
 
@@ -18,30 +19,37 @@ export default function IndexPage() {
     <article>
       <h1 className="text-xl font-medium">Index</h1>
       <p className="mt-3 text-sm text-muted-foreground">{SITE_DESCRIPTION}</p>
-      <div className="mt-12 flex flex-col gap-10">
+      <div className="mt-12 flex flex-col gap-12">
         {sections.map(({ section, concepts }) => (
           <section key={section}>
             <h2 className="text-xs text-muted-foreground">{section}</h2>
-            <ul className="mt-3 flex flex-col">
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               {concepts.map((concept) => {
                 const full = allConcepts.find((c) => c.slug === concept.slug);
                 return (
-                  <li key={concept.slug}>
-                    <Link
-                      href={`/${concept.slug}`}
-                      className="group flex items-baseline justify-between gap-4 border-b py-3"
-                    >
-                      <span className="text-sm text-foreground">
+                  <Link
+                    key={concept.slug}
+                    href={`/${concept.slug}`}
+                    className="group overflow-hidden rounded-2xl border bg-card transition-colors hover:border-ring/40"
+                  >
+                    <div className="flex h-36 items-center justify-center border-b">
+                      <ConceptThumbnail
+                        slug={concept.slug}
+                        section={section}
+                      />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="text-sm font-medium text-foreground">
                         {concept.title}
-                      </span>
-                      <span className="truncate text-xs text-muted-foreground transition-colors group-hover:text-foreground">
+                      </h3>
+                      <p className="mt-1 text-xs text-muted-foreground text-pretty">
                         {full?.description}
-                      </span>
-                    </Link>
-                  </li>
+                      </p>
+                    </div>
+                  </Link>
                 );
               })}
-            </ul>
+            </div>
           </section>
         ))}
       </div>

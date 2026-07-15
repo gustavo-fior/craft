@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ConceptPager } from "@/components/app/concept-pager";
+import { Resources } from "@/components/app/resources";
 import { Mdx } from "@/components/app/mdx";
 import { groupBySection } from "@/lib/sections";
 
@@ -66,6 +67,7 @@ export default async function ConceptPage({
       <div className="mt-10">
         <Mdx code={concept.mdx} />
       </div>
+      <Resources resources={concept.resources} />
       <ConceptPager
         prev={index > 0 ? ordered[index - 1] : undefined}
         next={index < ordered.length - 1 ? ordered[index + 1] : undefined}
