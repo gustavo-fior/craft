@@ -9,10 +9,10 @@ import { playSound } from "@/lib/sounds";
 // ~25s — and on hover — the wordmark glitches through the pixelated cuts
 // and settles back.
 const GLITCH_FRAMES = [
-  "font-redaction-70",
-  "font-redaction-100",
-  "font-redaction-70",
-  "font-redaction-100",
+  "font-redaction70",
+  "font-redaction100",
+  "font-redaction70",
+  "font-redaction100",
   "font-redaction",
 ] as const;
 
