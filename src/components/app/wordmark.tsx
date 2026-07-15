@@ -5,9 +5,8 @@ import { useEffect, useRef, useState } from "react";
 
 import { playSound } from "@/lib/sounds";
 
-// Redaction's cuts get progressively more degraded (35 → 50 → 70). Every
-// ~25s — and on hover — the wordmark glitches through the pixelated cuts
-// and settles back.
+// Redaction's cuts get progressively more degraded (35 → 50 → 70). On hover
+// the wordmark glitches through the pixelated cuts and settles back.
 const GLITCH_FRAMES = [
   "font-redaction50",
   "font-redaction70",
@@ -35,22 +34,8 @@ export function Wordmark() {
   };
 
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    const schedule = () => {
-      timer = setTimeout(
-        () => {
-          glitch();
-          schedule();
-        },
-        20_000 + Math.random() * 10_000,
-      );
-    };
-    schedule();
-    return () => {
-      clearTimeout(timer);
-      frameTimeouts.current.forEach(clearTimeout);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const timeouts = frameTimeouts.current;
+    return () => timeouts.forEach(clearTimeout);
   }, []);
 
   return (

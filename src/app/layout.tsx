@@ -38,13 +38,17 @@ const redaction = localFont({
 });
 
 const redaction70 = localFont({
-  src: [{ path: "../../public/fonts/Redaction70-Regular.woff2", weight: "400" }],
+  src: [
+    { path: "../../public/fonts/Redaction70-Regular.woff2", weight: "400" },
+  ],
   variable: "--font-redaction-70",
   display: "swap",
 });
 
 const redaction50 = localFont({
-  src: [{ path: "../../public/fonts/Redaction50-Regular.woff2", weight: "400" }],
+  src: [
+    { path: "../../public/fonts/Redaction50-Regular.woff2", weight: "400" },
+  ],
   variable: "--font-redaction-50",
   display: "swap",
 });
@@ -56,7 +60,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: SITE_NAME, template: `%s — ${SITE_NAME}` },
+  title: { default: SITE_NAME, template: `%s • ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
   alternates: { canonical: "/" },
   openGraph: {
@@ -84,10 +88,10 @@ export default function RootLayout({
       slug,
       section,
       order,
-    })),
+    }))
   );
   const sourcePaths = Object.fromEntries(
-    allConcepts.map((c) => [c.slug, c.sourcePath]),
+    allConcepts.map((c) => [c.slug, c.sourcePath])
   );
 
   return (
@@ -102,7 +106,11 @@ export default function RootLayout({
             name: SITE_NAME,
             description: SITE_DESCRIPTION,
             url: SITE_URL,
-            author: { "@type": "Person", name: "Gustavo Fior", url: "https://gustavofior.com" },
+            author: {
+              "@type": "Person",
+              name: "Gustavo Fior",
+              url: "https://gustavofior.com",
+            },
           }}
         />
         <Providers>
