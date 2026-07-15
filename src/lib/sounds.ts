@@ -87,13 +87,9 @@ export async function playSound(name: SoundName, opts?: PlayOptions) {
 }
 
 /**
- * Detune (in cents) for the nth step of a progression — a major pentatonic
- * scale, so any two neighboring nav items sound consonant.
+ * Volume multiplier for the nth nav item — a gentle swell down the list,
+ * capped so it never gets loud.
  */
-const PENTATONIC = [0, 200, 400, 700, 900];
-export function progressionDetune(step: number) {
-  return (
-    PENTATONIC[step % PENTATONIC.length] +
-    1200 * Math.floor(step / PENTATONIC.length)
-  );
+export function progressionVolume(step: number) {
+  return Math.min(0.5 + step * 0.06, 1);
 }
