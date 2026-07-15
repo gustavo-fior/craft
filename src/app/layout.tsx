@@ -37,6 +37,18 @@ const redaction = localFont({
   display: "swap",
 });
 
+const redaction70 = localFont({
+  src: [{ path: "../../public/fonts/Redaction70-Regular.woff2", weight: "400" }],
+  variable: "--font-redaction-70",
+  display: "swap",
+});
+
+const redaction100 = localFont({
+  src: [{ path: "../../public/fonts/Redaction100-Regular.woff2", weight: "400" }],
+  variable: "--font-redaction-100",
+  display: "swap",
+});
+
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
@@ -81,7 +93,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${redaction.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${inter.variable} ${redaction.variable} ${redaction70.variable} ${redaction100.variable} ${jetbrainsMono.variable} antialiased`}
       >
         <JsonLd
           data={{

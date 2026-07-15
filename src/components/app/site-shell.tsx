@@ -1,7 +1,6 @@
 "use client";
 
 import { ListIcon } from "@phosphor-icons/react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -13,6 +12,7 @@ import {
   ViewInRepoButton,
 } from "@/components/app/header-actions";
 import { SidebarNav } from "@/components/app/sidebar-nav";
+import { Wordmark } from "@/components/app/wordmark";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -22,7 +22,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import type { NavSection } from "@/lib/sections";
-import { playSound } from "@/lib/sounds";
 import { githubSourceUrl } from "@/lib/site";
 
 export function SiteShell({
@@ -66,13 +65,7 @@ export function SiteShell({
               <SidebarNav sections={sections} />
             </SheetContent>
           </Sheet>
-          <Link
-            href="/"
-            onClick={() => playSound("tick")}
-            className="font-redaction text-base text-foreground"
-          >
-            Craft
-          </Link>
+          <Wordmark />
         </div>
         <div className="flex items-center gap-1">
           <CopyLinkButton />
