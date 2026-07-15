@@ -11,14 +11,14 @@ export function Resources({ resources }: { resources: Resource[] }) {
   return (
     <section className="mt-14">
       <h2 className="text-base font-medium">Resources</h2>
-      <ul className="mt-4 flex flex-col gap-1">
+      <ul className="mt-4 flex flex-col gap-3">
         {resources.map((resource) => (
           <li key={resource.url}>
             <a
               href={resource.url}
               target="_blank"
               rel="noreferrer"
-              className="group -mx-3 flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-accent"
+              className="flex items-center gap-3"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -29,12 +29,11 @@ export function Resources({ resources }: { resources: Resource[] }) {
                 loading="lazy"
                 className="size-4 shrink-0 rounded-sm"
               />
-              <span className="min-w-0">
-                <span className="block truncate text-sm text-foreground">
-                  {resource.title}
-                </span>
+              <span className="min-w-0 truncate text-sm">
+                <span className="text-foreground">{resource.title}</span>
                 {resource.description && (
-                  <span className="block truncate text-xs text-muted-foreground">
+                  <span className="text-muted-foreground">
+                    {" — "}
                     {resource.description}
                   </span>
                 )}
