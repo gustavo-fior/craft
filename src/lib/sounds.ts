@@ -69,17 +69,31 @@ export function setMuted(muted: boolean) {
   window.localStorage.setItem(MUTE_KEY, String(muted));
 }
 
+export type PlayOptions = { detune?: number; volume?: number };
+
 /** Plays a sound regardless of the mute toggle (for explicit demos). */
-export async function playSoundAlways(name: SoundName) {
+export async function playSoundAlways(name: SoundName, opts?: PlayOptions) {
   try {
     await ensureReady();
-    minimal.play(name);
+    minimal.play(name, opts);
   } catch {
     // Audio not available (e.g. before user gesture) — stay silent.
   }
 }
 
-export async function playSound(name: SoundName) {
+export async function playSound(name: SoundName, opts?: PlayOptions) {
   if (isMuted()) return;
-  await playSoundAlways(name);
+  await playSoundAlways(name, opts);
+}
+
+/**
+ * Detune (in cents) for the nth step of a progression — a major pentatonic
+ * scale, so any two neighboring nav items sound consonant.
+ */
+const PENTATONIC = [0, 200, 400, 700, 900];
+export function progressionDetune(step: number) {
+  return (
+    PENTATONIC[step % PENTATONIC.length] +
+    1200 * Math.floor(step / PENTATONIC.length)
+  );
 }
