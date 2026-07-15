@@ -87,9 +87,9 @@ export async function playSound(name: SoundName, opts?: PlayOptions) {
 }
 
 /**
- * Volume multiplier for the nth nav item — a gentle swell down the list,
- * capped so it never gets loud.
+ * Detune (in cents) for the nth nav item — a very gentle rise down the
+ * list, about a quarter of a semitone per step.
  */
-export function progressionVolume(step: number) {
-  return Math.min(0.5 + step * 0.06, 1);
+export function progressionDetune(step: number) {
+  return step * 25;
 }

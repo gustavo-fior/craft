@@ -3,15 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { playSound, progressionVolume } from "@/lib/sounds";
+import { playSound, progressionDetune } from "@/lib/sounds";
 import type { NavSection } from "@/lib/sections";
 import { SectionIcon } from "@/components/app/section-icon";
 
 export function SidebarNav({ sections }: { sections: NavSection[] }) {
   const pathname = usePathname();
 
-  // Flat position of each concept in the nav, so hover volume swells as you
-  // move down the list ("Index" is step 0).
+  // Flat position of each concept in the nav, so hover pitch rises gently
+  // as you move down the list ("Index" is step 0).
   let step = 0;
 
   return (
@@ -24,7 +24,7 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
           <Link
             href="/"
             onClick={() => playSound("tick")}
-            onMouseEnter={() => playSound("hover", { volume: progressionVolume(0) })}
+            onMouseEnter={() => playSound("hover", { detune: 0 })}
             className={cn(
               "inline-block py-1 transition-colors",
               pathname === "/"
@@ -45,13 +45,13 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
               {concepts.map((concept) => {
                 const active = pathname === `/${concept.slug}`;
                 step += 1;
-                const volume = progressionVolume(step);
+                const detune = progressionDetune(step);
                 return (
                   <li key={concept.slug}>
                     <Link
                       href={`/${concept.slug}`}
                       onClick={() => playSound("tick")}
-                      onMouseEnter={() => playSound("hover", { volume })}
+                      onMouseEnter={() => playSound("hover", { detune })}
                       className={cn(
                         "inline-block py-1 transition-colors",
                         active
