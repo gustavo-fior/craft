@@ -132,18 +132,7 @@ function Thumbnail({ slug }: { slug: string }) {
         </div>
       );
     default:
-      return (
-        <div
-          style={{
-            display: "flex",
-            fontSize: 110,
-            fontFamily: "Redaction",
-            color: "#333",
-          }}
-        >
-          Craft
-        </div>
-      );
+      return null;
   }
 }
 
@@ -175,9 +164,13 @@ export async function GET(
           fontFamily: "Inter",
         }}
       >
-        <div style={{ display: "flex", fontSize: 30, fontFamily: "Redaction" }}>
-          Craft
-        </div>
+        {concept ? (
+          <div
+            style={{ display: "flex", fontSize: 30, fontFamily: "Redaction" }}
+          >
+            Craft
+          </div>
+        ) : null}
         <div
           style={{
             display: "flex",
@@ -189,7 +182,13 @@ export async function GET(
           <Thumbnail slug={slug} />
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <div style={{ display: "flex", fontSize: 52 }}>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 52,
+              fontFamily: concept ? "Inter" : "Redaction",
+            }}
+          >
             {concept ? title : SITE_NAME}
           </div>
           <div style={{ display: "flex", fontSize: 28, color: "#8f8f8f" }}>
