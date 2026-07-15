@@ -3,9 +3,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ConceptPager } from "@/components/app/concept-pager";
+import { JsonLd } from "@/components/app/json-ld";
 import { Resources } from "@/components/app/resources";
 import { Mdx } from "@/components/app/mdx";
 import { groupBySection } from "@/lib/sections";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 function orderedConcepts() {
   return groupBySection(
@@ -35,6 +37,15 @@ export async function generateMetadata({
     description: concept.description,
     alternates: { canonical: `/${concept.slug}` },
     openGraph: {
+      type: "article",
+      title: concept.title,
+      description: concept.description,
+      url: `/${concept.slug}`,
+      publishedTime: concept.publishedAt,
+      images: [`/og/${concept.slug}`],
+    },
+    twitter: {
+      card: "summary_large_image",
       title: concept.title,
       description: concept.description,
       images: [`/og/${concept.slug}`],
@@ -56,6 +67,19 @@ export default async function ConceptPage({
 
   return (
     <article>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          headline: concept.title,
+          description: concept.description,
+          url: `${SITE_URL}/${concept.slug}`,
+          datePublished: concept.publishedAt,
+          image: `${SITE_URL}/og/${concept.slug}`,
+          author: { "@type": "Person", name: "Gustavo Fior", url: "https://gustavofior.com" },
+          isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
+        }}
+      />
       <header>
         <h1 className="text-xl font-medium text-balance">
           {concept.title}

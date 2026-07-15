@@ -3,6 +3,7 @@ import { JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { allConcepts } from "content-collections";
 
+import { JsonLd } from "@/components/app/json-ld";
 import { Providers } from "@/components/app/providers";
 import { SiteShell } from "@/components/app/site-shell";
 import { groupBySection } from "@/lib/sections";
@@ -45,6 +46,21 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: SITE_NAME, template: `%s — ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    images: ["/og/index"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: ["/og/index"],
+  },
 };
 
 export default function RootLayout({
@@ -67,6 +83,16 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${redaction.variable} ${jetbrainsMono.variable} antialiased`}
       >
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: SITE_NAME,
+            description: SITE_DESCRIPTION,
+            url: SITE_URL,
+            author: { "@type": "Person", name: "Gustavo Fior", url: "https://gustavofior.com" },
+          }}
+        />
         <Providers>
           <SiteShell sections={sections} sourcePaths={sourcePaths}>
             {children}
