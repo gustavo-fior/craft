@@ -9,16 +9,14 @@ import { playSound } from "@/lib/sounds";
 const THRESHOLD = 260;
 // Pause between wheel events that resets the accumulator (a new gesture).
 const GESTURE_GAP = 200;
-// Minimum time between two commits, so a strong flick pages through
-// several articles at a readable rhythm instead of skipping instantly.
-const COMMIT_COOLDOWN = 320;
 const EXIT_MS = 170;
 
-// Module state survives client-side navigations, which is what lets a
-// single large gesture keep its momentum across page boundaries.
+// Module state survives client-side navigations: the entrance direction
+// for the incoming page, and a flag that swallows a gesture's leftover
+// momentum after a commit so one swipe never skips multiple articles.
 let enterFrom: "left" | "right" | null = null;
-let lastCommitAt = 0;
-let chain = 0; // how many articles this gesture has already passed
+let swallowMomentum = false;
+let lastWheelAt = 0;
 
 function insideHorizontalScroller(target: EventTarget | null) {
   let el = target instanceof Element ? target : null;
@@ -79,14 +77,9 @@ export function SwipeNav({
     const commit = (dir: "next" | "prev") => {
       const slug = dir === "next" ? nextRef.current : prevRef.current;
       if (!slug || committed.current) return;
-      const now = performance.now();
-      if (now - lastCommitAt < COMMIT_COOLDOWN) return;
-      lastCommitAt = now;
       committed.current = true;
-      // Chained commits in one gesture rise in pitch.
-      chain = now - lastEvent < 1000 ? chain : 0;
-      playSound("swipe", { detune: (dir === "prev" ? -200 : 0) + chain * 150 });
-      chain += 1;
+      swallowMomentum = true;
+      playSound("swipe");
       enterFrom = dir === "next" ? "right" : "left";
       setDrag(0);
       setPhase(dir === "next" ? "out-left" : "out-right");
@@ -98,13 +91,19 @@ export function SwipeNav({
       if (insideHorizontalScroller(e.target)) return;
       // Keep the browser's history-swipe gesture out of the way.
       e.preventDefault();
-      if (committed.current) return;
 
       const now = performance.now();
-      if (now - lastEvent > GESTURE_GAP) {
-        acc = 0;
-        chain = 0;
+      const gap = now - lastWheelAt;
+      lastWheelAt = now;
+      if (committed.current) return;
+      // After a commit, ignore the rest of that gesture's momentum -
+      // a new swipe starts only after a clear pause.
+      if (swallowMomentum) {
+        if (gap < GESTURE_GAP) return;
+        swallowMomentum = false;
       }
+
+      if (now - lastEvent > GESTURE_GAP) acc = 0;
       lastEvent = now;
       acc += e.deltaX;
 

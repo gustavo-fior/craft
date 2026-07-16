@@ -51,22 +51,18 @@ const minimal = definePatch({
         },
       ],
     },
-    // A short upward flick for swiping between articles - a soft sine
-    // sweep with a faint octave shimmer on top.
+    // "Swoosh" from the Core patch (audio.raphaelsalaja.com/library/core)
+    // - a bandpass-swept burst of white noise, used for article swipes.
     swipe: {
-      layers: [
-        {
-          source: { type: "sine", frequency: { start: 520, end: 840 } },
-          envelope: { attack: 0.005, decay: 0.09, sustain: 0, release: 0.03 },
-          gain: 0.07,
-        },
-        {
-          source: { type: "sine", frequency: { start: 1040, end: 1680 } },
-          envelope: { attack: 0.005, decay: 0.07, sustain: 0, release: 0.02 },
-          delay: 0.01,
-          gain: 0.025,
-        },
-      ],
+      source: { type: "noise", color: "white" },
+      filter: {
+        type: "bandpass",
+        frequency: 300,
+        resonance: 1.8,
+        envelope: { attack: 0.01, peak: 4000, decay: 0.08 },
+      },
+      envelope: { attack: 0.01, decay: 0.12, sustain: 0, release: 0.04 },
+      gain: 0.12,
     },
     toggle: {
       layers: [
