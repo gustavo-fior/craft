@@ -1,0 +1,47 @@
+---
+title: Layering Sounds
+description: Notes stacked with tiny delays become an instrument.
+section: Sound
+order: 2
+publishedAt: "2026-07-15"
+resources:
+  - url: https://audio.raphaelsalaja.com/library/retro
+    title: "Retro — @web-kits/audio"
+    description: The 8-bit patch this site's success sound comes from.
+  - url: https://audio.raphaelsalaja.com
+---
+
+A single beep is a notification. Four notes, each 60ms after the last, each
+a little quieter, is a *phrase* — it has direction, and direction carries
+meaning. Rising phrases read as success; falling ones as dismissal or
+deletion.
+
+Here's this site's copy-link sound, taken apart:
+
+<LayeringSoundsDemo />
+
+## The anatomy
+
+```ts
+success: {
+  layers: [
+    { source: { type: "square", frequency: 523 },  gain: 0.06 },              // C5
+    { source: { type: "square", frequency: 659 },  gain: 0.05, delay: 0.06 }, // E5
+    { source: { type: "square", frequency: 784 },  gain: 0.045, delay: 0.12 }, // G5
+    { source: { type: "square", frequency: 1047 }, gain: 0.04, delay: 0.18 }, // C6
+  ],
+}
+```
+
+Three decisions do the work:
+
+- **Real intervals.** C–E–G–C is a major arpeggio — the ear recognizes the
+  chord even at 6% volume and 60ms notes.
+- **A decaying envelope per note.** Each note is ~80ms of decay, no sustain
+  — a pluck, not a tone.
+- **Falling gain.** Each layer slightly quieter, so the phrase tapers
+  instead of ending abruptly.
+
+Same technique, different mood: two sine notes a fifth apart for a toggle,
+a downward pair for delete. Synthesized, not sampled — the whole palette
+weighs nothing.

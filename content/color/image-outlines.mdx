@@ -1,0 +1,43 @@
+---
+title: Image Outlines
+description: One faint pixel makes every image look sharper.
+section: Color
+order: 4
+publishedAt: "2026-07-15"
+resources:
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    description: Where I first learned this trick.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/outline-offset
+---
+
+Images have unpredictable edges. A screenshot with a white background melts
+into a light page; a dark photo bleeds into dark mode. Each image either has
+a crisp boundary or doesn't, depending on its own pixels — which means your
+layout's edges are up to luck.
+
+The fix is a 1px outline at 10% opacity, drawn *inside* the image:
+
+<ImageOutlineDemo />
+
+## The technique
+
+```css
+img {
+  outline: 1px solid rgba(0, 0, 0, 0.1);
+  outline-offset: -1px;
+}
+
+.dark img {
+  outline-color: rgba(255, 255, 255, 0.1);
+}
+```
+
+- `outline` doesn't affect layout, and `-1px` offset pulls it inside the
+  border radius so it hugs the image.
+- 10% black (or white in dark mode) is invisible on busy images and exactly
+  strong enough on flat ones.
+- Because it sits on top of the image rather than beside it, it works for
+  every image, whatever its content.
+
+It's the kind of detail nobody will ever point at — but every screenshot,
+avatar, and thumbnail on the page quietly gains a consistent, sharp edge.

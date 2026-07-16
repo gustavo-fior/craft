@@ -20,21 +20,27 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
       className="fade-mask-y scrollbar-hidden h-[80vh] overflow-y-auto md:py-[5vh] py-[2.8vh]"
     >
       <ul className="flex flex-col gap-1 text-xs">
-        <li>
-          <Link
-            href="/"
-            onClick={() => playSound("tick")}
-            onMouseEnter={() => playSound("hover", { detune: 0 })}
-            className={cn(
-              "inline-block py-1 transition-colors",
-              pathname === "/"
-                ? "text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            Index
-          </Link>
-        </li>
+        {[
+          { href: "/", label: "Index" },
+          { href: "/goats", label: "GOATs" },
+          { href: "/resources", label: "Resources" },
+        ].map((page) => (
+          <li key={page.href}>
+            <Link
+              href={page.href}
+              onClick={() => playSound("tick")}
+              onMouseEnter={() => playSound("hover", { detune: 0 })}
+              className={cn(
+                "inline-block py-1 transition-colors",
+                pathname === page.href
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {page.label}
+            </Link>
+          </li>
+        ))}
         {sections.map(({ section, concepts }) => (
           <li key={section} className="mt-5">
             <div className="flex items-center gap-1.5 py-1 text-foreground">

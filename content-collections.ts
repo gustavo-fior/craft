@@ -94,7 +94,15 @@ const concepts = defineCollection({
     content: z.string(),
     title: z.string(),
     description: z.string(),
-    section: z.enum(["Typography", "Color", "Layout", "Motion", "Sound"]),
+    section: z.enum([
+      "Typography",
+      "Color",
+      "Layout",
+      "Motion",
+      "Sound",
+      "Data",
+      "Craft",
+    ]),
     order: z.number().default(0),
     publishedAt: z.string(),
     resources: z

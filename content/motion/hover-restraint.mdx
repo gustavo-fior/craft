@@ -1,0 +1,37 @@
+---
+title: Hover Restraint
+description: The fastest hover animation is none.
+section: Motion
+order: 6
+publishedAt: "2026-07-15"
+resources:
+  - url: https://emilkowal.ski/ui/you-dont-need-animations
+  - url: https://emilkowal.ski/ui/7-practical-animation-tips
+---
+
+Hover states fire constantly — a user sweeping across a nav strafes ten of
+them per second. Animate each one and the interface is permanently a few
+frames behind the cursor. It reads as *slow*, even when nothing is.
+
+Emil Kowalski's framework: the more frequent the interaction, the less
+animation it can afford. Hover is the most frequent interaction there is.
+
+<HoverRestraintDemo />
+
+## The rules
+
+- **Backgrounds and colors on hover: instant.** Or nearly — ≤100ms if you
+  must soften them. This site's nav and resource rows switch instantly.
+- **Animate the leave, not the enter.** A snappy highlight that *fades* out
+  on exit gives polish without lag. `transition: background 200ms;` plus
+  `:hover { transition: none; }` does exactly this.
+- **Tooltips: delay the first, not the rest.** Once one tooltip is open,
+  its siblings should appear immediately — Emil's tip #3.
+- **Keyboard-triggered actions: never animate.** A shortcut user is your
+  fastest user; charging them 200ms per action is a tax on expertise.
+
+## The test
+
+Sweep your cursor across the component fast. If the UI is still finishing
+animations after your cursor has left, you're animating things that should
+simply *be*.

@@ -2,11 +2,27 @@ import { MDXContent } from "@content-collections/mdx/react";
 import type { MDXComponents } from "mdx/types";
 
 import { Demo } from "@/components/app/demo";
+import { ButtonPressDemo } from "@/components/demos/button-press";
+import { EasingsDemo } from "@/components/demos/easings";
+import { HitAreasDemo } from "@/components/demos/hit-areas";
+import { HoverRestraintDemo } from "@/components/demos/hover-restraint";
+import { HtmlBackgroundDemo } from "@/components/demos/html-background";
 import { IconMorphDemo } from "@/components/demos/icon-morph";
+import { IconWeightsDemo } from "@/components/demos/icon-weights";
+import { ImageOutlineDemo } from "@/components/demos/image-outline";
 import { InterfaceSfxDemo } from "@/components/demos/interface-sfx";
+import { InterruptibilityDemo } from "@/components/demos/interruptibility";
+import { LayeringSoundsDemo } from "@/components/demos/layering-sounds";
 import { LetterSpacingDemo } from "@/components/demos/letter-spacing";
+import { LivingChartsDemo } from "@/components/demos/living-charts";
 import { NestedRadiusDemo } from "@/components/demos/nested-radius";
+import { NoiseDemo } from "@/components/demos/noise";
 import { OklchDemo } from "@/components/demos/oklch";
+import { OpticalAlignmentDemo } from "@/components/demos/optical-alignment";
+import { PerceivedPerformanceDemo } from "@/components/demos/perceived-performance";
+import { ShadowsNotBordersDemo } from "@/components/demos/shadows-not-borders";
+import { StaggerDemo } from "@/components/demos/stagger";
+import { TabularNumsDemo } from "@/components/demos/tabular-nums";
 import { TextWrappingDemo } from "@/components/demos/text-wrapping";
 import { cn } from "@/lib/utils";
 
@@ -104,6 +120,22 @@ const components: MDXComponents = {
   NestedRadiusDemo,
   IconMorphDemo,
   InterfaceSfxDemo,
+  TabularNumsDemo,
+  OpticalAlignmentDemo,
+  IconWeightsDemo,
+  NoiseDemo,
+  ShadowsNotBordersDemo,
+  ImageOutlineDemo,
+  HtmlBackgroundDemo,
+  HitAreasDemo,
+  ButtonPressDemo,
+  EasingsDemo,
+  StaggerDemo,
+  InterruptibilityDemo,
+  HoverRestraintDemo,
+  LayeringSoundsDemo,
+  LivingChartsDemo,
+  PerceivedPerformanceDemo,
 };
 
 export function Mdx({ code }: { code: string }) {

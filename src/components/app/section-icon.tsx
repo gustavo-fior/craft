@@ -1,8 +1,10 @@
 import type { IconProps } from "@phosphor-icons/react";
 import {
   BezierCurveIcon,
+  ChartLineIcon,
   CirclesThreeIcon,
   LayoutIcon,
+  PenNibIcon,
   SpeakerHighIcon,
   TextAaIcon,
 } from "@phosphor-icons/react/dist/ssr";
@@ -15,6 +17,8 @@ const icons = {
   Layout: LayoutIcon,
   Motion: BezierCurveIcon,
   Sound: SpeakerHighIcon,
+  Data: ChartLineIcon,
+  Craft: PenNibIcon,
 } as const;
 
 // Muted enough to sit in a grayscale UI; the duotone fill layer
@@ -25,6 +29,8 @@ const colors: Record<Section, string> = {
   Layout: "text-amber-600 dark:text-amber-400",
   Motion: "text-violet-600 dark:text-violet-400",
   Sound: "text-emerald-600 dark:text-emerald-400",
+  Data: "text-cyan-600 dark:text-cyan-400",
+  Craft: "text-orange-600 dark:text-orange-400",
 };
 
 export function SectionIcon({

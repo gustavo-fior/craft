@@ -1,0 +1,53 @@
+---
+title: Noise
+description: A whisper of grain keeps flat surfaces from feeling dead.
+section: Color
+order: 2
+publishedAt: "2026-07-15"
+resources:
+  - url: https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Element/feTurbulence
+  - url: https://grainy-gradients.vercel.app
+---
+
+Large flat fills — hero gradients, cards, empty states — can feel sterile,
+and on cheap displays they band. A film of noise at single-digit opacity
+fixes both: it adds texture the eye barely registers and dithers the banding
+away.
+
+You don't need an image. SVG's `feTurbulence` generates the grain, and a CSS
+filter applies it:
+
+<NoiseDemo />
+
+## The technique
+
+```html
+<div class="noise" aria-hidden="true">
+  <svg>
+    <filter id="noise-fx">
+      <feTurbulence baseFrequency="0.8" />
+    </filter>
+  </svg>
+</div>
+
+<style>
+  .noise {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    filter: url(#noise-fx) grayscale(100%);
+    opacity: 0.1;
+    mix-blend-mode: overlay;
+  }
+</style>
+```
+
+- `baseFrequency` sets grain size — 0.6–1 is fine film grain.
+- `grayscale(100%)` kills the rainbow speckle turbulence produces.
+- A blend mode (`overlay`, `soft-light`) melts it into the surface.
+
+## Restraint
+
+Noise is seasoning. At 5–10% opacity it reads as material; at 30% it reads
+as a broken JPEG. Keep it off text surfaces, and remember it's decorative —
+`aria-hidden`, `pointer-events: none`.

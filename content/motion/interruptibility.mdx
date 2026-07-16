@@ -1,0 +1,45 @@
+---
+title: Interruptibility
+description: Animation the user can change their mind about.
+section: Motion
+order: 5
+publishedAt: "2026-07-15"
+resources:
+  - url: https://emilkowal.ski/ui/building-a-toast-component
+  - url: https://rauno.me/craft/interaction-design
+---
+
+Great interfaces never make you wait for a decision you've already
+reversed. Hover something, leave before the animation finishes — what
+happens next tells you how the UI was built. A CSS *transition* turns
+around mid-flight, from its current position, at its current velocity. A
+*keyframe animation* is a recorded clip: it can only snap and replay.
+
+<InterruptibilityDemo />
+
+## Why transitions win for interaction
+
+A transition animates *toward a state*, so when the state changes mid-way
+the browser retargets smoothly. Keyframes describe *a timeline*, so a state
+change mid-way has nowhere to resume from. That's why Sonner's toasts and
+iOS gestures feel responsive: everything is a spring or transition toward
+wherever the state currently points.
+
+```css
+/* interruptible */
+.panel { transition: transform 300ms ease-out; }
+.panel[data-open] { transform: translateY(0); }
+
+/* not interruptible */
+.panel[data-open] { animation: slide-up 300ms ease-out; }
+```
+
+## The rule
+
+- **State responds to the user → transition or spring.** Hover, open/close,
+  drag, expand.
+- **A fixed performance → keyframes.** Entrances, celebrations, loaders —
+  sequences with no state to interrupt.
+
+If a fast user can make your interface animate against them, it's the wrong
+tool.

@@ -1,0 +1,41 @@
+---
+title: Button Press
+description: A 3% dip that makes clicks feel physical.
+section: Motion
+order: 2
+publishedAt: "2026-07-15"
+resources:
+  - url: https://emilkowal.ski/ui/7-practical-animation-tips
+  - url: https://emilkowal.ski/ui/great-animations
+---
+
+Real buttons depress. Digital ones can borrow the effect with one line:
+scale down slightly while pressed. It's the cheapest haptic feedback the
+web has.
+
+<ButtonPressDemo />
+
+## The recipe
+
+```css
+.button {
+  transition: transform 100ms ease-out;
+}
+.button:active {
+  transform: scale(0.97);
+}
+```
+
+- **0.97 is the sweet spot.** Enough to feel, not enough to see as an
+  effect. Emil Kowalski's rule of thumb: if the user notices the animation
+  itself, it's too much.
+- **Keep it fast.** ~100ms down. The release can ride the same transition.
+- **Scale the whole button**, not the label — `transform` runs on the
+  compositor, so it's free.
+
+## Two warnings
+
+Never animate *entrances* from `scale(0)` — elements growing from nothing
+look cartoonish; start at 0.95 and fade. And skip the effect on controls
+triggered from the keyboard: a button that dips when nobody's finger is on
+it feels haunted.

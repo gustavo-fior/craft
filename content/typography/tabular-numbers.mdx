@@ -1,0 +1,42 @@
+---
+title: Tabular Numbers
+description: Digits that share a width, so numbers stop dancing.
+section: Typography
+order: 3
+publishedAt: "2026-07-15"
+resources:
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-numeric
+---
+
+Most fonts are proportional: a `1` is narrower than a `9`. That's right for
+prose, but the moment digits change over time — timers, counters, prices in a
+table — every change shifts the layout by a pixel or two. The number looks
+nervous.
+
+`font-variant-numeric: tabular-nums` switches to figures that all share one
+width. The value updates, the layout holds still.
+
+<TabularNumsDemo />
+
+## Where to use it
+
+- **Timers and clocks** — anything that ticks.
+- **Tables of numbers** — digits align into columns, so magnitudes are
+  scannable down a column.
+- **Animated counts** — followers, prices, progress percentages.
+
+Keep proportional figures everywhere else; tabular digits in running text look
+slightly loose.
+
+## In CSS
+
+```css
+.timer {
+  font-variant-numeric: tabular-nums;
+}
+```
+
+Tailwind ships it as `tabular-nums`. Inter — the font you're reading — has
+excellent tabular figures, but always confirm the font actually includes the
+`tnum` feature; if it doesn't, nothing happens.

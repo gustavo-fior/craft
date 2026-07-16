@@ -1,0 +1,46 @@
+---
+title: Hit Areas
+description: Targets should be bigger than they look.
+section: Layout
+order: 2
+publishedAt: "2026-07-15"
+resources:
+  - url: https://devouringdetails.com/prototypes/nextjs-dev-tools
+  - url: https://rauno.me/craft/interaction-design
+  - url: https://en.wikipedia.org/wiki/Fitts%27s_law
+---
+
+Fitts's Law: the time to hit a target is a function of its size and
+distance. A 16px icon button is fast to *see* but slow to *hit* — visually
+right, ergonomically wrong.
+
+The trick is to decouple the two: draw 16px, accept clicks on 40px.
+
+<HitAreasDemo />
+
+## The technique
+
+Extend the target with a pseudo-element — the glyph stays small, the
+clickable area doesn't:
+
+```css
+.icon-button {
+  position: relative;
+}
+.icon-button::before {
+  content: "";
+  position: absolute;
+  inset: -12px; /* 16px glyph, 40px target */
+}
+```
+
+Apple's guideline is 44pt minimum; Android says 48dp. On the web we
+routinely ship 20px targets and blame users for missing them.
+
+## Concentric, not nested
+
+When two adjacent controls both need extended areas, keep the extensions as
+siblings rather than nesting buttons (invalid HTML) — the Next.js DevTools
+team calls these concentric hit areas. And where the layout gives you free
+room — a screen edge, a corner — let the target run all the way into it:
+edges are infinitely wide targets.

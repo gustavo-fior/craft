@@ -1,0 +1,43 @@
+---
+title: Easings
+description: The curve is the personality of the motion.
+section: Motion
+order: 3
+publishedAt: "2026-07-15"
+resources:
+  - url: https://emilkowal.ski/ui/great-animations
+  - url: https://www.raphaelsalaja.com/library/12-principles-of-animation
+  - url: https://easings.net
+---
+
+Nothing in the physical world moves linearly. Objects accelerate, coast,
+and settle — Disney's animators called it *slow in, slow out*, and it's
+principle number six of their twelve. An element that moves at constant
+speed reads as mechanical; a curve makes it read as intentional.
+
+<EasingsDemo />
+
+## Which curve when
+
+- **Entering / responding to input → ease-out.** Start fast, settle gently.
+  The interface reacts *now*, then composes itself. This is the default for
+  90% of UI motion.
+- **Exiting → ease-in or ease-out, kept short.** Things leaving deserve less
+  ceremony than things arriving.
+- **Moving across the screen → ease-in-out.** Accelerate, cruise, decelerate.
+- **Linear → almost never.** Progress bars and spinners only — things whose
+  job is to represent constant rates.
+
+## Beyond the built-ins
+
+The browser's `ease-out` is timid. Custom beziers give you sharper
+personalities:
+
+```css
+--ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+```
+
+For elements whose distance varies — drawers, sheets, anything draggable —
+springs beat beziers: they take velocity as input, so the motion continues
+from however fast your finger was moving.

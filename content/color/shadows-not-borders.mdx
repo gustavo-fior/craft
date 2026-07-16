@@ -1,0 +1,43 @@
+---
+title: Shadows, Not Borders
+description: Depth reads better than outlines.
+section: Color
+order: 3
+publishedAt: "2026-07-15"
+resources:
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+  - url: https://www.joshwcomeau.com/css/designing-shadows/
+---
+
+A 1px solid border says "here is a box." A composite shadow says "this
+surface floats above the page." Same silhouette, completely different
+feeling — and the shadow version scales: raise the elevation for popovers,
+lower it for cards, and the whole UI shares one lighting model.
+
+<ShadowsNotBordersDemo />
+
+## The recipe
+
+Replace the border with a hairline ring plus a stack of soft shadows that
+widen as they fall:
+
+```css
+.card {
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06),   /* hairline ring */
+    0 1px 2px rgba(0, 0, 0, 0.05),   /* contact shadow */
+    0 4px 8px rgba(0, 0, 0, 0.04),   /* ambient */
+    0 12px 24px rgba(0, 0, 0, 0.04); /* atmosphere */
+}
+```
+
+- The `0 0 0 1px` ring replaces the border without consuming layout space.
+- Each layer roughly doubles the blur and fades — mimicking real light.
+- Keep every alpha tiny; the layers sum.
+
+## Dark mode caveat
+
+Shadows disappear on dark backgrounds — there's nothing darker to cast onto.
+Flip the strategy: keep the hairline ring but make it *lighter* than the
+surface (`rgba(255,255,255,0.08)`), simulating an edge highlight instead of
+a shadow.

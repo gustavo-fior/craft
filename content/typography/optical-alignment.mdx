@@ -1,0 +1,40 @@
+---
+title: Optical Alignment
+description: Centered by eye beats centered by math.
+section: Typography
+order: 4
+publishedAt: "2026-07-15"
+resources:
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+  - url: https://medium.com/design-bridges/optical-effects-9fca82b4cd9a
+---
+
+Flexbox centers bounding boxes, not shapes. A play triangle sits inside a
+square box, but its visual weight leans left — so a geometrically centered
+play button always looks like it's drifting toward the edge.
+
+The fix is embarrassingly manual: nudge it until it looks right.
+
+<OpticalAlignmentDemo />
+
+## The pattern
+
+Any asymmetric glyph needs this treatment:
+
+- **Play icons** — shift right ~8% of their size.
+- **Chevrons and arrows** — shift toward their point.
+- **Text next to icons** — cap height and icon center rarely agree; align by
+  eye, then encode the nudge.
+
+```css
+.play-icon {
+  transform: translateX(3px); /* optically centered */
+}
+```
+
+## Trust your eyes
+
+Every serious icon set draws glyphs inside their boxes with these
+compensations baked in — circles overshoot the grid slightly, triangles sit
+off-center. When the tool says "aligned" and your eye says "off," the eye is
+the one your users share.

@@ -1,0 +1,42 @@
+---
+title: Performance Is Design
+description: Speed is a feature; pretending to be fast is not.
+section: Craft
+order: 1
+publishedAt: "2026-07-15"
+resources:
+  - url: https://shud.in/thoughts/performance-is-not-a-technical-problem
+  - url: https://emilkowal.ski/ui/you-dont-need-animations
+---
+
+We treat performance as an engineering metric and loading states as a design
+problem. They're the same problem. Every skeleton, spinner, and shimmer is
+the design team decorating a failure the engineering team measured.
+
+Consider a 350ms load — a fast API on a normal connection:
+
+<PerceivedPerformanceDemo />
+
+The skeleton version renders placeholder bars for a single blink, then
+violently swaps them for real content. Two visual events. The quiet version
+shows one: content, easing in. The skeleton made the app *feel* slower than
+doing nothing at all.
+
+## Rules of thumb
+
+- **Under ~300ms: show nothing.** A beat of stillness reads as
+  responsiveness. A flash of skeleton reads as churn.
+- **300ms–1s: hold layout, fade content in.** Reserve the space so nothing
+  jumps, but don't animate placeholders.
+- **Over 1s: now you owe the user an explanation.** This is where skeletons
+  and progress belong — for genuinely slow things.
+- **Never let the loading state outlive the load.** Artificially holding a
+  spinner for "smoothness" is lying in the wrong direction.
+
+## The real fix
+
+Shu Ding's point: performance isn't a technical problem — it's entropy,
+hundreds of small decisions nobody owned. Design is deciding. The best
+loading state is the one you deleted by making the thing fast: cache it,
+render it on the server, prefetch it on hover. Then the interface can do
+the most confident thing an interface can do — just show the data.

@@ -27,6 +27,14 @@ export function GET() {
     lines.push("");
   }
 
+  lines.push(
+    "## Pages",
+    "",
+    `- [GOATs](${SITE_URL}/goats): The design engineers whose writing and work shaped this site.`,
+    `- [Resources](${SITE_URL}/resources): Tools, references, and reading for design engineering.`,
+    "",
+  );
+
   return new Response(lines.join("\n"), {
     headers: { "content-type": "text/plain; charset=utf-8" },
   });
