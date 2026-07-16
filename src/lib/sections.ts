@@ -1,11 +1,11 @@
 export const SECTIONS = [
+  "Craft",
   "Typography",
   "Color",
   "Layout",
   "Motion",
   "Sound",
   "Data",
-  "Craft",
 ] as const;
 
 export type Section = (typeof SECTIONS)[number];
