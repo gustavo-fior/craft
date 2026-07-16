@@ -6,7 +6,6 @@ import { ConceptPager } from "@/components/app/concept-pager";
 import { JsonLd } from "@/components/app/json-ld";
 import { Resources } from "@/components/app/resources";
 import { Mdx } from "@/components/app/mdx";
-import { SwipeNav } from "@/components/app/swipe-nav";
 import { groupBySection } from "@/lib/sections";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -70,37 +69,35 @@ export default async function ConceptPage({
   const next = index < ordered.length - 1 ? ordered[index + 1] : undefined;
 
   return (
-    <SwipeNav key={slug} prevSlug={prev?.slug} nextSlug={next?.slug}>
-      <article>
-        <JsonLd
-          data={{
-            "@context": "https://schema.org",
-            "@type": "TechArticle",
-            headline: concept.title,
-            description: concept.description,
-            url: `${SITE_URL}/${concept.slug}`,
-            datePublished: concept.publishedAt,
-            image: `${SITE_URL}/og/${concept.slug}`,
-            author: {
-              "@type": "Person",
-              name: "Gustavo Fior",
-              url: "https://gustavofior.com",
-            },
-            isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
-          }}
-        />
-        <header>
-          <h1 className="text-xl font-medium text-balance">{concept.title}</h1>
-          <p className="mt-3 text-sm text-muted-foreground text-pretty">
-            {concept.description}
-          </p>
-        </header>
-        <div className="mt-10">
-          <Mdx code={concept.mdx} />
-        </div>
-        <Resources resources={concept.resources} />
-        <ConceptPager prev={prev} next={next} />
-      </article>
-    </SwipeNav>
+    <article>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          headline: concept.title,
+          description: concept.description,
+          url: `${SITE_URL}/${concept.slug}`,
+          datePublished: concept.publishedAt,
+          image: `${SITE_URL}/og/${concept.slug}`,
+          author: {
+            "@type": "Person",
+            name: "Gustavo Fior",
+            url: "https://gustavofior.com",
+          },
+          isPartOf: { "@type": "WebSite", name: SITE_NAME, url: SITE_URL },
+        }}
+      />
+      <header>
+        <h1 className="text-xl font-medium text-balance">{concept.title}</h1>
+        <p className="mt-3 text-sm text-muted-foreground text-pretty">
+          {concept.description}
+        </p>
+      </header>
+      <div className="mt-10">
+        <Mdx code={concept.mdx} />
+      </div>
+      <Resources resources={concept.resources} />
+      <ConceptPager prev={prev} next={next} />
+    </article>
   );
 }

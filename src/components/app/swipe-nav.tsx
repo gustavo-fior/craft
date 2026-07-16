@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { playSound } from "@/lib/sounds";
 
@@ -11,12 +11,13 @@ const THRESHOLD = 260;
 const GESTURE_GAP = 200;
 const EXIT_MS = 170;
 
-// Module state survives client-side navigations: the entrance direction
-// for the incoming page, and a flag that swallows a gesture's leftover
-// momentum after a commit so one swipe never skips multiple articles.
+// A swipe commit swallows the rest of that gesture's momentum, so one
+// swipe never skips multiple pages.
 let enterFrom: "left" | "right" | null = null;
 let swallowMomentum = false;
 let lastWheelAt = 0;
+
+type Phase = "idle" | "in-left" | "in-right" | "out-left" | "out-right";
 
 function insideHorizontalScroller(target: EventTarget | null) {
   let el = target instanceof Element ? target : null;
@@ -30,44 +31,50 @@ function insideHorizontalScroller(target: EventTarget | null) {
   return false;
 }
 
+/**
+ * Swipe horizontally (trackpad or touch) to move through `routes` -
+ * the same order as the sidebar nav. Mounted once in the site shell.
+ */
 export function SwipeNav({
-  prevSlug,
-  nextSlug,
+  routes,
   children,
 }: {
-  prevSlug?: string;
-  nextSlug?: string;
+  routes: string[];
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const ref = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
   const [drag, setDrag] = useState(0); // rubber-band offset in px
-  const [phase, setPhase] = useState<"in" | "idle" | "out-left" | "out-right">(
-    enterFrom ? "in" : "idle",
-  );
+  const [phase, setPhase] = useState<Phase>("idle");
   const committed = useRef(false);
 
-  const prevRef = useRef(prevSlug);
-  const nextRef = useRef(nextSlug);
-  prevRef.current = prevSlug;
-  nextRef.current = nextSlug;
+  const index = routes.indexOf(pathname);
+  const prev = index > 0 ? routes[index - 1] : undefined;
+  const next =
+    index >= 0 && index < routes.length - 1 ? routes[index + 1] : undefined;
+  const prevRef = useRef(prev);
+  const nextRef = useRef(next);
+  prevRef.current = prev;
+  nextRef.current = next;
 
-  // Entrance: start shifted toward the side the gesture came from,
-  // then settle. Runs only after a swipe, not on normal navigation.
-  const from = useRef(enterFrom);
-  useEffect(() => {
-    if (!from.current) return;
+  // On navigation: reset gesture state and, if a swipe brought us here,
+  // enter from the side the gesture came from.
+  useLayoutEffect(() => {
+    committed.current = false;
+    setDrag(0);
+    if (!enterFrom) return;
+    setPhase(enterFrom === "right" ? "in-right" : "in-left");
     enterFrom = null;
     const raf = requestAnimationFrame(() =>
       requestAnimationFrame(() => setPhase("idle")),
     );
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
-    if (nextSlug) router.prefetch(`/${nextSlug}`);
-    if (prevSlug) router.prefetch(`/${prevSlug}`);
-  }, [router, nextSlug, prevSlug]);
+    if (next) router.prefetch(next);
+    if (prev) router.prefetch(prev);
+  }, [router, next, prev]);
 
   useEffect(() => {
     let acc = 0;
@@ -75,15 +82,15 @@ export function SwipeNav({
     let settleTimer: number | undefined;
 
     const commit = (dir: "next" | "prev") => {
-      const slug = dir === "next" ? nextRef.current : prevRef.current;
-      if (!slug || committed.current) return;
+      const href = dir === "next" ? nextRef.current : prevRef.current;
+      if (!href || committed.current) return;
       committed.current = true;
       swallowMomentum = true;
       playSound("swipe");
       enterFrom = dir === "next" ? "right" : "left";
       setDrag(0);
       setPhase(dir === "next" ? "out-left" : "out-right");
-      window.setTimeout(() => router.push(`/${slug}`), EXIT_MS);
+      window.setTimeout(() => router.push(href), EXIT_MS);
     };
 
     const onWheel = (e: WheelEvent) => {
@@ -172,10 +179,11 @@ export function SwipeNav({
             ? "none"
             : "transform 250ms ease-out, opacity 250ms ease-out",
         }
-      : phase === "in"
+      : phase === "in-right" || phase === "in-left"
         ? {
-            transform: `translateX(${from.current === "right" ? 32 : -32}px)`,
+            transform: `translateX(${phase === "in-right" ? 32 : -32}px)`,
             opacity: 0,
+            transition: "none",
           }
         : {
             transform: `translateX(${phase === "out-left" ? -32 : 32}px)`,
@@ -183,18 +191,5 @@ export function SwipeNav({
             transition: `transform ${EXIT_MS}ms ease-in, opacity ${EXIT_MS}ms ease-in`,
           };
 
-  return (
-    <div
-      ref={ref}
-      style={{
-        ...style,
-        transition:
-          phase === "idle" && !drag
-            ? "transform 250ms ease-out, opacity 250ms ease-out"
-            : style.transition,
-      }}
-    >
-      {children}
-    </div>
-  );
+  return <div style={style}>{children}</div>;
 }
