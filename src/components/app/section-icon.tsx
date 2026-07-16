@@ -33,6 +33,17 @@ const colors: Record<Section, string> = {
   Craft: "text-orange-600 dark:text-orange-400",
 };
 
+// Background equivalents of the icon colors, for the nav's active dot.
+export const sectionDotColors: Record<Section, string> = {
+  Typography: "bg-blue-600 dark:bg-blue-400",
+  Color: "bg-rose-600 dark:bg-rose-400",
+  Layout: "bg-amber-600 dark:bg-amber-400",
+  Motion: "bg-violet-600 dark:bg-violet-400",
+  Sound: "bg-emerald-600 dark:bg-emerald-400",
+  Data: "bg-cyan-600 dark:bg-cyan-400",
+  Craft: "bg-orange-600 dark:bg-orange-400",
+};
+
 export function SectionIcon({
   section,
   className,

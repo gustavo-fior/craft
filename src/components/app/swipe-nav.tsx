@@ -90,7 +90,9 @@ export function SwipeNav({
       enterFrom = dir === "next" ? "right" : "left";
       setDrag(0);
       setPhase(dir === "next" ? "out-left" : "out-right");
-      window.setTimeout(() => router.push(href), EXIT_MS);
+      // Navigate immediately - the exit animation plays while Next swaps
+      // the page, so there's no dead gap between out and in.
+      router.push(href);
     };
 
     const onWheel = (e: WheelEvent) => {

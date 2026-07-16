@@ -62,7 +62,7 @@ const minimal = definePatch({
         envelope: { attack: 0.01, peak: 4000, decay: 0.08 },
       },
       envelope: { attack: 0.01, decay: 0.12, sustain: 0, release: 0.04 },
-      gain: 0.12,
+      gain: 0.06,
     },
     toggle: {
       layers: [
