@@ -1,0 +1,43 @@
+---
+title: Font Smoothing
+description: Light text on dark renders bolder than you designed.
+section: Typography
+order: 6
+publishedAt: "2026-07-16"
+resources:
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth
+---
+
+Switch your app to dark mode and the type quietly gains half a weight.
+Nothing changed in the CSS - it's the rasterizer. Subpixel antialiasing,
+the default, exploits the RGB stripes of the display to sharpen edges, and
+on light-on-dark text the fringing reads as bloom: letters look thicker,
+slightly fuzzy, heavier than the font you chose.
+
+<FontSmoothingDemo />
+
+## The fix
+
+```css
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+```
+
+Grayscale antialiasing gives up the subpixel trick and renders the glyph
+at its honest weight. Jakub Krehel's details post ships it globally, and
+so does this site - most design-forward products do (Linear, Vercel, and
+practically every macOS app, where grayscale has been the system default
+since Mojave).
+
+## Notes
+
+- The properties are non-standard and mostly a **macOS/WebKit** story;
+  Windows ClearType ignores them. That's fine - macOS is where the bloom
+  is worst.
+- The classic argument against - "subpixel is more legible for long-form
+  body text" - carries less weight on retina displays, where there are
+  enough real pixels that the trick no longer pays for its color fringes.
+- If you apply it globally, check thin weights (300 and below) on
+  low-density screens: honest weight cuts both ways, and what was leaning
+  on the bloom can turn wispy.

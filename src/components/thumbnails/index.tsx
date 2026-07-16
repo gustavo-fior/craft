@@ -284,6 +284,126 @@ function ReferencesThumbnail() {
   );
 }
 
+function SharedLayoutThumbnail() {
+  return (
+    <div className="relative flex gap-1 rounded-lg border bg-muted p-1">
+      <span className="absolute inset-y-1 left-1 w-9 rounded-md bg-card shadow-xs transition-transform duration-300 group-hover:translate-x-[80px]" />
+      {[0, 1, 2].map((i) => (
+        <span key={i} className="relative h-5 w-9 rounded-md" />
+      ))}
+    </div>
+  );
+}
+
+function ExitAnimationsThumbnail() {
+  return (
+    <div className="rounded-lg border bg-card px-4 py-2 text-xs shadow-xs transition-all duration-300 group-hover:opacity-0 group-hover:blur-[3px]">
+      Saved
+    </div>
+  );
+}
+
+function ScaleEntrancesThumbnail() {
+  return (
+    <div
+      className="w-20 origin-top scale-95 rounded-lg border bg-card p-1.5 opacity-80 shadow-xs transition-all duration-300 group-hover:scale-100 group-hover:opacity-100"
+    >
+      {[12, 16, 10].map((w, i) => (
+        <div
+          key={i}
+          className="my-1.5 h-1 rounded-full bg-muted-foreground/25"
+          style={{ width: w * 4 }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ClipPathThumbnail() {
+  return (
+    <div className="relative h-14 w-20 overflow-hidden rounded-lg border bg-muted">
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-sky-400 via-violet-400 to-rose-400 transition-[clip-path] duration-500"
+        style={{ clipPath: "inset(0 55% 0 0)" }}
+      />
+      <div className="absolute inset-y-0 left-[45%] w-px bg-foreground/40 transition-transform duration-500 group-hover:translate-x-4" />
+    </div>
+  );
+}
+
+function ScrollFadesThumbnail() {
+  return (
+    <div
+      className="flex flex-col gap-1.5"
+      style={{
+        maskImage:
+          "linear-gradient(to bottom, transparent, black 30%, black 70%, transparent)",
+      }}
+    >
+      {[20, 24, 18, 22, 16].map((w, i) => (
+        <div
+          key={i}
+          className="h-1.5 rounded-full bg-muted-foreground/40 transition-transform duration-500 group-hover:-translate-y-1"
+          style={{ width: w * 4 }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function FontSmoothingThumbnail() {
+  return (
+    <span className="rounded-xl bg-neutral-900 px-5 py-3 text-2xl font-semibold text-white dark:border dark:bg-neutral-950 [-webkit-font-smoothing:auto] transition-all group-hover:[-webkit-font-smoothing:antialiased]">
+      Aa
+    </span>
+  );
+}
+
+function CurveSmoothingThumbnail() {
+  return (
+    <svg viewBox="0 0 96 40" className="h-10 w-24 overflow-visible">
+      <path
+        d="M0 28 L 16 14 L 32 24 L 48 8 L 64 20 L 80 12 L 96 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="text-muted-foreground/60 transition-opacity duration-300 group-hover:opacity-0"
+      />
+      <path
+        d="M0 28 C 8 21, 10 14, 16 14 S 26 24, 32 24 S 42 8, 48 8 S 58 20, 64 20 S 74 12, 80 12 S 90 24, 96 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        className="text-foreground opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      />
+    </svg>
+  );
+}
+
+function TasteThumbnail() {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="rounded-lg border bg-card px-3 py-1.5 text-xs text-muted-foreground transition-opacity duration-300 group-hover:opacity-40">
+        A
+      </span>
+      <span className="rounded-lg border bg-card px-3 py-1.5 text-xs shadow-xs transition-transform duration-300 group-hover:scale-110">
+        B
+      </span>
+    </div>
+  );
+}
+
+function TimelessnessThumbnail() {
+  return (
+    <span className="font-mono text-xl text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
+      1957
+    </span>
+  );
+}
+
 function NoveltyBudgetThumbnail() {
   return (
     <div className="flex items-center gap-1.5">
@@ -326,6 +446,15 @@ const thumbnails: Record<string, () => React.ReactNode> = {
   "performance-is-design": PerceivedPerformanceThumbnail,
   "how-to-get-references": ReferencesThumbnail,
   "novelty-budget": NoveltyBudgetThumbnail,
+  "shared-layout": SharedLayoutThumbnail,
+  "exit-animations": ExitAnimationsThumbnail,
+  "scale-entrances": ScaleEntrancesThumbnail,
+  "clip-path": ClipPathThumbnail,
+  "scroll-fades": ScrollFadesThumbnail,
+  "font-smoothing": FontSmoothingThumbnail,
+  "curve-smoothing": CurveSmoothingThumbnail,
+  "taste-is-trained": TasteThumbnail,
+  timelessness: TimelessnessThumbnail,
 };
 
 export function ConceptThumbnail({

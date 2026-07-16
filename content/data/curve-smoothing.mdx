@@ -1,0 +1,41 @@
+---
+title: Curve Smoothing
+description: The lines between your data points are a design choice.
+section: Data
+order: 2
+publishedAt: "2026-07-16"
+resources:
+  - url: https://shud.in/thoughts/adaptive-polynomial-curve-fitting
+  - url: https://d3js.org/d3-shape/curve
+---
+
+A line chart is mostly not data. Fifteen measurements produce fourteen
+connecting segments, and every pixel of those segments is invented - the
+only honest parts are the points. Since you're inventing them anyway, the
+question is what the invention should communicate.
+
+<CurveSmoothingDemo />
+
+## Choosing a curve
+
+- **Straight segments** say "discrete samples": precise, jagged, a little
+  technical. Right for sparse data where each reading matters (deploys per
+  day, invoice totals).
+- **Catmull-Rom / cardinal** curves pass through every point with smooth
+  tangents - the default "designed" look, and what the demo above draws.
+  The risk: between points the curve can overshoot above or below any
+  actual measurement.
+- **Monotone cubic** (d3's `curveMonotoneX`) smooths *without* overshoot -
+  it never invents a peak that isn't in the data. The safe choice for
+  dashboards where someone might read values off the line.
+- **Shu Ding's adaptive fitting** goes further for dense, noisy series:
+  fit low-degree polynomials over sliding windows and blend them, tuning
+  smoothness by error tolerance rather than by eye.
+
+## The rule
+
+Smoothing is presentation, so it obeys presentation's rule: it may not
+lie. Show the true points when they're sparse, keep tooltips reading raw
+values, and if a smoothed line would cross a threshold the data never
+crossed, use monotone. The curve should feel calm - a chart used for
+decisions shouldn't be *interesting* between measurements.

@@ -1,0 +1,36 @@
+---
+title: Exit Animations
+description: Things leaving deserve less ceremony than things arriving.
+section: Motion
+order: 8
+publishedAt: "2026-07-16"
+resources:
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+  - url: https://emilkowal.ski/ui/you-dont-need-animations
+---
+
+The lazy exit is the entrance played backwards: slide up on enter, slide
+down on leave, same duration. It feels symmetric, so it feels right. But
+the two moments are nothing alike. An entrance introduces something you
+need to notice; an exit removes something you're already done with.
+
+<ExitAnimationsDemo />
+
+## The asymmetry
+
+- **Enter deliberately, leave quickly.** An exit at half the entrance
+  duration (or less) respects that the user has moved on. Dismissing a
+  toast that takes 350ms to slide away is 350ms of watching furniture.
+- **Exit via opacity and blur, not position.** Jakub Krehel's rule: motion
+  on exit drags the eye toward something that's disappearing - the one
+  place attention shouldn't go. A fade with a touch of blur dissolves
+  instead of traveling.
+- **User-initiated exits should be near-instant.** Closing a menu, pressing
+  Escape, dismissing a dialog: the user already decided it's gone. Anything
+  over ~150ms is the interface disagreeing.
+
+## The test
+
+Dismiss the same element ten times in a row. The exit that felt polished
+once should feel like nothing at all - if you're waiting on it by the third
+repetition, it's too long.

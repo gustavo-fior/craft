@@ -1,0 +1,51 @@
+---
+title: Shared Layout
+description: One element moving beats two elements swapping.
+section: Motion
+order: 7
+publishedAt: "2026-07-16"
+resources:
+  - url: https://jakub.kr/work/shared-layout-animations
+    title: How I Use Shared Layout Animations
+    description: Jakub Krehel on layoutId, FLIP, and where morphs make sense.
+  - url: https://motion.dev/docs/react-layout-animations
+---
+
+When a tab indicator jumps from one tab to the next, your brain sees two
+things: a highlight disappearing and a new one appearing. When it *slides*,
+you see one thing moving - and movement carries information: where it came
+from, where it went, that these two states are the same object.
+
+<SharedLayoutDemo />
+
+## How it works
+
+Give the element a `layoutId` and Motion does the rest:
+
+```tsx
+{active === i && (
+  <motion.span layoutId="indicator" className="..." />
+)}
+```
+
+Under the hood this is FLIP: measure the element's old position, render it
+in the new one, then animate a transform between the two. Because it's all
+`transform`, it runs on the compositor - a `layoutId` slide is cheaper than
+animating `left` or `width` ever was.
+
+## Where it earns its keep
+
+- **Tab and nav indicators** - the canonical case.
+- **Preview to detail** - a card that expands into a dialog reads as the
+  *same surface* growing, not a modal appearing over it.
+- **Reordering lists** - items glide to their new slots instead of
+  teleporting.
+
+## Notes
+
+- Keep shared elements outside `AnimatePresence` when you can - exit
+  animations and layout measurement fight each other.
+- Rounded corners distort under scale; Motion corrects `borderRadius` if
+  it's set via the `style` prop.
+- Reach for it when two states are conceptually one object. If they aren't,
+  a crossfade is honest and a morph is noise.

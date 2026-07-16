@@ -1,0 +1,36 @@
+---
+title: Scale Entrances
+description: Never enter from scale(0).
+section: Motion
+order: 9
+publishedAt: "2026-07-16"
+resources:
+  - url: https://emilkowal.ski/ui/7-practical-animation-tips
+  - url: https://emilkowal.ski/ui/css-transforms
+---
+
+Popovers, menus, and tooltips almost always enter with a scale animation -
+and the single number you pick as the starting scale decides whether the
+entrance feels engineered or cartoonish. From `scale(0)`, the element
+balloons out of a point like a speech bubble. From `scale(0.95)`, it
+simply arrives.
+
+<ScaleEntrancesDemo />
+
+## The rules
+
+- **Start between 0.9 and 0.97.** Emil Kowalski's tip: the element should
+  already essentially *be there*, settling the last few percent. Pair it
+  with a fade - the opacity does the appearing, the scale does the feel.
+- **Set `transform-origin` toward the trigger.** A menu opening below a
+  button should grow *from the button*, not from its own center. Radix and
+  Base UI expose this as a CSS variable pointing at the anchor.
+- **Keep it short.** 150-200ms with ease-out. The scale range is so small
+  that anything longer reads as slow motion.
+- **Exits can scale less, or not at all.** Fading out at `scale(0.98)` is
+  plenty - see Exit Animations.
+
+The pattern generalizes: almost no real object enters your field of view
+by growing from nothing. Interfaces that scale from ~1 borrow the physics
+of something moving into place; interfaces that scale from 0 borrow the
+physics of a balloon.

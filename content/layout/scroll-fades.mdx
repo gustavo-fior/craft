@@ -1,0 +1,49 @@
+---
+title: Scroll Fades
+description: Edges should dissolve, not decapitate.
+section: Layout
+order: 5
+publishedAt: "2026-07-16"
+resources:
+  - url: https://rauno.me/craft/nextjs
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/mask-image
+---
+
+Every scroll container has the same ugly problem: content gets cut off
+mid-row at the edge, a clean guillotine that looks like a rendering bug.
+A CSS mask turns that hard cut into a dissolve - and doubles as an
+affordance, because a fading edge visibly *continues*.
+
+<ScrollFadesDemo />
+
+## The technique
+
+```css
+mask-image: linear-gradient(
+  to bottom,
+  transparent,
+  black 15%,
+  black 85%,
+  transparent
+);
+```
+
+Where the gradient is black the element is visible; where it's transparent
+it isn't. No overlay divs, no matching the background color - the mask
+works over images, gradients, anything behind it.
+
+This site's sidebar uses exactly this: the concept list fades at both ends
+instead of clipping against the viewport.
+
+## Notes
+
+- **Fade the scrolling element, not a cover.** The old trick - an absolutely
+  positioned gradient matching the background - breaks the moment the
+  background isn't flat.
+- **Fade the trailing edge conditionally if you can.** The affordance lies
+  when there's nothing more to scroll; at the very bottom, the fade should
+  go. Rauno's Next.js site drives the mask from scroll position for this.
+- **Horizontal works the same** - `to right`, and it's the standard fix for
+  logo carousels and overflowing tab strips.
+- The same gradient in `mask-image` on a *wrapper* also clips its children,
+  so apply it to the element that owns the scrollbar.

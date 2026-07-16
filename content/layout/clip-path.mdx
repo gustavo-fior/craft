@@ -1,0 +1,45 @@
+---
+title: Clip-Path
+description: Reveal by drawing less, not by moving more.
+section: Layout
+order: 4
+publishedAt: "2026-07-16"
+resources:
+  - url: https://emilkowal.ski/ui/the-magic-of-clip-path
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path
+---
+
+Most reveal effects are built by moving or resizing elements - which means
+layout shifts, stretched content, and reflow. `clip-path` sidesteps all of
+it: the element stays exactly where it is at full size, and you control
+how much of it the browser draws.
+
+<ClipPathDemo />
+
+## The workhorse: inset()
+
+```css
+clip-path: inset(0 50% 0 0); /* draw the left half */
+```
+
+Because the element never changes size, whatever is inside it never
+squishes or reflows - which is what makes the classic before/after
+comparison slider work. Two identical layers, the top one clipped; drag to
+change the inset.
+
+## Uses beyond sliders
+
+- **Tab color inversion** - Emil's trick: render the label twice, dark on
+  light and light on dark, and clip the top copy to the moving indicator.
+  The text appears to change color as the highlight passes through it.
+- **Theme-switch reveals** - animate a `circle()` clip from the toggle
+  button outward so the new theme floods the page from the click point.
+- **Entrances** - animating `inset(0 100% 0 0)` to `inset(0)` wipes content
+  in without a wrapper div or overflow hack.
+
+## Notes
+
+- `clip-path` is animatable as long as the shape type and point count
+  match on both ends (`inset` to `inset`, same-vertex polygons).
+- It composites cheaply - no layout, no paint outside the element - making
+  it one of the few reveal tools that's both precise and fast.
