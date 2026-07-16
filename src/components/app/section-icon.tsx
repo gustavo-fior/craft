@@ -1,7 +1,7 @@
 import type { IconProps } from "@phosphor-icons/react";
 import {
   BezierCurveIcon,
-  ChartLineIcon,
+  ChartBarHorizontalIcon,
   CirclesThreeIcon,
   LayoutIcon,
   PenNibIcon,
@@ -17,7 +17,7 @@ const icons = {
   Layout: LayoutIcon,
   Motion: BezierCurveIcon,
   Sound: SpeakerHighIcon,
-  Data: ChartLineIcon,
+  Data: ChartBarHorizontalIcon,
   Craft: PenNibIcon,
 } as const;
 

@@ -100,7 +100,7 @@ const GROUPS: Group[] = [
         url: "https://phosphoricons.com",
         domain: "phosphoricons.com",
         title: "Phosphor Icons",
-        description: "The icon family used on this site — six weights.",
+        description: "The icon family used on this site - six weights.",
       },
       {
         url: "https://lucide.dev",
@@ -174,7 +174,7 @@ export default function ResourcesPage() {
                     <span className="min-w-0 truncate text-sm">
                       <span className="text-foreground">{resource.title}</span>
                       <span className="text-muted-foreground">
-                        {" — "}
+                        {" - "}
                         {resource.description}
                       </span>
                     </span>

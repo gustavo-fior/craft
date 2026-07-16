@@ -3,7 +3,7 @@
 import { definePatch, ensureReady } from "@web-kits/audio";
 
 // A subset of the "Minimal" patch by Raphael Salaja
-// (audio.raphaelsalaja.com/library/minimal) — quiet sine-based UI feedback.
+// (audio.raphaelsalaja.com/library/minimal) - quiet sine-based UI feedback.
 const minimal = definePatch({
   name: "Minimal",
   sounds: {
@@ -23,7 +23,7 @@ const minimal = definePatch({
       gain: 0.1,
     },
     // "Success" from the Retro patch (audio.raphaelsalaja.com/library/retro)
-    // — a rising 8-bit C–E–G–C arpeggio.
+    // - a rising 8-bit C–E–G–C arpeggio.
     success: {
       layers: [
         {
@@ -91,7 +91,7 @@ export async function playSoundAlways(name: SoundName, opts?: PlayOptions) {
     await ensureReady();
     minimal.play(name, opts);
   } catch {
-    // Audio not available (e.g. before user gesture) — stay silent.
+    // Audio not available (e.g. before user gesture) - stay silent.
   }
 }
 
@@ -101,7 +101,7 @@ export async function playSound(name: SoundName, opts?: PlayOptions) {
 }
 
 /**
- * Detune (in cents) for the nth nav item — a very gentle rise down the
+ * Detune (in cents) for the nth nav item - a very gentle rise down the
  * list, about a quarter of a semitone per step.
  */
 export function progressionDetune(step: number) {

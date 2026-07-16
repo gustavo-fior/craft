@@ -32,7 +32,7 @@ export function ImageOutlineDemo() {
       </div>
       <p className="max-w-sm text-center text-xs text-muted-foreground text-pretty">
         Light image edges melt into light backgrounds. An inset 1px outline at
-        10% opacity gives every image a consistent, crisp edge — barely
+        10% opacity gives every image a consistent, crisp edge - barely
         visible, always working.
       </p>
     </Demo>

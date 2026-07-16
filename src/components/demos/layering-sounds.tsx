@@ -34,7 +34,7 @@ async function playNote(name: string) {
     await ensureReady();
     notes.play(name);
   } catch {
-    // Audio unavailable before a user gesture — stay silent.
+    // Audio unavailable before a user gesture - stay silent.
   }
 }
 
@@ -65,7 +65,7 @@ export function LayeringSoundsDemo() {
       </div>
       <p className="max-w-sm text-center text-xs text-muted-foreground text-pretty">
         Four square-wave notes, each delayed 60ms after the last and slightly
-        quieter — a tiny arpeggio instead of a beep. This is the sound this
+        quieter - a tiny arpeggio instead of a beep. This is the sound this
         site plays when you copy a link.
       </p>
     </Demo>

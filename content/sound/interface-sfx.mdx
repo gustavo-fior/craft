@@ -12,7 +12,7 @@ resources:
 ---
 
 Most interfaces are silent, and most that aren't are annoying. The difference
-is scale: good interface sound works like haptics — tiny, quiet confirmations
+is scale: good interface sound works like haptics - tiny, quiet confirmations
 of physical actions, not announcements.
 
 <InterfaceSfxDemo />
@@ -31,7 +31,7 @@ of physical actions, not announcements.
 ## Synthesized, not sampled
 
 This site uses [@web-kits/audio](https://audio.raphaelsalaja.com) to describe
-sounds as plain objects — an oscillator, an envelope, a gain — synthesized by
+sounds as plain objects - an oscillator, an envelope, a gain - synthesized by
 the Web Audio API at play time. The palette is a subset of the
 [Minimal patch](https://audio.raphaelsalaja.com/library/minimal): pure sines,
 tiny envelopes, gains under 0.1. No audio files, no network requests:
@@ -51,5 +51,5 @@ const patch = definePatch({
 patch.play("tick");
 ```
 
-A falling sine reads as "dismiss", two quick ascending sines as "success" —
+A falling sine reads as "dismiss", two quick ascending sines as "success" -
 three parameters away from a whole sound vocabulary.

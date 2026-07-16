@@ -74,7 +74,7 @@ function ComboboxInput({
             render={<ComboboxTrigger />}
             // The `render` swaps in a Combobox Trigger, which itself renders a
             // native <button>, so Button's "render means non-native" heuristic
-            // is wrong here — tell Base UI it's a native button explicitly.
+            // is wrong here - tell Base UI it's a native button explicitly.
             nativeButton
             data-slot="input-group-button"
             className="group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent"

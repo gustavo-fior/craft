@@ -33,7 +33,7 @@ export function Resources({ resources }: { resources: Resource[] }) {
                 <span className="text-foreground">{resource.title}</span>
                 {resource.description && (
                   <span className="text-muted-foreground">
-                    {" — "}
+                    {" - "}
                     {resource.description}
                   </span>
                 )}

@@ -45,7 +45,7 @@ export function HtmlBackgroundDemo() {
         </div>
       </div>
       <p className="max-w-sm text-center text-xs text-muted-foreground text-pretty">
-        This dark page only styles its content. Overscroll it — without a
+        This dark page only styles its content. Overscroll it - without a
         background on <code>html</code>, Safari flashes white behind it.
       </p>
     </Demo>

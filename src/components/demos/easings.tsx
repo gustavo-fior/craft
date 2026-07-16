@@ -41,7 +41,7 @@ export function EasingsDemo() {
         Run
       </Button>
       <p className="max-w-sm text-center text-xs text-muted-foreground text-pretty">
-        Ease-out starts fast and settles — that&apos;s why it feels responsive
+        Ease-out starts fast and settles - that&apos;s why it feels responsive
         for things entering the screen. Linear feels robotic everywhere.
       </p>
     </Demo>

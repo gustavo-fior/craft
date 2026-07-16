@@ -52,7 +52,7 @@ function Thumbnail({ slug }: { slug: string }) {
     case "oklch":
       return (
         <div style={{ display: "flex", gap: 14 }}>
-          {/* oklch(0.72 0.14 h) precomputed to hex — satori can't parse oklch() */}
+          {/* oklch(0.72 0.14 h) precomputed to hex - satori can't parse oklch() */}
           {["#ee8b78", "#b1a141", "#43b989", "#41aee2", "#bb92ee"].map(
             (color) => (
               <div

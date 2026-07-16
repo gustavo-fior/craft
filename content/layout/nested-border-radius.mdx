@@ -17,7 +17,7 @@ The rule that fixes it:
 
 > **outer radius = inner radius + padding**
 
-That keeps the two curves concentric — the gap between them stays constant
+That keeps the two curves concentric - the gap between them stays constant
 all the way around the corner. Flip on naive mode below to feel the pinch.
 
 <NestedRadiusDemo />
@@ -40,5 +40,5 @@ Encode the relationship instead of hardcoding both values:
 ```
 
 The same rule works in reverse: if the outer radius is fixed (a phone screen,
-a browser window), the inner radius should be `outer − padding` — and once
+a browser window), the inner radius should be `outer − padding` - and once
 that hits zero, square corners are correct.

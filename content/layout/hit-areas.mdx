@@ -11,7 +11,7 @@ resources:
 ---
 
 Fitts's Law: the time to hit a target is a function of its size and
-distance. A 16px icon button is fast to *see* but slow to *hit* — visually
+distance. A 16px icon button is fast to *see* but slow to *hit* - visually
 right, ergonomically wrong.
 
 The trick is to decouple the two: draw 16px, accept clicks on 40px.
@@ -20,7 +20,7 @@ The trick is to decouple the two: draw 16px, accept clicks on 40px.
 
 ## The technique
 
-Extend the target with a pseudo-element — the glyph stays small, the
+Extend the target with a pseudo-element - the glyph stays small, the
 clickable area doesn't:
 
 ```css
@@ -40,7 +40,7 @@ routinely ship 20px targets and blame users for missing them.
 ## Concentric, not nested
 
 When two adjacent controls both need extended areas, keep the extensions as
-siblings rather than nesting buttons (invalid HTML) — the Next.js DevTools
+siblings rather than nesting buttons (invalid HTML) - the Next.js DevTools
 team calls these concentric hit areas. And where the layout gives you free
-room — a screen edge, a corner — let the target run all the way into it:
+room - a screen edge, a corner - let the target run all the way into it:
 edges are infinitely wide targets.

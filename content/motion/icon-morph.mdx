@@ -9,7 +9,7 @@ resources:
   - url: https://rauno.me/craft/interaction-design
 ---
 
-Icons that change state — copy to check, play to pause, menu to close — feel
+Icons that change state - copy to check, play to pause, menu to close - feel
 abrupt when they swap in a single frame. But a full crossfade is too slow and
 mushy. The sweet spot is a short **blur + scale + fade**, driven by a spring.
 
@@ -40,7 +40,7 @@ Details that matter:
 - **`mode="popLayout"`** takes the exiting icon out of layout so the two
   icons overlap instead of stacking. Wrap in a `relative` container.
 - **`initial={false}`** prevents the animation from firing on first mount.
-- **`bounce: 0`** — a critically damped spring. Icon swaps want snap, not
+- **`bounce: 0`** - a critically damped spring. Icon swaps want snap, not
   wobble.
 - Keep it around **300ms**; state feedback should never make the user wait.
 

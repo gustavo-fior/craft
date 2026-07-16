@@ -11,7 +11,7 @@ resources:
 ---
 
 Browsers wrap text greedily: fill a line, break, repeat. That's fast, but it
-produces two classic eyesores — headlines where the last line holds a single
+produces two classic eyesores - headlines where the last line holds a single
 short word, and paragraphs ending in a lonely orphan.
 
 CSS now has two purpose-built fixes. Resize the container below and compare.
@@ -21,7 +21,7 @@ CSS now has two purpose-built fixes. Resize the container below and compare.
 ## text-balance
 
 `text-wrap: balance` makes all lines of a block roughly the same length. It's
-designed for **short runs of text** — headings, blurbs, toasts. Browsers only
+designed for **short runs of text** - headings, blurbs, toasts. Browsers only
 balance blocks up to a handful of lines (Chromium: 6), so don't reach for it
 on body copy.
 
@@ -34,7 +34,7 @@ h1, h2, h3, blockquote {
 ## text-pretty
 
 `text-wrap: pretty` keeps greedy wrapping but looks ahead to avoid bad
-endings — most visibly the single-word last line. It's cheap enough to apply
+endings - most visibly the single-word last line. It's cheap enough to apply
 to **paragraphs by default**.
 
 ```css

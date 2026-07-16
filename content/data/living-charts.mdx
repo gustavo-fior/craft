@@ -11,7 +11,7 @@ resources:
 
 Real-time data arrives in steps: a new reading every second, a websocket
 message every few hundred milliseconds. Draw each snapshot as it lands and
-the chart twitches — technically accurate, emotionally dead. The ChatGPT
+the chart twitches - technically accurate, emotionally dead. The ChatGPT
 voice waveform, trading charts, audio meters: everything that feels alive
 on screen is *interpolating*.
 
@@ -32,7 +32,7 @@ function frame() {
 }
 ```
 
-That `* 0.08` is a lerp — 8% of the remaining distance per frame. New data
+That `* 0.08` is a lerp - 8% of the remaining distance per frame. New data
 doesn't jump; it *arrives*, decelerating as it lands (ease-out for free).
 Benji Taylor's Liveline charts use exactly this.
 
@@ -40,7 +40,7 @@ Benji Taylor's Liveline charts use exactly this.
 
 - **Canvas, not React.** Sixty updates a second through the render cycle is
   waste; draw directly and leave React out of the loop.
-- **Lerp the view, never the record.** The drawn value is presentation —
+- **Lerp the view, never the record.** The drawn value is presentation -
   tooltips and axes should read the true data.
 - **Smoothing has opinions.** Higher factors track faster but jitter;
   lower ones glide but lag. Match it to how urgent the data is.

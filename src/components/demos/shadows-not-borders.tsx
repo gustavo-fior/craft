@@ -32,7 +32,7 @@ export function ShadowsNotBordersDemo() {
         <Switch checked={shadows} onCheckedChange={setShadows} />
       </div>
       <p className="max-w-sm text-center text-xs text-muted-foreground text-pretty">
-        A hairline ring plus a few soft, widening shadows reads as depth — the
+        A hairline ring plus a few soft, widening shadows reads as depth - the
         card floats instead of being outlined.
       </p>
     </Demo>

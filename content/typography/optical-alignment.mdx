@@ -10,7 +10,7 @@ resources:
 ---
 
 Flexbox centers bounding boxes, not shapes. A play triangle sits inside a
-square box, but its visual weight leans left — so a geometrically centered
+square box, but its visual weight leans left - so a geometrically centered
 play button always looks like it's drifting toward the edge.
 
 The fix is embarrassingly manual: nudge it until it looks right.
@@ -21,9 +21,9 @@ The fix is embarrassingly manual: nudge it until it looks right.
 
 Any asymmetric glyph needs this treatment:
 
-- **Play icons** — shift right ~8% of their size.
-- **Chevrons and arrows** — shift toward their point.
-- **Text next to icons** — cap height and icon center rarely agree; align by
+- **Play icons** - shift right ~8% of their size.
+- **Chevrons and arrows** - shift toward their point.
+- **Text next to icons** - cap height and icon center rarely agree; align by
   eye, then encode the nudge.
 
 ```css
@@ -35,6 +35,6 @@ Any asymmetric glyph needs this treatment:
 ## Trust your eyes
 
 Every serious icon set draws glyphs inside their boxes with these
-compensations baked in — circles overshoot the grid slightly, triangles sit
+compensations baked in - circles overshoot the grid slightly, triangles sit
 off-center. When the tool says "aligned" and your eye says "off," the eye is
 the one your users share.

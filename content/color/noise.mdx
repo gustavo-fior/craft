@@ -9,7 +9,7 @@ resources:
   - url: https://grainy-gradients.vercel.app
 ---
 
-Large flat fills — hero gradients, cards, empty states — can feel sterile,
+Large flat fills - hero gradients, cards, empty states - can feel sterile,
 and on cheap displays they band. A film of noise at single-digit opacity
 fixes both: it adds texture the eye barely registers and dithers the banding
 away.
@@ -42,12 +42,12 @@ filter applies it:
 </style>
 ```
 
-- `baseFrequency` sets grain size — 0.6–1 is fine film grain.
+- `baseFrequency` sets grain size - 0.6–1 is fine film grain.
 - `grayscale(100%)` kills the rainbow speckle turbulence produces.
 - A blend mode (`overlay`, `soft-light`) melts it into the surface.
 
 ## Restraint
 
 Noise is seasoning. At 5–10% opacity it reads as material; at 30% it reads
-as a broken JPEG. Keep it off text surfaces, and remember it's decorative —
+as a broken JPEG. Keep it off text surfaces, and remember it's decorative -
 `aria-hidden`, `pointer-events: none`.

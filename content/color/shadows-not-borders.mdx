@@ -11,7 +11,7 @@ resources:
 
 A 1px solid border says "here is a box." A composite shadow says "this
 surface floats above the page." Same silhouette, completely different
-feeling — and the shadow version scales: raise the elevation for popovers,
+feeling - and the shadow version scales: raise the elevation for popovers,
 lower it for cards, and the whole UI shares one lighting model.
 
 <ShadowsNotBordersDemo />
@@ -32,12 +32,12 @@ widen as they fall:
 ```
 
 - The `0 0 0 1px` ring replaces the border without consuming layout space.
-- Each layer roughly doubles the blur and fades — mimicking real light.
+- Each layer roughly doubles the blur and fades - mimicking real light.
 - Keep every alpha tiny; the layers sum.
 
 ## Dark mode caveat
 
-Shadows disappear on dark backgrounds — there's nothing darker to cast onto.
+Shadows disappear on dark backgrounds - there's nothing darker to cast onto.
 Flip the strategy: keep the hairline ring but make it *lighter* than the
 surface (`rgba(255,255,255,0.08)`), simulating an edge highlight instead of
 a shadow.

@@ -13,7 +13,7 @@ We treat performance as an engineering metric and loading states as a design
 problem. They're the same problem. Every skeleton, spinner, and shimmer is
 the design team decorating a failure the engineering team measured.
 
-Consider a 350ms load — a fast API on a normal connection:
+Consider a 350ms load - a fast API on a normal connection:
 
 <PerceivedPerformanceDemo />
 
@@ -29,14 +29,14 @@ doing nothing at all.
 - **300ms–1s: hold layout, fade content in.** Reserve the space so nothing
   jumps, but don't animate placeholders.
 - **Over 1s: now you owe the user an explanation.** This is where skeletons
-  and progress belong — for genuinely slow things.
+  and progress belong - for genuinely slow things.
 - **Never let the loading state outlive the load.** Artificially holding a
   spinner for "smoothness" is lying in the wrong direction.
 
 ## The real fix
 
-Shu Ding's point: performance isn't a technical problem — it's entropy,
+Shu Ding's point: performance isn't a technical problem - it's entropy,
 hundreds of small decisions nobody owned. Design is deciding. The best
 loading state is the one you deleted by making the thing fast: cache it,
 render it on the server, prefetch it on hover. Then the interface can do
-the most confident thing an interface can do — just show the data.
+the most confident thing an interface can do - just show the data.

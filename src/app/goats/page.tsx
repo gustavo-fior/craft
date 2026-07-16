@@ -33,7 +33,7 @@ const GOATS: Goat[] = [
     url: "https://jakub.kr",
     domain: "jakub.kr",
     description:
-      "Founder of Interfere. Writes obsessively about the smallest details — outlines, optics, and the cost of animation.",
+      "Founder of Interfere. Writes obsessively about the smallest details - outlines, optics, and the cost of animation.",
   },
   {
     name: "Paco Coursey",
@@ -61,7 +61,7 @@ const GOATS: Goat[] = [
     url: "https://www.raphaelsalaja.com",
     domain: "raphaelsalaja.com",
     description:
-      "Design engineer. Built @web-kits/audio — the library behind every sound on this site — and Toldo.",
+      "Design engineer. Built @web-kits/audio - the library behind every sound on this site - and Toldo.",
   },
 ];
 
@@ -72,7 +72,7 @@ export default function GoatsPage() {
       <p className="mt-3 text-sm text-muted-foreground text-pretty">
         Nothing here is original. These are the people whose writing, demos,
         and open-source work taught me most of what this site tries to pass
-        on — they indirectly contributed to every page.
+        on.
       </p>
       <ul className="mt-10 flex flex-col gap-1">
         {GOATS.map((goat) => (
@@ -95,7 +95,7 @@ export default function GoatsPage() {
               <span className="min-w-0 text-sm">
                 <span className="text-foreground">{goat.name}</span>
                 <span className="text-muted-foreground">
-                  {" — "}
+                  {" - "}
                   {goat.description}
                 </span>
               </span>

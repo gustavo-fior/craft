@@ -12,7 +12,7 @@ resources:
 
 Images have unpredictable edges. A screenshot with a white background melts
 into a light page; a dark photo bleeds into dark mode. Each image either has
-a crisp boundary or doesn't, depending on its own pixels — which means your
+a crisp boundary or doesn't, depending on its own pixels - which means your
 layout's edges are up to luck.
 
 The fix is a 1px outline at 10% opacity, drawn *inside* the image:
@@ -39,5 +39,5 @@ img {
 - Because it sits on top of the image rather than beside it, it works for
   every image, whatever its content.
 
-It's the kind of detail nobody will ever point at — but every screenshot,
+It's the kind of detail nobody will ever point at - but every screenshot,
 avatar, and thumbnail on the page quietly gains a consistent, sharp edge.

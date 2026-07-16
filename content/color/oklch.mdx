@@ -16,7 +16,7 @@ yellow at 50% lightness glows, blue at 50% looks almost dark. HSL treats the
 RGB cube geometrically and ignores how human eyes weigh different hues.
 
 OKLCH is a **perceptually uniform** color space: equal lightness values look
-equally light, across every hue. Drag the slider — the HSL row shifts in
+equally light, across every hue. Drag the slider - the HSL row shifts in
 apparent brightness from hue to hue, while the OKLCH row stays even.
 
 <OklchDemo />
@@ -24,7 +24,7 @@ apparent brightness from hue to hue, while the OKLCH row stays even.
 ## Why it matters
 
 - **Palettes**: generate ten hues at the same `L` and `C` and they genuinely
-  read as one family — same weight, same contrast against text.
+  read as one family - same weight, same contrast against text.
 - **Dark mode**: adjusting only the lightness channel keeps hue and
   saturation intact, so colors don't drift as they dim.
 - **Contrast**: because `L` tracks perceived lightness, it's a usable proxy
@@ -39,5 +39,5 @@ apparent brightness from hue to hue, while the OKLCH row stays even.
 }
 ```
 
-Every design token on this site is defined in OKLCH — the neutral grays are
+Every design token on this site is defined in OKLCH - the neutral grays are
 just `oklch(L 0 0)` with chroma zeroed out.

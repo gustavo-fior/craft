@@ -30,12 +30,12 @@ web has.
   effect. Emil Kowalski's rule of thumb: if the user notices the animation
   itself, it's too much.
 - **Keep it fast.** ~100ms down. The release can ride the same transition.
-- **Scale the whole button**, not the label — `transform` runs on the
+- **Scale the whole button**, not the label - `transform` runs on the
   compositor, so it's free.
 
 ## Two warnings
 
-Never animate *entrances* from `scale(0)` — elements growing from nothing
+Never animate *entrances* from `scale(0)` - elements growing from nothing
 look cartoonish; start at 0.95 and fade. And skip the effect on controls
 triggered from the keyboard: a button that dips when nobody's finger is on
 it feels haunted.

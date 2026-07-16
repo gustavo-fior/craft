@@ -43,7 +43,7 @@ export function HitAreasDemo() {
         <Switch checked={show} onCheckedChange={setShow} />
       </div>
       <p className="max-w-sm text-center text-xs text-muted-foreground text-pretty">
-        These 16px icons carry 40px hit areas — click around the glyphs and
+        These 16px icons carry 40px hit areas - click around the glyphs and
         they still respond. Fitts&apos;s Law: bigger targets are faster to hit.
       </p>
     </Demo>
