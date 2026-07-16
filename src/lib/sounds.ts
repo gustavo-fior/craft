@@ -51,6 +51,23 @@ const minimal = definePatch({
         },
       ],
     },
+    // A short upward flick for swiping between articles - a soft sine
+    // sweep with a faint octave shimmer on top.
+    swipe: {
+      layers: [
+        {
+          source: { type: "sine", frequency: { start: 520, end: 840 } },
+          envelope: { attack: 0.005, decay: 0.09, sustain: 0, release: 0.03 },
+          gain: 0.07,
+        },
+        {
+          source: { type: "sine", frequency: { start: 1040, end: 1680 } },
+          envelope: { attack: 0.005, decay: 0.07, sustain: 0, release: 0.02 },
+          delay: 0.01,
+          gain: 0.025,
+        },
+      ],
+    },
     toggle: {
       layers: [
         {
@@ -69,7 +86,14 @@ const minimal = definePatch({
   },
 });
 
-export const SOUND_NAMES = ["tick", "pop", "success", "toggle", "hover"] as const;
+export const SOUND_NAMES = [
+  "tick",
+  "pop",
+  "success",
+  "toggle",
+  "hover",
+  "swipe",
+] as const;
 export type SoundName = (typeof SOUND_NAMES)[number];
 
 const MUTE_KEY = "craft-muted";

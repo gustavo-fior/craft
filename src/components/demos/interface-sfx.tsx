@@ -10,6 +10,7 @@ const LABELS: Record<SoundName, string> = {
   success: "Success - link copied",
   toggle: "Toggle - switches",
   hover: "Hover - nav links",
+  swipe: "Swipe - article nav",
 };
 
 export function InterfaceSfxDemo() {
