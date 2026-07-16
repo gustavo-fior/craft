@@ -51,19 +51,6 @@ const minimal = definePatch({
         },
       ],
     },
-    // "Swoosh" from the Core patch (audio.raphaelsalaja.com/library/core)
-    // - a bandpass-swept burst of white noise, used for article swipes.
-    swipe: {
-      source: { type: "noise", color: "white" },
-      filter: {
-        type: "bandpass",
-        frequency: 300,
-        resonance: 1.8,
-        envelope: { attack: 0.01, peak: 4000, decay: 0.08 },
-      },
-      envelope: { attack: 0.01, decay: 0.12, sustain: 0, release: 0.04 },
-      gain: 0.06,
-    },
     toggle: {
       layers: [
         {
@@ -88,7 +75,6 @@ export const SOUND_NAMES = [
   "success",
   "toggle",
   "hover",
-  "swipe",
 ] as const;
 export type SoundName = (typeof SOUND_NAMES)[number];
 

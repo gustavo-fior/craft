@@ -12,7 +12,6 @@ import {
   ViewInRepoButton,
 } from "@/components/app/header-actions";
 import { SidebarNav } from "@/components/app/sidebar-nav";
-import { SwipeNav } from "@/components/app/swipe-nav";
 import { Wordmark } from "@/components/app/wordmark";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,14 +40,6 @@ export function SiteShell({
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => setMobileOpen(false), [pathname]);
-
-  // Swipe order mirrors the sidebar: pages first, then concepts by section.
-  const routes = [
-    "/",
-    "/goats",
-    "/resources",
-    ...sections.flatMap((s) => s.concepts.map((c) => `/${c.slug}`)),
-  ];
 
   return (
     <div className="min-h-dvh">
@@ -89,7 +80,7 @@ export function SiteShell({
       </aside>
 
       <main className="mx-auto w-full max-w-160 px-5 pt-28 pb-24 sm:px-8">
-        <SwipeNav routes={routes}>{children}</SwipeNav>
+        {children}
       </main>
 
       <CommandMenu sections={sections} />
