@@ -91,13 +91,43 @@ export function setMuted(muted: boolean) {
 
 export type PlayOptions = { detune?: number; volume?: number };
 
-/** Plays a sound regardless of the mute toggle (for explicit demos). */
-export async function playSoundAlways(name: SoundName, opts?: PlayOptions) {
+// Browsers keep the AudioContext suspended until a real user gesture
+// (click/key/touch - hover doesn't count), and resume() just stays pending
+// until then. Track when it has actually resolved so hover sounds can be
+// dropped instead of queueing up and bursting out after the first click.
+let audioUnlocked = false;
+
+async function unlockAudio() {
   try {
     await ensureReady();
+    audioUnlocked = true;
+  } catch {
+    // Audio not available - stay silent.
+  }
+}
+
+if (typeof window !== "undefined") {
+  // Unlock on the first gesture anywhere, not just the first sound-playing
+  // interaction, so hover sounds start working as early as possible.
+  window.addEventListener("pointerdown", unlockAudio, { once: true });
+  window.addEventListener("keydown", unlockAudio, { once: true });
+}
+
+/** Plays a sound regardless of the mute toggle (for explicit demos). */
+export async function playSoundAlways(name: SoundName, opts?: PlayOptions) {
+  if (!audioUnlocked) {
+    if (name === "hover") {
+      // A hover can't grant user activation; don't queue a stale blip.
+      void unlockAudio();
+      return;
+    }
+    await unlockAudio();
+    if (!audioUnlocked) return;
+  }
+  try {
     minimal.play(name, opts);
   } catch {
-    // Audio not available (e.g. before user gesture) - stay silent.
+    // Audio not available - stay silent.
   }
 }
 
