@@ -3,9 +3,6 @@
 A small collection of design engineering concepts, live at
 [craft.gustavofior.com](https://craft.gustavofior.com).
 
-Each concept is an MDX page with an interactive demo: nested border radius,
-OKLCH, text wrapping, letter spacing, icon morphing, interface SFX.
-
 ## Stack
 
 - [Next.js](https://nextjs.org) (App Router, fully static) + Tailwind CSS v4
