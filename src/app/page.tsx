@@ -12,12 +12,12 @@ export default function IndexPage() {
       slug,
       section,
       order,
-    })),
+    }))
   );
 
   return (
     <article>
-      <h1 className="text-xl font-medium">Index</h1>
+      <h1 className="text-lg font-medium">Index</h1>
       <p className="mt-3 text-sm text-muted-foreground">{SITE_DESCRIPTION}</p>
       <div className="mt-12 flex flex-col gap-12">
         {sections.map(({ section, concepts }) => (
@@ -33,10 +33,7 @@ export default function IndexPage() {
                     className="group overflow-hidden rounded-2xl border bg-card transition-colors hover:border-ring/40"
                   >
                     <div className="flex h-36 items-center justify-center border-b">
-                      <ConceptThumbnail
-                        slug={concept.slug}
-                        section={section}
-                      />
+                      <ConceptThumbnail slug={concept.slug} section={section} />
                     </div>
                     <div className="p-4">
                       <h3 className="text-sm font-medium text-foreground">

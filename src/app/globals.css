@@ -174,11 +174,19 @@
 }
 
 @utility fade-mask-y {
+  /* Eased (smoothstep-like) fade over 3rem - matches the nav's py-12 so
+     resting content stays fully opaque. */
   mask-image: linear-gradient(
     to bottom,
     transparent,
-    black 10%,
-    black 90%,
+    rgb(0 0 0 / 0.1) 0.75rem,
+    rgb(0 0 0 / 0.35) 1.5rem,
+    rgb(0 0 0 / 0.7) 2.25rem,
+    black 3rem,
+    black calc(100% - 3rem),
+    rgb(0 0 0 / 0.7) calc(100% - 2.25rem),
+    rgb(0 0 0 / 0.35) calc(100% - 1.5rem),
+    rgb(0 0 0 / 0.1) calc(100% - 0.75rem),
     transparent
   );
 }

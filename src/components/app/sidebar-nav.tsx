@@ -22,7 +22,13 @@ function ActiveDot({ layoutId, color }: { layoutId: string; color: string }) {
   );
 }
 
-export function SidebarNav({ sections }: { sections: NavSection[] }) {
+export function SidebarNav({
+  sections,
+  className,
+}: {
+  sections: NavSection[];
+  className?: string;
+}) {
   const pathname = usePathname();
   // The nav renders twice (sidebar + mobile sheet) - keep the dot's
   // shared-layout animation scoped to each instance.
@@ -35,7 +41,12 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
   return (
     <nav
       aria-label="Concepts"
-      className="fade-mask-y scrollbar-hidden h-full md:h-[80vh] overflow-y-auto md:py-[5vh] py-[2.8vh]"
+      // py-12 matches the 3rem fade-mask-y stops, so at rest the list sits
+      // fully inside the opaque zone and only overflow fades at the edges.
+      className={cn(
+        "fade-mask-y scrollbar-hidden overflow-y-auto py-12",
+        className
+      )}
     >
       <ul className="flex flex-col gap-1 text-xs">
         {[
@@ -89,7 +100,7 @@ export function SidebarNav({ sections }: { sections: NavSection[] }) {
                       className={cn(
                         "inline-block py-1 transition-[color,translate] duration-200",
                         active
-                          ? "translate-x-2.5 text-foreground"
+                          ? "translate-x-3 text-foreground"
                           : "text-muted-foreground hover:text-foreground"
                       )}
                     >

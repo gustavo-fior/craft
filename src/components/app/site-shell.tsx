@@ -21,6 +21,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import type { NavSection } from "@/lib/sections";
 import { githubSourceUrl } from "@/lib/site";
 
@@ -52,7 +53,7 @@ export function SiteShell({
                   variant="ghost"
                   size="icon-sm"
                   aria-label="Open navigation"
-                  className="md:hidden"
+                  className="lg:hidden"
                 >
                   <ListIcon weight="duotone" className="size-4 mb-[3px]" />
                 </Button>
@@ -62,24 +63,32 @@ export function SiteShell({
               <SheetHeader className="sr-only">
                 <SheetTitle>Navigation</SheetTitle>
               </SheetHeader>
-              <SidebarNav sections={sections} />
+              <SidebarNav sections={sections} className="h-full" />
             </SheetContent>
           </Sheet>
           <Wordmark />
         </div>
-        <div className="flex items-center gap-1">
-          <CopyLinkButton />
-          <ViewInRepoButton href={repoUrl} />
-          <ThemeSwitcher />
-          <SoundToggle />
-        </div>
+        {/* Grouped so moving between adjacent tooltips skips the open delay
+            and animation - only the first one animates in. */}
+        <TooltipProvider timeout={500}>
+          <div className="flex items-center gap-1">
+            <CopyLinkButton />
+            <ViewInRepoButton href={repoUrl} />
+            <ThemeSwitcher />
+            <SoundToggle />
+          </div>
+        </TooltipProvider>
       </header>
 
-      <aside className="fixed top-1/2 left-0 hidden w-56 -translate-y-1/2 pl-8 md:block">
-        <SidebarNav sections={sections} />
+      <aside className="fixed top-1/2 left-0 hidden w-56 -translate-y-1/2 pl-8 lg:block">
+        {/* 65vh of list + py-12 on both ends, so the fade gradients sit at
+            the edges instead of eating into the resting list. */}
+        <SidebarNav sections={sections} className="h-[calc(65vh+6rem)]" />
       </aside>
 
-      <main className="mx-auto w-full max-w-160 px-5 pt-28 pb-24 sm:px-8">
+      {/* px-7 on mobile lines the content up with the header icon glyphs,
+          which sit 8px inside their size-8 ghost buttons (20px pad + 8px). */}
+      <main className="mx-auto w-full max-w-160 px-7 pt-28 pb-24 sm:px-8">
         {children}
       </main>
 

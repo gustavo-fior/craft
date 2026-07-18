@@ -144,10 +144,10 @@ const GROUPS: Group[] = [
 export default function ResourcesPage() {
   return (
     <article>
-      <h1 className="text-xl font-medium">Resources</h1>
+      <h1 className="text-lg font-medium">Resources</h1>
       <p className="mt-3 text-sm text-muted-foreground text-pretty">
-        Tools and references I keep coming back to. Each concept page also
-        lists the specific posts it draws from.
+        Tools and references I keep coming back to. Each concept page also lists
+        the specific posts it draws from.
       </p>
       <div className="mt-10 flex flex-col gap-10">
         {GROUPS.map((group) => (

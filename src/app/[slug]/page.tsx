@@ -16,7 +16,7 @@ function orderedConcepts() {
       slug,
       section,
       order,
-    })),
+    }))
   ).flatMap((s) => s.concepts);
 }
 
@@ -88,7 +88,7 @@ export default async function ConceptPage({
         }}
       />
       <header>
-        <h1 className="text-xl font-medium text-balance">{concept.title}</h1>
+        <h1 className="text-lg font-medium text-balance">{concept.title}</h1>
         <p className="mt-3 text-sm text-muted-foreground text-pretty">
           {concept.description}
         </p>

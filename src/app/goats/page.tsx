@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "GOATs",
-  description:
-    "The design engineers whose writing and work shaped this site.",
+  description: "The design engineers whose writing and work shaped this site.",
 };
 
 type Goat = {
@@ -68,11 +67,10 @@ const GOATS: Goat[] = [
 export default function GoatsPage() {
   return (
     <article>
-      <h1 className="text-xl font-medium">GOATs</h1>
+      <h1 className="text-lg font-medium">GOATs</h1>
       <p className="mt-3 text-sm text-muted-foreground text-pretty">
-        Nothing here is original. These are the people whose writing, demos,
-        and open-source work taught me most of what this site tries to pass
-        on.
+        Nothing here is original. These are the people whose writing, demos, and
+        open-source work taught me most of what this site tries to pass on.
       </p>
       <ul className="mt-10 flex flex-col gap-1">
         {GOATS.map((goat) => (
@@ -81,7 +79,7 @@ export default function GoatsPage() {
               href={goat.url}
               target="_blank"
               rel="noreferrer"
-              className="-mx-2.5 flex items-start gap-3 rounded-md px-2.5 py-2.5 hover:bg-muted"
+              className="-mx-2.5 flex items-start gap-3 rounded-md px-2.5 py-2.5 hover:bg-muted text-pretty pr-3"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -90,7 +88,7 @@ export default function GoatsPage() {
                 width={16}
                 height={16}
                 loading="lazy"
-                className="mt-0.5 size-4 shrink-0 rounded-sm"
+                className="mt-1 size-4 shrink-0 rounded-[3px]"
               />
               <span className="min-w-0 text-sm">
                 <span className="text-foreground">{goat.name}</span>
