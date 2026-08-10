@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { allConcepts } from "content-collections";
+import { Analytics } from "@vercel/analytics/next";
 
 import { JsonLd } from "@/components/app/json-ld";
 import { Providers } from "@/components/app/providers";
@@ -118,6 +119,7 @@ export default function RootLayout({
             {children}
           </SiteShell>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
