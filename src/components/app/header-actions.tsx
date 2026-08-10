@@ -64,7 +64,7 @@ export function CopyLinkButton() {
     <Action label="Copy link" onClick={copy}>
       <CopyIcon
         copied={copied}
-        icon={<LinkIcon weight="duotone" className="size-4" />}
+        icon={<LinkIcon className="size-4" />}
         className="size-4"
       />
     </Action>
@@ -80,7 +80,7 @@ export function ViewInRepoButton({ href }: { href: string }) {
         window.open(href, "_blank", "noopener,noreferrer");
       }}
     >
-      <GithubLogoIcon weight="duotone" className="size-4" />
+      <GithubLogoIcon className="size-4" />
     </Action>
   );
 }
@@ -108,9 +108,9 @@ export function ThemeSwitcher() {
       {!mounted || current === "system" ? (
         <DesktopIcon weight="duotone" className="size-4" />
       ) : current === "light" ? (
-        <SunIcon weight="duotone" className="size-4" />
+        <SunIcon className="size-4" />
       ) : (
-        <MoonIcon weight="duotone" className="size-4" />
+        <MoonIcon className="size-4" />
       )}
     </Action>
   );

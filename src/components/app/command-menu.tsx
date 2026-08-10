@@ -39,7 +39,10 @@ export function CommandMenu({ sections }: { sections: NavSection[] }) {
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen} title="Search concepts">
-      <CommandInput placeholder="Search concepts..." />
+      <CommandInput
+        placeholder="Search..."
+        className="border-b pb-3 border-border/50"
+      />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Pages">
@@ -60,7 +63,7 @@ export function CommandMenu({ sections }: { sections: NavSection[] }) {
                     available ? () => go(`/${concept.slug}`) : undefined
                   }
                 >
-                  <SectionIcon section={section} className="size-4" />
+                  <SectionIcon section={section} className="size-3.5" />
                   {concept.title}
                 </CommandItem>
               );

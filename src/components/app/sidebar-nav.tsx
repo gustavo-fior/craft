@@ -1,5 +1,6 @@
 "use client";
 
+import { SparkleIcon } from "@phosphor-icons/react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -64,7 +65,7 @@ export function SidebarNav({
                 onClick={() => playSound("tick")}
                 onMouseEnter={() => playSound("hover", { detune: 0 })}
                 className={cn(
-                  "inline-block py-1 transition-[color,translate] duration-200",
+                  "inline-block rounded-[3px] py-1 outline-none transition-[color,translate] duration-200 focus-visible:ring-[1.5px] focus-visible:ring-inset focus-visible:ring-ring/60",
                   active
                     ? "translate-x-2.5 text-foreground"
                     : "text-muted-foreground hover:text-foreground"
@@ -101,13 +102,16 @@ export function SidebarNav({
                         onClick={() => playSound("tick")}
                         onMouseEnter={() => playSound("hover", { detune })}
                         className={cn(
-                          "inline-block py-1 transition-[color,translate] duration-200",
+                          "inline-flex items-center gap-1.5 rounded-[3px] py-1 outline-none transition-[color,translate] duration-200 focus-visible:ring-[1.5px] focus-visible:ring-inset focus-visible:ring-ring/60",
                           active
                             ? "translate-x-3 text-foreground"
                             : "text-muted-foreground hover:text-foreground"
                         )}
                       >
-                        {concept.title}
+                        <span>{concept.title}</span>
+                        <span className="new-badge inline-flex items-center rounded-full ml-0.5 bg-green-100 px-1.5 py-px text-[8px] text-green-600 dark:bg-green-950 dark:text-green-400 shadow-(--custom-shadow-green)">
+                          New
+                        </span>
                       </Link>
                     ) : (
                       <span

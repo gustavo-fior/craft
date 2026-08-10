@@ -19,6 +19,29 @@ type Group = {
 
 const GROUPS: Group[] = [
   {
+    heading: "My Vaults",
+    resources: [
+      {
+        url: "https://vayo.me/bookmarks/019ce8a2-931e-7308-8bc7-a3f10b2bd9ff",
+        domain: "vayo.me",
+        title: "UI",
+        description: "Interface references and patterns collected on Vayo.",
+      },
+      {
+        url: "https://vayo.me/bookmarks/clublk9rh000113g5qf4tj038",
+        domain: "vayo.me",
+        title: "Cool Stuff",
+        description: "Interesting products, ideas, and details collected on Vayo.",
+      },
+      {
+        url: "https://vayo.me/bookmarks/cltpx1nq70001jw1tc90e4ht6",
+        domain: "vayo.me",
+        title: "Articles",
+        description: "Writing worth returning to, collected on Vayo.",
+      },
+    ],
+  },
+  {
     heading: "Learning",
     resources: [
       {
@@ -34,85 +57,86 @@ const GROUPS: Group[] = [
         description: "Emil Kowalski's course on web animations.",
       },
       {
-        url: "https://www.refactoringui.com",
-        domain: "refactoringui.com",
-        title: "Refactoring UI",
-        description: "Design tactics for developers, by the Tailwind founders.",
+        url: "https://invisibledetails.com/",
+        domain: "invisibledetails.com",
+        title: "Invisible Details",
+        description: "A course on the small decisions behind great interfaces.",
       },
       {
-        url: "https://lawsofux.com",
-        domain: "lawsofux.com",
-        title: "Laws of UX",
-        description: "The psychology principles behind interface decisions.",
-      },
-    ],
-  },
-  {
-    heading: "Motion",
-    resources: [
-      {
-        url: "https://easings.net",
-        domain: "easings.net",
-        title: "easings.net",
-        description: "Every easing curve, visualized and copyable.",
+        url: "https://interfaces.dev/",
+        domain: "interfaces.dev",
+        title: "Interfaces",
+        description: "Jakub Krehel's design engineering magazine.",
       },
       {
-        url: "https://motion.dev",
-        domain: "motion.dev",
-        title: "Motion",
-        description: "The animation library used across this site.",
-      },
-      {
-        url: "https://linear.style",
-        domain: "linear.style",
-        title: "linear.style",
-        description: "Generate linear() spring and bounce easings in CSS.",
+        url: "https://www.interfacecraft.dev/",
+        domain: "interfacecraft.dev",
+        title: "Interface Craft",
+        description: "A working library for designing with uncommon care.",
       },
     ],
   },
   {
-    heading: "Color & typography",
+    heading: "Icons",
     resources: [
       {
-        url: "https://oklch.fyi",
-        domain: "oklch.fyi",
-        title: "oklch.fyi",
-        description: "Jakub Krehel's OKLCH color picker and explainer.",
+        url: "https://lucide.dev/",
+        domain: "lucide.dev",
+        title: "Lucide",
+        description: "Clean, customizable SVG icons made by the community.",
       },
       {
-        url: "https://www.fontshare.com",
-        domain: "fontshare.com",
-        title: "Fontshare",
-        description: "Free, quality fonts from the Indian Type Foundry.",
-      },
-      {
-        url: "https://modernfontstacks.com",
-        domain: "modernfontstacks.com",
-        title: "Modern Font Stacks",
-        description: "System font stacks that need no webfont at all.",
-      },
-    ],
-  },
-  {
-    heading: "Icons & sound",
-    resources: [
-      {
-        url: "https://phosphoricons.com",
+        url: "https://phosphoricons.com/",
         domain: "phosphoricons.com",
         title: "Phosphor Icons",
         description: "The icon family used on this site - six weights.",
       },
       {
-        url: "https://lucide.dev",
-        domain: "lucide.dev",
-        title: "Lucide",
-        description: "The community fork of Feather; the safe default.",
+        url: "https://tabler.io/icons",
+        domain: "tabler.io",
+        title: "Tabler Icons",
+        description: "6,000+ open-source icons built on a consistent 24px grid.",
       },
+      {
+        url: "https://nucleoapp.com/",
+        domain: "nucleoapp.com",
+        title: "Nucleo",
+        description: "40,000+ premium SVG icons with an app to manage them.",
+      },
+      {
+        url: "https://www.radix-ui.com/icons",
+        domain: "radix-ui.com",
+        title: "Radix Icons",
+        description: "A crisp set of 15×15 icons available as React components.",
+      },
+      {
+        url: "https://hugeicons.com/",
+        domain: "hugeicons.com",
+        title: "Hugeicons",
+        description: "A large free and premium library across multiple styles.",
+      },
+      {
+        url: "https://svgl.app/",
+        domain: "svgl.app",
+        title: "SVGL",
+        description: "A searchable library of brand and product SVG logos.",
+      },
+    ],
+  },
+  {
+    heading: "Sound",
+    resources: [
       {
         url: "https://audio.raphaelsalaja.com",
         domain: "audio.raphaelsalaja.com",
         title: "@web-kits/audio",
         description: "Synthesized interface sounds; powers this site's SFX.",
+      },
+      {
+        url: "https://cuelume-site.pages.dev/",
+        domain: "cuelume-site.pages.dev",
+        title: "Cuelume",
+        description: "A tiny library of interaction sounds synthesized with Web Audio.",
       },
     ],
   },
@@ -126,16 +150,28 @@ const GROUPS: Group[] = [
         description: "The best place to collect and connect references.",
       },
       {
-        url: "https://godly.website",
-        domain: "godly.website",
-        title: "Godly",
-        description: "Astronomically good web design inspiration.",
+        url: "https://recent.design/",
+        domain: "recent.design",
+        title: "Recent",
+        description: "A daily curation of exceptional design, websites, and tools.",
       },
       {
         url: "https://www.cosmos.so",
         domain: "cosmos.so",
         title: "Cosmos",
         description: "A calmer, curated alternative to Pinterest.",
+      },
+      {
+        url: "https://mobbin.com/",
+        domain: "mobbin.com",
+        title: "Mobbin",
+        description: "A searchable library of mobile and web app screenshots.",
+      },
+      {
+        url: "https://x.com/",
+        domain: "x.com",
+        title: "X",
+        description: "Design work, ideas, and conversations from people I follow.",
       },
     ],
   },
