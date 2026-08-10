@@ -7,6 +7,7 @@ import { useId } from "react";
 import { cn } from "@/lib/utils";
 import { playSound, progressionDetune } from "@/lib/sounds";
 import type { NavSection } from "@/lib/sections";
+import { isConceptAvailable } from "@/lib/concepts";
 import { SectionIcon, sectionDotColors } from "@/components/app/section-icon";
 
 function ActiveDot({ layoutId, color }: { layoutId: string; color: string }) {
@@ -82,7 +83,8 @@ export function SidebarNav({
             </div>
             <ul className="flex flex-col mt-1">
               {concepts.map((concept) => {
-                const active = pathname === `/${concept.slug}`;
+                const available = isConceptAvailable(concept.slug);
+                const active = available && pathname === `/${concept.slug}`;
                 step += 1;
                 const detune = progressionDetune(step);
                 return (
@@ -93,19 +95,29 @@ export function SidebarNav({
                         color={sectionDotColors[section]}
                       />
                     )}
-                    <Link
-                      href={`/${concept.slug}`}
-                      onClick={() => playSound("tick")}
-                      onMouseEnter={() => playSound("hover", { detune })}
-                      className={cn(
-                        "inline-block py-1 transition-[color,translate] duration-200",
-                        active
-                          ? "translate-x-3 text-foreground"
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                    >
-                      {concept.title}
-                    </Link>
+                    {available ? (
+                      <Link
+                        href={`/${concept.slug}`}
+                        onClick={() => playSound("tick")}
+                        onMouseEnter={() => playSound("hover", { detune })}
+                        className={cn(
+                          "inline-block py-1 transition-[color,translate] duration-200",
+                          active
+                            ? "translate-x-3 text-foreground"
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                      >
+                        {concept.title}
+                      </Link>
+                    ) : (
+                      <span
+                        aria-disabled="true"
+                        title="Coming soon"
+                        className="inline-block cursor-not-allowed py-1 text-muted-foreground/40 select-none"
+                      >
+                        {concept.title}
+                      </span>
+                    )}
                   </li>
                 );
               })}

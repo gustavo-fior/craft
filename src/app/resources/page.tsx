@@ -144,15 +144,15 @@ const GROUPS: Group[] = [
 export default function ResourcesPage() {
   return (
     <article>
-      <h1 className="text-lg font-medium">Resources</h1>
+      <h1 className="text-base font-medium">Resources</h1>
       <p className="mt-3 text-sm text-muted-foreground text-pretty">
         Tools and references I keep coming back to. Each concept page also lists
         the specific posts it draws from.
       </p>
-      <div className="mt-10 flex flex-col gap-10">
+      <div className="mt-8 flex flex-col gap-10">
         {GROUPS.map((group) => (
           <section key={group.heading}>
-            <h2 className="text-xs text-muted-foreground">{group.heading}</h2>
+            <h2 className="text-sm font-medium">{group.heading}</h2>
             <ul className="mt-2 flex flex-col gap-1">
               {group.resources.map((resource) => (
                 <li key={resource.url}>
@@ -164,17 +164,17 @@ export default function ResourcesPage() {
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={`https://www.google.com/s2/favicons?domain=${resource.domain}&sz=64`}
+                      src={`https://www.google.com/s2/favicons?domain=${resource.domain}&sz=128`}
                       alt=""
                       width={16}
                       height={16}
                       loading="lazy"
-                      className="size-4 shrink-0 rounded-sm"
+                      className="size-4 shrink-0 rounded-[3px]"
                     />
                     <span className="min-w-0 truncate text-sm">
                       <span className="text-foreground">{resource.title}</span>
+                      <span className="text-muted-foreground mx-2">{"∙"}</span>
                       <span className="text-muted-foreground">
-                        {" - "}
                         {resource.description}
                       </span>
                     </span>

@@ -4,13 +4,16 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import { isConceptAvailable } from "@/lib/concepts";
 
 export const dynamic = "force-static";
 
 export function generateStaticParams() {
   return [
     { slug: "index" },
-    ...allConcepts.map((concept) => ({ slug: concept.slug })),
+    ...allConcepts
+      .filter((concept) => isConceptAvailable(concept.slug))
+      .map((concept) => ({ slug: concept.slug })),
   ];
 }
 
@@ -141,7 +144,9 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
-  const concept = allConcepts.find((c) => c.slug === slug);
+  const concept = allConcepts.find(
+    (c) => c.slug === slug && isConceptAvailable(c.slug),
+  );
   const title = concept?.title ?? SITE_NAME;
   const description = concept?.description ?? SITE_DESCRIPTION;
 

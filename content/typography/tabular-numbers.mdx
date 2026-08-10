@@ -1,42 +1,71 @@
 ---
 title: Tabular Numbers
-description: Digits that share a width, so numbers stop dancing.
+description: Keep changing numbers steady and numeric columns aligned.
 section: Typography
 order: 3
 publishedAt: "2026-07-15"
 resources:
   - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: A practical collection of small interface improvements.
   - url: https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-numeric
+    title: font-variant-numeric
+    description: Syntax, examples, and browser support on MDN.
+  - url: https://www.w3.org/TR/css-fonts-4/#font-variant-numeric-prop
+    title: CSS Fonts Module Level 4 — Numerical formatting
+    description: The specification behind proportional and tabular figures.
+  - url: https://learn.microsoft.com/en-us/typography/opentype/otspec190/features_pt#tag-tnum
+    title: OpenType tabular figures
+    description: How the tnum font feature maps digits to uniform widths.
 ---
 
-Most fonts are proportional: a `1` is narrower than a `9`. That's right for
-prose, but the moment digits change over time - timers, counters, prices in a
-table - every change shifts the layout by a pixel or two. The number looks
-nervous.
+Digits can have two kinds of spacing.
 
-`font-variant-numeric: tabular-nums` switches to figures that all share one
-width. The value updates, the layout holds still.
+**Proportional figures** use the natural width of each shape: `1` is narrow,
+while `8` is wide. **Tabular figures** give every digit the same width. Toggle
+the demo to see the glyph boxes change.
 
 <TabularNumsDemo />
 
-## Where to use it
+Use proportional figures when numbers sit inside a sentence. They read more
+naturally. Use tabular figures when the position of a digit needs to stay
+fixed.
 
-- **Timers and clocks** - anything that ticks.
-- **Tables of numbers** - digits align into columns, so magnitudes are
-  scannable down a column.
-- **Animated counts** - followers, prices, progress percentages.
+## Changing values
 
-Keep proportional figures everywhere else; tabular digits in running text look
-slightly loose.
+A timer made with proportional figures changes width as it runs. Everything
+beside it moves too. Watch the red edge in the demo.
+
+<TabularTimerDemo />
+
+Tabular figures turn every character into a stable slot. The digits change;
+the width does not. Use them for clocks, counters, scores, prices, and live
+metrics.
+
+## Rows and columns
+
+In a numeric column, equal-width digits create a vertical grid. Repeated
+places line up, so differences are easier to scan.
+
+<TabularTableDemo />
+
+Right-align numeric columns as well. Tabular figures align the digits;
+right alignment keeps numbers with different lengths anchored to the same
+edge.
 
 ## In CSS
 
 ```css
-.timer {
+.timer,
+.numeric-column {
   font-variant-numeric: tabular-nums;
 }
 ```
 
-Tailwind ships it as `tabular-nums`. Inter - the font you're reading - has
-excellent tabular figures, but always confirm the font actually includes the
-`tnum` feature; if it doesn't, nothing happens.
+In Tailwind, use `tabular-nums`. Apply it only to the values that need it;
+the property inherits, and proportional figures usually look better in body
+copy.
+
+The font must include tabular figures for this to work. If `tabular-nums`
+makes no visible difference, try another font or inspect its OpenType features
+for `tnum`.

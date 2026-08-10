@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/command";
 import type { NavSection } from "@/lib/sections";
 import { playSound } from "@/lib/sounds";
+import { isConceptAvailable } from "@/lib/concepts";
 
 export function CommandMenu({ sections }: { sections: NavSection[] }) {
   const router = useRouter();
@@ -48,15 +49,22 @@ export function CommandMenu({ sections }: { sections: NavSection[] }) {
         </CommandGroup>
         {sections.map(({ section, concepts }) => (
           <CommandGroup key={section} heading={section}>
-            {concepts.map((concept) => (
-              <CommandItem
-                key={concept.slug}
-                onSelect={() => go(`/${concept.slug}`)}
-              >
-                <SectionIcon section={section} className="size-4" />
-                {concept.title}
-              </CommandItem>
-            ))}
+            {concepts.map((concept) => {
+              const available = isConceptAvailable(concept.slug);
+              return (
+                <CommandItem
+                  key={concept.slug}
+                  disabled={!available}
+                  title={available ? undefined : "Coming soon"}
+                  onSelect={
+                    available ? () => go(`/${concept.slug}`) : undefined
+                  }
+                >
+                  <SectionIcon section={section} className="size-4" />
+                  {concept.title}
+                </CommandItem>
+              );
+            })}
           </CommandGroup>
         ))}
       </CommandList>

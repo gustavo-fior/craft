@@ -1,6 +1,7 @@
 import { allConcepts } from "content-collections";
 
 import { SECTIONS } from "@/lib/sections";
+import { isConceptAvailable } from "@/lib/concepts";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
@@ -15,7 +16,9 @@ export function GET() {
 
   for (const section of SECTIONS) {
     const concepts = allConcepts
-      .filter((c) => c.section === section)
+      .filter(
+        (c) => c.section === section && isConceptAvailable(c.slug),
+      )
       .sort((a, b) => a.order - b.order);
     if (concepts.length === 0) continue;
     lines.push(`## ${section}`, "");

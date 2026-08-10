@@ -6,6 +6,7 @@ import { ConceptPager } from "@/components/app/concept-pager";
 import { JsonLd } from "@/components/app/json-ld";
 import { Resources } from "@/components/app/resources";
 import { Mdx } from "@/components/app/mdx";
+import { isConceptAvailable } from "@/lib/concepts";
 import { groupBySection } from "@/lib/sections";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -17,11 +18,15 @@ function orderedConcepts() {
       section,
       order,
     }))
-  ).flatMap((s) => s.concepts);
+  )
+    .flatMap((s) => s.concepts)
+    .filter((concept) => isConceptAvailable(concept.slug));
 }
 
 export function generateStaticParams() {
-  return allConcepts.map((concept) => ({ slug: concept.slug }));
+  return allConcepts
+    .filter((concept) => isConceptAvailable(concept.slug))
+    .map((concept) => ({ slug: concept.slug }));
 }
 
 export async function generateMetadata({
@@ -31,7 +36,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const concept = allConcepts.find((c) => c.slug === slug);
-  if (!concept) return {};
+  if (!concept || !isConceptAvailable(slug)) return {};
   return {
     title: concept.title,
     description: concept.description,
@@ -60,7 +65,7 @@ export default async function ConceptPage({
 }) {
   const { slug } = await params;
   const concept = allConcepts.find((c) => c.slug === slug);
-  if (!concept) notFound();
+  if (!concept || !isConceptAvailable(slug)) notFound();
 
   const ordered = orderedConcepts();
   const index = ordered.findIndex((c) => c.slug === slug);

@@ -29,7 +29,11 @@ import { ScrollFadesDemo } from "@/components/demos/scroll-fades";
 import { ShadowsNotBordersDemo } from "@/components/demos/shadows-not-borders";
 import { SharedLayoutDemo } from "@/components/demos/shared-layout";
 import { StaggerDemo } from "@/components/demos/stagger";
-import { TabularNumsDemo } from "@/components/demos/tabular-nums";
+import {
+  TabularNumsDemo,
+  TabularTableDemo,
+  TabularTimerDemo,
+} from "@/components/demos/tabular-nums";
 import { TextWrappingDemo } from "@/components/demos/text-wrapping";
 import { cn } from "@/lib/utils";
 
@@ -41,16 +45,13 @@ const components: MDXComponents = {
     />
   ),
   h3: ({ className, ...props }) => (
-    <h3
-      className={cn("mt-8 mb-3 text-sm font-medium", className)}
-      {...props}
-    />
+    <h3 className={cn("mt-8 mb-3 text-sm font-medium", className)} {...props} />
   ),
   p: ({ className, ...props }) => (
     <p
       className={cn(
-        "my-4 text-sm leading-relaxed text-pretty text-muted-foreground",
-        className,
+        "my-4 text-sm leading-[1.8] text-pretty text-muted-foreground",
+        className
       )}
       {...props}
     />
@@ -59,7 +60,7 @@ const components: MDXComponents = {
     <a
       className={cn(
         "text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground",
-        className,
+        className
       )}
       target={props.href?.startsWith("http") ? "_blank" : undefined}
       rel={props.href?.startsWith("http") ? "noreferrer" : undefined}
@@ -70,7 +71,7 @@ const components: MDXComponents = {
     <ul
       className={cn(
         "my-4 list-disc space-y-2 pl-5 text-sm text-muted-foreground",
-        className,
+        className
       )}
       {...props}
     />
@@ -79,7 +80,7 @@ const components: MDXComponents = {
     <ol
       className={cn(
         "my-4 list-decimal space-y-2 pl-5 text-sm text-muted-foreground",
-        className,
+        className
       )}
       {...props}
     />
@@ -93,8 +94,8 @@ const components: MDXComponents = {
   code: ({ className, ...props }) => (
     <code
       className={cn(
-        "rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.8em] text-foreground",
-        className,
+        "rounded-[4px] bg-muted px-1.5 py-0.5 font-mono text-[0.8em] text-foreground ",
+        className
       )}
       {...props}
     />
@@ -102,8 +103,8 @@ const components: MDXComponents = {
   pre: ({ className, ...props }) => (
     <pre
       className={cn(
-        "my-6 overflow-x-auto rounded-xl border bg-card p-4 text-xs leading-relaxed [&>code]:bg-transparent [&>code]:p-0",
-        className,
+        "my-6 overflow-x-auto rounded-xl shadow-(--custom-shadow) bg-card p-4 text-xs leading-relaxed [&>code]:bg-transparent [&>code]:p-0",
+        className
       )}
       {...props}
     />
@@ -112,7 +113,7 @@ const components: MDXComponents = {
     <blockquote
       className={cn(
         "my-6 border-l-2 pl-4 text-sm text-muted-foreground italic",
-        className,
+        className
       )}
       {...props}
     />
@@ -128,6 +129,8 @@ const components: MDXComponents = {
   IconMorphDemo,
   InterfaceSfxDemo,
   TabularNumsDemo,
+  TabularTimerDemo,
+  TabularTableDemo,
   OpticalAlignmentDemo,
   IconWeightsDemo,
   NoiseDemo,
