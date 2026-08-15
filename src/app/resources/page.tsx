@@ -1,8 +1,25 @@
 import type { Metadata } from "next";
 
+const TITLE = "Resources";
+const DESCRIPTION = "Tools, references, and reading for design engineering.";
+
 export const metadata: Metadata = {
-  title: "Resources",
-  description: "Tools, references, and reading for design engineering.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/resources" },
+  openGraph: {
+    type: "website",
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "/resources",
+    images: ["/og/resources"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/og/resources"],
+  },
 };
 
 type Resource = {

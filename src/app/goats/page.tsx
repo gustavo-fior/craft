@@ -1,8 +1,26 @@
 import type { Metadata } from "next";
 
+const TITLE = "GOATs";
+const DESCRIPTION =
+  "The design engineers whose writing and work shaped this site.";
+
 export const metadata: Metadata = {
-  title: "GOATs",
-  description: "The design engineers whose writing and work shaped this site.",
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/goats" },
+  openGraph: {
+    type: "website",
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "/goats",
+    images: ["/og/goats"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: ["/og/goats"],
+  },
 };
 
 type Goat = {

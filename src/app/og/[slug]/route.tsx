@@ -8,9 +8,23 @@ import { isConceptAvailable } from "@/lib/concepts";
 
 export const dynamic = "force-static";
 
+// Standalone pages that get an OG card but aren't concepts. Titles and
+// descriptions mirror each page's `metadata` export.
+const PAGES: Record<string, { title: string; description: string }> = {
+  goats: {
+    title: "GOATs",
+    description: "The design engineers whose writing and work shaped this site.",
+  },
+  resources: {
+    title: "Resources",
+    description: "Tools, references, and reading for design engineering.",
+  },
+};
+
 export function generateStaticParams() {
   return [
     { slug: "index" },
+    ...Object.keys(PAGES).map((slug) => ({ slug })),
     ...allConcepts
       .filter((concept) => isConceptAvailable(concept.slug))
       .map((concept) => ({ slug: concept.slug })),
@@ -147,8 +161,9 @@ export async function GET(
   const concept = allConcepts.find(
     (c) => c.slug === slug && isConceptAvailable(c.slug),
   );
-  const title = concept?.title ?? SITE_NAME;
-  const description = concept?.description ?? SITE_DESCRIPTION;
+  const page = concept ?? PAGES[slug];
+  const title = page?.title ?? SITE_NAME;
+  const description = page?.description ?? SITE_DESCRIPTION;
 
   const [inter, redaction] = await Promise.all([
     readFile(path.join(process.cwd(), "src/assets/Inter-Medium.otf")),
@@ -169,7 +184,7 @@ export async function GET(
           fontFamily: "Inter",
         }}
       >
-        {concept ? (
+        {page ? (
           <div
             style={{ display: "flex", fontSize: 30, fontFamily: "Redaction" }}
           >
@@ -191,10 +206,10 @@ export async function GET(
             style={{
               display: "flex",
               fontSize: 52,
-              fontFamily: concept ? "Inter" : "Redaction",
+              fontFamily: page ? "Inter" : "Redaction",
             }}
           >
-            {concept ? title : SITE_NAME}
+            {title}
           </div>
           <div style={{ display: "flex", fontSize: 28, color: "#8f8f8f" }}>
             {description}
