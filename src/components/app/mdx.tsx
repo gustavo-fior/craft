@@ -1,6 +1,7 @@
 import { MDXContent } from "@content-collections/mdx/react";
 import type { MDXComponents } from "mdx/types";
 
+import { CodeBlock } from "@/components/app/code-block";
 import { Demo } from "@/components/app/demo";
 import { ButtonPressDemo } from "@/components/demos/button-press";
 import { ClipPathDemo } from "@/components/demos/clip-path";
@@ -19,10 +20,19 @@ import { InterruptibilityDemo } from "@/components/demos/interruptibility";
 import { LayeringSoundsDemo } from "@/components/demos/layering-sounds";
 import { LetterSpacingDemo } from "@/components/demos/letter-spacing";
 import { LivingChartsDemo } from "@/components/demos/living-charts";
-import { NestedRadiusDemo } from "@/components/demos/nested-radius";
+import {
+  NestedRadiusDemo,
+  NestedRadiusExamplesDemo,
+  RadiusCalculatorDemo,
+} from "@/components/demos/nested-radius";
 import { NoiseDemo } from "@/components/demos/noise";
 import { OklchDemo } from "@/components/demos/oklch";
-import { OpticalAlignmentDemo } from "@/components/demos/optical-alignment";
+import {
+  HangingPunctuationDemo,
+  OpticalAlignmentDemo,
+  OpticalButtonDemo,
+  OpticalSizingDemo,
+} from "@/components/demos/optical-alignment";
 import { PerceivedPerformanceDemo } from "@/components/demos/perceived-performance";
 import { ScaleEntrancesDemo } from "@/components/demos/scale-entrances";
 import { ScrollFadesDemo } from "@/components/demos/scroll-fades";
@@ -36,6 +46,20 @@ import {
 } from "@/components/demos/tabular-nums";
 import { TextWrappingDemo } from "@/components/demos/text-wrapping";
 import { cn } from "@/lib/utils";
+
+function getFaviconUrl(href?: string) {
+  if (!href) return;
+
+  try {
+    const url = new URL(href);
+
+    if (url.protocol !== "http:" && url.protocol !== "https:") return;
+
+    return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(url.hostname)}&sz=32`;
+  } catch {
+    return;
+  }
+}
 
 const components: MDXComponents = {
   h2: ({ className, ...props }) => (
@@ -51,27 +75,47 @@ const components: MDXComponents = {
     <p
       className={cn(
         "my-4 text-sm leading-[1.8] text-pretty text-muted-foreground",
-        className
+        className,
       )}
       {...props}
     />
   ),
-  a: ({ className, ...props }) => (
-    <a
-      className={cn(
-        "text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground",
-        className
-      )}
-      target={props.href?.startsWith("http") ? "_blank" : undefined}
-      rel={props.href?.startsWith("http") ? "noreferrer" : undefined}
-      {...props}
-    />
-  ),
+  a: ({ className, children, href, ...props }) => {
+    const faviconUrl = getFaviconUrl(href);
+
+    return (
+      <a
+        className={cn(
+          "text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground",
+          className,
+        )}
+        href={href}
+        target={faviconUrl ? "_blank" : undefined}
+        rel={faviconUrl ? "noreferrer" : undefined}
+        {...props}
+      >
+        {faviconUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            aria-hidden="true"
+            alt=""
+            className="mr-1 inline-block size-3.5 rounded-[3px] align-[-2px]"
+            decoding="async"
+            height={14}
+            loading="lazy"
+            src={faviconUrl}
+            width={14}
+          />
+        ) : null}
+        {children}
+      </a>
+    );
+  },
   ul: ({ className, ...props }) => (
     <ul
       className={cn(
         "my-4 list-disc space-y-2 pl-5 text-sm text-muted-foreground",
-        className
+        className,
       )}
       {...props}
     />
@@ -80,7 +124,7 @@ const components: MDXComponents = {
     <ol
       className={cn(
         "my-4 list-decimal space-y-2 pl-5 text-sm text-muted-foreground",
-        className
+        className,
       )}
       {...props}
     />
@@ -94,8 +138,8 @@ const components: MDXComponents = {
   code: ({ className, ...props }) => (
     <code
       className={cn(
-        "rounded-[4px] bg-muted px-1.5 py-0.5 font-mono text-[0.8em] text-foreground ",
-        className
+        "rounded-[3px] bg-primary/7 shadow-(--custom-shadow) px-1 py-0.5 font-mono text-[0.8em] text-foreground mx-0.75",
+        className,
       )}
       {...props}
     />
@@ -103,8 +147,8 @@ const components: MDXComponents = {
   pre: ({ className, ...props }) => (
     <pre
       className={cn(
-        "my-6 overflow-x-auto rounded-xl shadow-(--custom-shadow) bg-card p-4 text-xs leading-relaxed [&>code]:bg-transparent [&>code]:p-0",
-        className
+        "my-6 overflow-x-auto rounded-xl shadow-(--custom-shadow) bg-card p-4 text-xs leading-relaxed [&>code]:bg-transparent [&>code]:p-0 [&>code]:shadow-none",
+        className,
       )}
       {...props}
     />
@@ -113,7 +157,7 @@ const components: MDXComponents = {
     <blockquote
       className={cn(
         "my-6 border-l-2 pl-4 text-sm text-muted-foreground italic",
-        className
+        className,
       )}
       {...props}
     />
@@ -126,12 +170,17 @@ const components: MDXComponents = {
   TextWrappingDemo,
   OklchDemo,
   NestedRadiusDemo,
+  NestedRadiusExamplesDemo,
+  RadiusCalculatorDemo,
   IconMorphDemo,
   InterfaceSfxDemo,
   TabularNumsDemo,
   TabularTimerDemo,
   TabularTableDemo,
   OpticalAlignmentDemo,
+  OpticalButtonDemo,
+  OpticalSizingDemo,
+  HangingPunctuationDemo,
   IconWeightsDemo,
   NoiseDemo,
   ShadowsNotBordersDemo,
@@ -153,6 +202,7 @@ const components: MDXComponents = {
   ScrollFadesDemo,
   FontSmoothingDemo,
   CurveSmoothingDemo,
+  CodeBlock,
 };
 
 export function Mdx({ code }: { code: string }) {

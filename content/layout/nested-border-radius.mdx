@@ -1,44 +1,109 @@
 ---
 title: Nested Border Radius
-description: Outer radius = inner radius + padding.
+description: Make nested rounded corners follow the same curve.
 section: Layout
 order: 1
 publishedAt: "2026-07-14"
 resources:
   - url: https://cloudfour.com/thinks/the-math-behind-nesting-rounded-corners/
+    title: The math behind nesting rounded corners
+    description: Cloud Four’s explanation of the radius formula with practical CSS examples.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/border-radius
+    title: border-radius
+    description: MDN’s reference for the CSS border-radius property.
+  - url: https://www.w3.org/TR/css-backgrounds-3/#corners
+    title: CSS corner shaping
+    description: The specification for outer, padding, and content edge radii.
 ---
 
-When you put a rounded element inside another rounded element, giving both
-the same radius looks subtly wrong: the gap between the two corners pinches,
-because the outer curve sits farther from the inner one at the corner than
-along the edges.
-
-The rule that fixes it:
-
-> **outer radius = inner radius + padding**
-
-That keeps the two curves concentric - the gap between them stays constant
-all the way around the corner. Flip on naive mode below to feel the pinch.
+Rounded corners look best when one curve follows the other. If a box sits
+inside another box, using the same radius on both usually makes the gap wider
+near the corner.
 
 <NestedRadiusDemo />
 
-## In CSS
+The fix is a simple relationship:
 
-Encode the relationship instead of hardcoding both values:
+> **outer radius = inner radius + inset**
 
-```css
-.card {
-  --radius: 12px;
-  --padding: 16px;
-  padding: var(--padding);
-  border-radius: calc(var(--radius) + var(--padding));
+The inset is the distance between the two edges. It is often the parent’s
+padding. If the parent has a border, include its width too.
+
+In the demo, the inner radius is `16px` and the inset is `12px`. That makes the
+outer radius `28px`.
+
+## Start from the outer radius
+
+Design systems usually start with a radius on the outer component. In that
+case, reverse the formula:
+
+> **inner radius = outer radius − inset**
+
+<RadiusCalculatorDemo />
+
+The inner radius cannot go below zero. If the inset is larger than the outer
+radius, use a square inner corner. In CSS, `max()` can handle that limit for
+you.
+
+## Real components
+
+The difference is easier to see in a card or a menu than in an empty diagram.
+
+<NestedRadiusExamplesDemo />
+
+The card has a `24px` outer radius and an `8px` inset, so its media uses
+`16px`. The menu has a `16px` outer radius and a `4px` inset, so its highlighted
+item uses `12px`.
+
+This also makes the component easier to change. Update the outer radius or the
+inset, then calculate the inner radius from those values.
+
+## Pills are different
+
+Pills use the largest radius their height allows. When two pills have an even
+inset, `border-radius: 9999px` or `rounded-full` will usually keep both curves
+aligned without a manual calculation.
+
+Treat pills as their own shape. Use the formula for cards, panels, menus, and
+other corners with a clear radius.
+
+## When to adjust it
+
+The formula is a strong starting point, not a rule for every shape. Tune the
+result by eye when the inset changes around the component, the inner element
+does not reach the corner, or the surfaces use different corner shapes.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.card {
+    --outer-radius: 24px;
+    --inset: 8px;
+    padding: var(--inset);
+    border-radius: var(--outer-radius);
 }
 
-.card > .inner {
-  border-radius: var(--radius);
-}
-```
+.card__media {
+    border-radius: max(0px, calc(var(--outer-radius) - var(--inset)));
+}`,
+    },
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<div class="rounded-3xl p-2">
+    <div class="rounded-2xl">
+        ...
+    </div>
+</div>`,
+    },
+  ]}
+/>
 
-The same rule works in reverse: if the outer radius is fixed (a phone screen,
-a browser window), the inner radius should be `outer − padding` - and once
-that hits zero, square corners are correct.
+Keep the outer radius and inset as the source values. Calculate the inner
+radius from them so the relationship stays clear.

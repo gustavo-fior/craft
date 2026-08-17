@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { Demo } from "@/components/app/demo";
+import { SegmentedControl } from "@/components/app/segmented-control";
 import { cn } from "@/lib/utils";
 
 type FigureStyle = "proportional" | "tabular";
@@ -12,6 +13,11 @@ const numericStyles: Record<FigureStyle, React.CSSProperties> = {
   tabular: { fontVariantNumeric: "tabular-nums" },
 };
 
+const FIGURE_STYLES = [
+  { value: "proportional", label: "Proportional" },
+  { value: "tabular", label: "Tabular" },
+] as const;
+
 function FigureStyleControl({
   value,
   onChange,
@@ -20,36 +26,12 @@ function FigureStyleControl({
   onChange: (value: FigureStyle) => void;
 }) {
   return (
-    <div
-      className="flex rounded-full border bg-background p-0.5 shadow-xs"
-      role="group"
-      aria-label="Figure style"
-    >
-      {(["proportional", "tabular"] as const).map((option) => (
-        <button
-          key={option}
-          type="button"
-          onClick={() => onChange(option)}
-          aria-pressed={value === option}
-          className={cn(
-            "h-7 cursor-pointer rounded-full px-3 text-xs capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50",
-            value === option
-              ? "bg-foreground text-background shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-          )}
-        >
-          {option}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function ModeLabel({ mode }: { mode: FigureStyle }) {
-  return (
-    <code className="font-mono text-[10px] text-muted-foreground">
-      {mode === "tabular" ? "tnum" : "pnum"}
-    </code>
+    <SegmentedControl
+      ariaLabel="Figure style"
+      onChange={onChange}
+      options={FIGURE_STYLES}
+      value={value}
+    />
   );
 }
 
@@ -103,10 +85,10 @@ export function TabularTimerDemo() {
         </span>
         <span className="ml-2 h-11 w-px bg-rose-500/65" aria-hidden="true" />
         <span
-          className="absolute -right-1.5 -bottom-5 font-mono text-[9px] text-rose-500"
+          className="absolute -right-2.5 -bottom-5 text-[9px] text-rose-500"
           aria-hidden="true"
         >
-          edge
+          Edge
         </span>
       </div>
       <FigureStyleControl value={mode} onChange={setMode} />
@@ -115,10 +97,30 @@ export function TabularTimerDemo() {
 }
 
 const activity = [
-  { label: "Northstar", sessions: "12,441", change: "+8.10%" },
-  { label: "Raycast", sessions: "18,118", change: "+1.87%" },
-  { label: "Superhuman", sessions: "11,874", change: "+7.18%" },
-  { label: "Linear", sessions: "17,481", change: "+1.11%" },
+  {
+    label: "Vercel",
+    domain: "vercel.com",
+    sessions: "12,441",
+    change: "+8.10%",
+  },
+  {
+    label: "Raycast",
+    domain: "raycast.com",
+    sessions: "21,118",
+    change: "-1.87%",
+  },
+  {
+    label: "Notion",
+    domain: "notion.so",
+    sessions: "11,874",
+    change: "+7.18%",
+  },
+  {
+    label: "Linear",
+    domain: "linear.app",
+    sessions: "17,481",
+    change: "-1.11%",
+  },
 ];
 
 export function TabularTableDemo() {
@@ -126,19 +128,30 @@ export function TabularTableDemo() {
 
   return (
     <Demo className="gap-7 px-4 sm:px-8">
-      <div className="w-full overflow-hidden rounded-xl border bg-background shadow-xs">
-        <div className="grid grid-cols-[1fr_auto_auto] gap-5 border-b bg-muted/45 px-4 py-2.5 text-[10px] font-medium tracking-wide text-muted-foreground uppercase">
+      <div className="w-full overflow-hidden rounded-md bg-card shadow-(--custom-shadow)">
+        <div className="grid grid-cols-[1fr_auto_auto] gap-10 border-b border-[#E7E7E7] dark:border-[#1E1E1E] px-4 py-2.5 text-xs font-medium text-muted-foreground">
           <span>Project</span>
           <span>Sessions</span>
           <span>Change</span>
         </div>
-        <div className="divide-y">
+        <div className="divide-y divide-[#E7E7E7] dark:divide-[#1E1E1E]">
           {activity.map((row) => (
             <div
               key={row.label}
-              className="grid grid-cols-[1fr_auto_auto] items-center gap-5 px-4 py-3 text-xs"
+              className="grid grid-cols-[1fr_auto_auto] items-center gap-10 px-4 py-3 text-xs"
             >
-              <span className="truncate text-foreground">{row.label}</span>
+              <span className="flex min-w-0 items-center gap-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`https://www.google.com/s2/favicons?domain=${row.domain}&sz=64`}
+                  alt=""
+                  width={16}
+                  height={16}
+                  loading="lazy"
+                  className="size-4 shrink-0 rounded-3xl corner-squircle"
+                />
+                <span className="truncate text-foreground">{row.label}</span>
+              </span>
               <span
                 className="min-w-14 text-right text-muted-foreground"
                 style={numericStyles[mode]}
@@ -146,7 +159,12 @@ export function TabularTableDemo() {
                 {row.sessions}
               </span>
               <span
-                className="min-w-12 text-right text-emerald-600 dark:text-emerald-400"
+                className={cn(
+                  "min-w-12 text-right",
+                  row.change.startsWith("-")
+                    ? "text-rose-600 dark:text-rose-400"
+                    : "text-emerald-600 dark:text-emerald-400"
+                )}
                 style={numericStyles[mode]}
               >
                 {row.change}

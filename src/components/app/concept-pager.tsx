@@ -15,7 +15,7 @@ export function ConceptPager({
             href={`/${prev.slug}`}
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
-            ← {prev.title}
+            ← <span className="ml-1">{prev.title}</span>
           </Link>
         )}
       </span>
@@ -25,7 +25,7 @@ export function ConceptPager({
             href={`/${next.slug}`}
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
-            {next.title} →
+            <span className="mr-1">{next.title}</span> →
           </Link>
         )}
       </span>

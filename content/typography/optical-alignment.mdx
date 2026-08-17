@@ -1,40 +1,133 @@
 ---
 title: Optical Alignment
-description: Centered by eye beats centered by math.
+description: Correct what looks off after the boxes are aligned.
 section: Typography
 order: 4
 publishedAt: "2026-07-15"
 resources:
+  - url: https://developer.apple.com/design/human-interface-guidelines/icons
+    title: Icons
+    description: Apple’s guidance on visual weight, padding, and optical alignment.
+  - url: https://www.w3.org/TR/css-text-3/#hanging-glyph
+    title: Hanging glyphs
+    description: The CSS specification for placing punctuation outside a line edge.
   - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
-  - url: https://medium.com/design-bridges/optical-effects-9fca82b4cd9a
+    title: Details that make interfaces feel better
+    description: Practical examples of small visual corrections in interfaces.
 ---
 
-Flexbox centers bounding boxes, not shapes. A play triangle sits inside a
-square box, but its visual weight leans left - so a geometrically centered
-play button always looks like it's drifting toward the edge.
+Two objects can share the same center and still look misaligned.
 
-The fix is embarrassingly manual: nudge it until it looks right.
+CSS aligns boxes. People see the shapes inside those boxes. **Optical
+alignment** is the small correction you make when those two things disagree.
 
 <OpticalAlignmentDemo />
 
-## The pattern
+All three SVG boxes start in the mathematical center, but each shape feels off
+in a different way.
 
-Any asymmetric glyph needs this treatment:
+The play triangle feels too far left, so it moves right. The star feels low,
+so it moves up. The download icon also moves up, but by a smaller amount.
 
-- **Play icons** - shift right ~8% of their size.
-- **Chevrons and arrows** - shift toward their point.
-- **Text next to icons** - cap height and icon center rarely agree; align by
-  eye, then encode the nudge.
+These corrections are for these icons at this size. A smaller version may need
+a smaller shift.
 
-```css
-.play-icon {
-  transform: translateX(3px); /* optically centered */
+## Inside a button
+
+A button component can give every icon the same size, gap, and padding. Those
+defaults create a consistent layout, but they still align the SVG boxes rather
+than the shapes inside them.
+
+<OpticalButtonDemo />
+
+One shared icon style can look good with some glyphs and unbalanced with
+others. Keep the Button rules shared, then put the small correction on the icon
+that needs it. Do not move every SVG in the component by the same amount.
+
+The correction can also change with the rendered icon size. The larger examples
+above use whole pixels. The smaller button icons use smaller values.
+
+## Equal boxes, different weight
+
+Matching width and height is a good starting point, but different shapes fill
+their boxes in different ways. A square fills more space than a circle. A
+triangle fills less space than both.
+
+<OpticalSizingDemo />
+
+This is why icons in the same row do not always need the same numeric size.
+Adjust them as a group until their weight feels even. Check them at the size
+people will actually see.
+
+## Align the visible edge
+
+Text has the same problem. A quote mark can sit on the layout edge while the
+first letter looks indented. Hanging the quote in the margin lines up the
+letters instead.
+
+<HangingPunctuationDemo />
+
+This works well for large quotes and display text. CSS has a
+`hanging-punctuation` property, but support is still limited. A small negative
+`text-indent` is a practical fallback for a known quote style.
+
+## How to check it
+
+1. Start with Flexbox, Grid, or normal text alignment.
+2. Add a guide through the center or along the edge.
+3. Look at the result at 100% zoom and at its final size.
+4. Move the shape one pixel at a time.
+5. Keep the correction in the icon or text style that needs it.
+
+Optical alignment is a finishing step. It should correct a visible problem,
+not replace a solid layout.
+
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.button-icon[data-icon="play"] {
+    transform: translateX(1px);
 }
-```
 
-## Trust your eyes
+.button-icon[data-icon="star"],
+.button-icon[data-icon="download"] {
+    transform: translateY(-0.5px);
+}
 
-Every serious icon set draws glyphs inside their boxes with these
-compensations baked in - circles overshoot the grid slightly, triangles sit
-off-center. When the tool says "aligned" and your eye says "off," the eye is
-the one your users share.
+.pull-quote {
+    text-indent: -0.42em;
+}`,
+    },
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<Button>
+    <PlayIcon className="translate-x-px" />
+    Play
+</Button>
+
+<Button>
+    <StarIcon className="-translate-y-[0.5px]" />
+    Favorite
+</Button>
+
+<Button>
+    <DownloadIcon className="-translate-y-[0.5px]" />
+    Save
+</Button>
+
+<blockquote className="[text-indent:-0.42em]">
+    “Good alignment should disappear.”
+</blockquote>`,
+    },
+  ]}
+/>
+
+Keep each correction small and local. The value belongs to that shape at that
+size, not to every icon or quote in the product.

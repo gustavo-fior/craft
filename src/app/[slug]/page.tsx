@@ -94,11 +94,8 @@ export default async function ConceptPage({
       />
       <header>
         <h1 className="text-lg font-medium text-balance">{concept.title}</h1>
-        <p className="mt-3 text-sm text-muted-foreground text-pretty">
-          {concept.description}
-        </p>
       </header>
-      <div className="mt-10">
+      <div className="mt-4">
         <Mdx code={concept.mdx} />
       </div>
       <Resources resources={concept.resources} />

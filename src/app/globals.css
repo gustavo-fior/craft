@@ -193,3 +193,38 @@
     display: none;
   }
 }
+
+/* Shiki emits both palettes as variables so highlighted code follows the site
+   theme without re-rendering or sending the highlighter to the browser. */
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+}
+
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark);
+}
+
+.shiki-inline,
+.shiki-inline span {
+  color: var(--shiki-light);
+}
+
+.dark .shiki-inline,
+.dark .shiki-inline span {
+  color: var(--shiki-dark);
+}
+
+.shiki {
+  background: transparent !important;
+}
+
+.code-block-panel .shiki {
+  min-width: max-content;
+  padding: 1rem;
+  font-family: var(--font-jetbrains-mono);
+  font-size: 0.75rem;
+  line-height: 1.625;
+  outline: none;
+}

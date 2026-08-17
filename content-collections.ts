@@ -2,6 +2,8 @@ import { defineCollection, defineConfig } from "@content-collections/core";
 import { compileMDX } from "@content-collections/mdx";
 import { z } from "zod";
 
+import { rehypeSyntaxHighlight } from "./src/lib/rehype-syntax-highlight";
+
 type ResourceInput = {
   url: string;
   title: string | null;
@@ -116,7 +118,9 @@ const concepts = defineCollection({
       .default([]),
   }),
   transform: async (document, context) => {
-    const mdx = await compileMDX(context, document);
+    const mdx = await compileMDX(context, document, {
+      rehypePlugins: [rehypeSyntaxHighlight],
+    });
     const slug = document._meta.fileName.replace(/\.mdx$/, "");
     const resources = await Promise.all(
       document.resources.map((resource) =>

@@ -29,7 +29,7 @@ export function Wordmark() {
       setTimeout(() => {
         setFrame(className);
         if (i === GLITCH_FRAMES.length - 1) glitching.current = false;
-      }, i * FRAME_MS),
+      }, i * FRAME_MS)
     );
   };
 

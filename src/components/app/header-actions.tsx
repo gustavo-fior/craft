@@ -54,7 +54,7 @@ export function CopyLinkButton() {
 
   const copy = async () => {
     await navigator.clipboard.writeText(window.location.href);
-    playSound("success", { volume: 0.25 });
+    playSound("success", { volume: 0.35 });
     setCopied(true);
     clearTimeout(timeout.current);
     timeout.current = setTimeout(() => setCopied(false), 1500);

@@ -59,7 +59,11 @@ export function SiteShell({
                 </Button>
               }
             />
-            <SheetContent variant="floating" side="left" className="w-64 px-6">
+            <SheetContent
+              variant="floating"
+              side="left"
+              className="w-64 px-6 rounded-md"
+            >
               <SheetHeader className="sr-only">
                 <SheetTitle>Navigation</SheetTitle>
               </SheetHeader>

@@ -17,9 +17,12 @@ resources:
   - url: https://learn.microsoft.com/en-us/typography/opentype/otspec190/features_pt#tag-tnum
     title: OpenType tabular figures
     description: How the tnum font feature maps digits to uniform widths.
+  - url: https://wakamaifondue.com
+    title: Wakamai Fondue
+    description: Drop in a font file to see every OpenType feature it supports.
 ---
 
-Digits can have two kinds of spacing.
+Digits can have two kinds of widths.
 
 **Proportional figures** use the natural width of each shape: `1` is narrow,
 while `8` is wide. **Tabular figures** give every digit the same width. Toggle
@@ -28,44 +31,54 @@ the demo to see the glyph boxes change.
 <TabularNumsDemo />
 
 Use proportional figures when numbers sit inside a sentence. They read more
-naturally. Use tabular figures when the position of a digit needs to stay
-fixed.
+naturally. Use tabular figures when changing values need to stay steady or
+align vertically.
 
 ## Changing values
 
 A timer made with proportional figures changes width as it runs. Everything
-beside it moves too. Watch the red edge in the demo.
+beside it moves too. Watch the red edge in the demo below.
 
 <TabularTimerDemo />
 
-Tabular figures turn every character into a stable slot. The digits change;
-the width does not. Use them for clocks, counters, scores, prices, and live
+Tabular figures turn every character into a stable slot. Use them for clocks, counters, scores, prices, and live
 metrics.
 
-## Rows and columns
+The usual instinct here is to switch to a monospace font, but you don't need to. A mono font changes the whole voice of
+the interface. Often, you just need to use tabular figures.
+
+## Tables
 
 In a numeric column, equal-width digits create a vertical grid. Repeated
-places line up, so differences are easier to scan.
+places line up, so differences are easier to scan. It feels much better to see data this way.
 
 <TabularTableDemo />
 
-Right-align numeric columns as well. Tabular figures align the digits;
-right alignment keeps numbers with different lengths anchored to the same
+Right-align numeric columns as well. Right alignment keeps numbers with different lengths anchored to the same
 edge.
 
-## In CSS
+## Usage
 
-```css
-.timer,
-.numeric-column {
-  font-variant-numeric: tabular-nums;
-}
-```
-
-In Tailwind, use `tabular-nums`. Apply it only to the values that need it;
-the property inherits, and proportional figures usually look better in body
-copy.
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.numeric-column {
+    font-variant-numeric: tabular-nums;
+}`,
+    },
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<span class="tabular-nums">12:45</span>`,
+    },
+  ]}
+/>
 
 The font must include tabular figures for this to work. If `tabular-nums`
-makes no visible difference, try another font or inspect its OpenType features
-for `tnum`.
+makes no visible difference, drop the font file into
+[Wakamai Fondue](https://wakamaifondue.com) and check whether it lists `tnum`
+among its features.

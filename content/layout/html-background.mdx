@@ -6,36 +6,67 @@ order: 3
 publishedAt: "2026-07-15"
 resources:
   - url: https://css-tricks.com/html-vs-body-in-css/
+    title: HTML vs Body in CSS
+    description: A practical look at how the root and body elements behave.
+  - url: https://www.w3.org/TR/css-backgrounds-3/#special-backgrounds
+    title: Canvas backgrounds
+    description: How browsers paint the document canvas from the root or body.
   - url: https://developer.mozilla.org/en-US/docs/Web/CSS/overscroll-behavior
+    title: overscroll-behavior
+    description: Control what happens when scrolling reaches a boundary.
+  - url: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meta/name/theme-color
+    title: theme-color
+    description: Match supported browser chrome to the page background.
 ---
 
-Scroll past the top of a page in Safari and the content rubber-bands,
-revealing whatever is *behind* it. If your dark app only sets its background
-on a wrapper div - or even on `body` in some configurations - that reveal is
-a flash of white.
+Pull past the top of a dark page in Safari and a white strip can appear behind
+it. The app is dark, but the document canvas is still white.
+
+The canvas is the surface the browser paints behind the page. Try both modes
+below, then use the button to reveal it.
 
 <HtmlBackgroundDemo />
 
-## The fix
+## The document canvas
 
-Set the background on the root element itself:
+A wrapper only paints its own box. When it moves during overscroll, the canvas
+shows through. Set the background on the root element to paint that surface
+too.
 
-```css
-html {
-  background-color: var(--background);
-}
-```
+Browsers normally use the `body` background when `html` is transparent.
+Setting it on `html` directly makes the intended canvas color clear and does
+not rely on that behavior.
 
-The browser paints the overscroll area (and the area behind
-`env(safe-area-inset)` notches) with the `html` background. A wrapper div
-scrolls away with the content; `html` doesn't.
+## Other edges
 
-## Related edges
+- **Theme color:** The `theme-color` meta tag can tint supported browser UI to
+  match the page. Keep it in sync when the theme changes.
+- **Overscroll:** `overscroll-behavior: none` can remove the bounce and stop
+  scroll chaining. Use it carefully. The bounce is a familiar part of the
+  platform.
+- **Both themes:** The root background must follow the active theme, or the
+  white flash can return in one mode.
 
-- **Theme color.** `<meta name="theme-color">` tints Safari's toolbar to
-  match - update it when the theme switches.
-- **Overscroll containment.** `overscroll-behavior: none` stops scroll
-  chaining into the rubber-band for full-screen app UIs, but think twice:
-  the bounce is a platform affordance users feel at home with.
-- **Both modes.** If you support light and dark, the `html` background must
-  follow the active theme, or the flash returns in one of them.
+## Usage
+
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `html {
+    background-color: var(--background);
+}`,
+    },
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<html class="bg-background">`,
+    },
+  ]}
+/>
+
+Use the same background token for the root and the app. If the theme changes,
+that token should change with it.

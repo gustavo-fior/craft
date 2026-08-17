@@ -10,7 +10,7 @@ export function Demo({
   return (
     <figure
       className={cn(
-        "my-8 flex min-h-48 flex-col items-center justify-center gap-6 rounded-2xl shadow-(--custom-shadow) bg-card px-6 py-10",
+        "my-8 flex min-h-48 flex-col items-center justify-center gap-6 px-6 py-10",
         className
       )}
     >

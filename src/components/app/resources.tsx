@@ -27,7 +27,7 @@ export function Resources({ resources }: { resources: Resource[] }) {
                 width={16}
                 height={16}
                 loading="lazy"
-                className="size-4 shrink-0 rounded-sm"
+                className="size-4 shrink-0 rounded-[3px]"
               />
               <span className="min-w-0 truncate text-sm">
                 <span className="text-foreground">{resource.title}</span>
