@@ -1,0 +1,11 @@
+{
+  "Width": "Ancho",
+  "Container width": "Ancho del contenedor",
+  "Introducing the new dashboard for teams": "Presentamos el nuevo dashboard para equipos",
+  "Exports now run in the background, so you can keep working while we prepare the file. We will send you a link when it is ready.": "Las exportaciones se ejecutan en segundo plano para que sigas trabajando mientras preparamos el archivo. Te enviaremos un enlace cuando esté listo.",
+  "Your workspace export is ready to download": "Ya puedes descargar la exportación de tu espacio de trabajo",
+  "The link works for 24 hours. After that, start a new export from settings to get a fresh one.": "El enlace estará disponible durante 24 horas. Después, inicia otra exportación desde los ajustes para obtener uno nuevo.",
+  "Text wrapping": "Ajuste de líneas del texto",
+  "Off": "Desactivado",
+  "On": "Activado"
+}

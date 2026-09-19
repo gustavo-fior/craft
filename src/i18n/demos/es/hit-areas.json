@@ -1,0 +1,23 @@
+{
+  "Normal": "Normal",
+  "Show hit areas": "Mostrar hit areas",
+  "Bold": "Negrita",
+  "Italic": "Cursiva",
+  "Link": "Enlace",
+  "Undo": "Deshacer",
+  "Redo": "Rehacer",
+  "Padded toolbar": "Barra de herramientas con padding",
+  "Unpadded toolbar": "Barra de herramientas sin padding",
+  "Hit area overlay": "Visualización de las hit areas",
+  "Design": "Diseño",
+  "Engineering": "Ingeniería",
+  "Product": "Producto",
+  "Remove {filter}": "Quitar {filter}",
+  "Reset filters": "Restablecer filtros",
+  "Rename": "Cambiar nombre",
+  "Duplicate": "Duplicar",
+  "Copy link": "Copiar enlace",
+  "Delete": "Eliminar",
+  "Menu with gaps": "Menú con huecos",
+  "Menu without gaps": "Menú sin huecos"
+}

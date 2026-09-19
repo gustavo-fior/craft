@@ -1,5 +1,6 @@
 import { MDXContent } from "@content-collections/mdx/react";
 import type { MDXComponents } from "mdx/types";
+import { localizedPath, splitLocalePath, type Locale } from "@/i18n/locales";
 
 import { CodeBlock } from "@/components/app/code-block";
 import { Demo } from "@/components/app/demo";
@@ -340,6 +341,10 @@ const components: MDXComponents = {
   LinkList,
 };
 
-export function Mdx({ code }: { code: string }) {
-  return <MDXContent code={code} components={components} />;
+export function Mdx({ code, locale = "en" }: { code: string; locale?: Locale }) {
+  const localizedComponents: MDXComponents = {
+    ...components,
+    a: ({ href, ...props }) => <ProseLink {...props} href={href?.startsWith("/") && !href.startsWith("//") ? localizedPath(locale, splitLocalePath(href).pathname) : href} />,
+  };
+  return <MDXContent code={code} components={localizedComponents} />;
 }

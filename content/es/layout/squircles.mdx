@@ -1,0 +1,114 @@
+---
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "a777a80192edd8a0627da53ac916bff11b078d70703ebc2b85c56dbf5545a0f9"
+title: Squircles
+description: Esquinas cuya curva se funde suavemente con el borde.
+section: Layout
+order: 6
+publishedAt: "2026-09-14"
+resources:
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/corner-shape
+    title: corner-shape
+    description: La referencia de MDN para la propiedad, sus palabras clave y la función superellipse().
+  - url: https://developer.chrome.com/blog/corner-shape
+    title: Shape your corners with corner-shape
+    description: La presentación de la propiedad por el equipo de Chrome, con ejemplos de todas las palabras clave.
+  - url: https://www.figma.com/blog/desperately-seeking-squircles/
+    title: Desperately seeking squircles
+    description: La historia de cómo Figma reconstruyó la curva de los iconos de Apple y por qué resulta más suave.
+  - url: https://drafts.csswg.org/css-borders-4/#corner-shaping
+    title: CSS Borders 4, corner shaping
+    description: La especificación de corner-shape y de cómo se define su curva.
+  - url: https://github.com/phamfoo/figma-squircle
+    title: figma-squircle
+    description: Genera trazados SVG de squircles para máscaras y clip-paths donde no se admite la propiedad CSS.
+---
+
+Una esquina redondeada normal es un cuarto de círculo. El borde recto avanza
+hasta que empieza el arco, y hay un punto en el que uno se convierte en el
+otro. Puedes percibir ese punto aunque no lo veas.
+
+Un squircle lo elimina. La curva empieza antes y se funde suavemente con el
+borde, de modo que la esquina no tiene un principio ni un final perceptibles.
+Es la forma de los iconos de las apps de iOS y la razón por la que parecen
+más suaves que una caja con el mismo radio.
+
+<SquircleCompareDemo />
+
+Las dos piezas usan el mismo radio de `28px`. Solo cambia la forma de la esquina.
+
+## Una propiedad
+
+La forma de la esquina ya es una propiedad CSS. El radio sigue definiendo
+su tamaño; `corner-shape` define la curva que ocupa ese espacio.
+
+**Conserva el radio y cambia la forma.** Como forma parte de la propia caja,
+el fondo, el borde, la sombra y `overflow: hidden` siguen la nueva curva.
+No hacen falta máscaras, trazados SVG ni elementos adicionales.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<div class="rounded-[28px] corner-squircle">`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.icon {
+    border-radius: 28px;
+    corner-shape: squircle;
+}`,
+    },
+  ]}
+/>
+
+Las utilidades de Tailwind vienen del
+[plugin corner-shape](https://github.com/toolwind/corner-shape).
+
+## Cuánta curvatura
+
+Las palabras clave son puntos con nombre dentro de una misma escala:
+`superellipse()`. Arrastra el slider para recorrerla.
+
+<SquircleCurvatureDemo />
+
+`1` es un círculo, así que equivale a `round`. `2` es `squircle`.
+`0` es un `bevel` plano, y los valores negativos curvan hacia dentro.
+La curva de los iconos de Apple está un poco por encima de `2`, alrededor
+de `superellipse(2.3)`.
+
+Cualquier valor entre `1.5` y `2.5` se percibe como un squircle. Si sigues
+subiendo, la esquina empieza a parecer cuadrada de nuevo.
+
+## Dónde se nota
+
+El efecto crece con el radio. Un radio grande en una caja pequeña, como un
+avatar o un icono de app, cambia por completo su carácter. Un radio pequeño
+en un botón apenas cambia, y está bien: simplemente se percibe algo más suave.
+
+<SquircleExamplesDemo />
+
+Conviene recordar dos cosas del artículo sobre esquinas anidadas. Define
+la forma tanto en la caja exterior como en la interior, porque no se hereda,
+y mantén el radio exterior igual al interior más el inset. Un squircle por
+fuera con una esquina circular por dentro queda peor que dos esquinas circulares.
+
+## Un radio algo mayor
+
+Con el mismo radio, un squircle se ve más cerrado que una esquina circular,
+porque la curva pasa una menor parte de su recorrido cerca del borde.
+Si cambias la forma de un componente y la esquina parece más pequeña, lo es.
+Aumenta el radio aproximadamente un cuarto y vuelve a comparar.
+
+## Compatibilidad
+
+Los navegadores que no conocen `corner-shape` lo ignoran y dibujan una
+esquina circular. Ese es el fallback adecuado, así que para la mayoría de
+las interfaces no hace falta detectar compatibilidad. Si la forma es parte
+de la marca, genera el trazado con una herramienta como `figma-squircle`
+y aplícalo mediante `clip-path` o una máscara donde no se admita la propiedad.

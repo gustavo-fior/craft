@@ -1,0 +1,98 @@
+---
+title: Iconos
+description: Una familia, un peso y un tamaño acorde con el texto.
+section: Typography
+order: 5
+publishedAt: "2026-07-15"
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: 20374f108a5f5efb9fd159d6e2f6668cded10fad8fd8905927676fe8afc56bd2
+resources:
+  - url: https://phosphoricons.com
+    title: Phosphor Icons
+    description: Una familia amplia con seis pesos por glifo, todos dibujados sobre la misma retícula.
+  - url: https://tabler.io/icons
+    title: Tabler Icons
+    description: Otra familia coherente, dibujada sobre una retícula de 24 px con un trazo de 2 px.
+  - url: https://benji.org/morphing-icons-with-claude
+    title: Morphing icons
+    description: Benji Taylor explica cómo dibujar un sistema propio en el que todos los iconos comparten tres líneas.
+  - url: https://developer.apple.com/design/human-interface-guidelines/sf-symbols
+    title: SF Symbols
+    description: Cómo relaciona Apple el peso y el tamaño óptico de los iconos con el texto al que acompañan.
+---
+
+Los iconos son tipografía. Una familia de iconos es un pequeño alfabeto y,
+como cualquier alfabeto, tiene una voz: el grosor del trazo, el radio de las
+esquinas, la retícula sobre la que se dibujó y el detalle que cabe en cada glifo.
+
+Lo primero es elegir una voz y utilizarla en todas partes. Cambia el peso en
+la demo para ver cuánto cambian los mismos iconos.
+
+<IconWeightsDemo />
+
+Fíjate en que el peso también debe encajar con el texto. Unos iconos thin
+junto a etiquetas medium parecen pertenecer a otro producto. Los iconos bold
+gritan. Regular combina con texto regular y medium; por eso es el peso
+predeterminado de la mayoría de las familias.
+
+Este sitio utiliza **duotone** en todas partes. La segunda capa rellena tiene
+poca opacidad, lo que añade algo de profundidad sin introducir color.
+
+## Una sola familia
+
+Mezclar librerías de iconos produce el mismo efecto que mezclar tipografías
+en mitad de una frase. Las retículas no coinciden, los trazos tampoco, y el
+ojo lo detecta aunque no sepa explicar por qué.
+
+<IconMixDemo />
+
+La barra incorrecta reúne iconos de dos librerías, tres grosores de trazo y dos
+tamaños. La correcta usa una librería, un peso y un tamaño. No ha cambiado nada más.
+
+Cuando elijas una librería, cuenta los iconos que necesita tu producto y
+comprueba que los incluya. Quedarte sin opciones a medio camino y recurrir a
+una segunda librería es lo que acaba creando la barra incorrecta.
+
+## Tamaño
+
+Los iconos se dibujan con un poco de espacio libre dentro de su caja. Por eso,
+un icono con el mismo tamaño en píxeles que el texto parece más pequeño que
+las mayúsculas que tiene al lado.
+
+<IconTextSizeDemo />
+
+Un tamaño entre `1.1em` y `1.25em` suele equilibrar el conjunto. Después,
+comprueba la posición vertical. Flexbox centra la caja del icono, no su forma,
+así que a menudo hace falta desplazarlo un píxel. Expresar el tamaño en `em`
+mantiene la proporción cuando cambia el tamaño del texto.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { TrayIcon } from "@phosphor-icons/react";
+
+<a className="flex items-center gap-2 text-sm font-medium">
+    <TrayIcon weight="duotone" className="mb-px size-[1.15em]" />
+    Inbox
+</a>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.nav-item svg {
+    width: 1.15em;
+    height: 1.15em;
+    margin-bottom: 1px;
+}`,
+    },
+  ]}
+/>
+
+Una comprobación rápida para cualquier pantalla: coloca todos sus iconos en
+una fila. Si alguno parece dibujado por otra persona, probablemente lo esté.

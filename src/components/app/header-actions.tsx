@@ -19,6 +19,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useUiLanguage } from "./ui-language";
 import { isMuted, playSound, setMuted } from "@/lib/sounds";
 
 function Action({
@@ -55,6 +56,7 @@ function Action({
 }
 
 export function CopyLinkButton() {
+  const { messages } = useUiLanguage();
   const [copied, setCopied] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -67,7 +69,7 @@ export function CopyLinkButton() {
   };
 
   return (
-    <Action label="Copy link" onClick={copy}>
+    <Action label={messages.copyLink} onClick={copy}>
       <CopyIcon
         copied={copied}
         icon={<LinkIcon className="size-4" />}
@@ -81,6 +83,7 @@ export function CopyLinkButton() {
 // is fetched on hover so the clipboard write still happens inside the click's
 // user activation, which Safari requires.
 export function CopyMarkdownButton({ href }: { href: string }) {
+  const { messages } = useUiLanguage();
   const [copied, setCopied] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout>>(undefined);
   const markdown = useRef<Promise<string> | undefined>(undefined);
@@ -111,7 +114,7 @@ export function CopyMarkdownButton({ href }: { href: string }) {
   };
 
   return (
-    <Action label="Copy as Markdown" onClick={copy} onPrefetch={load}>
+    <Action label={messages.copyMarkdown} onClick={copy} onPrefetch={load}>
       <CopyIcon
         copied={copied}
         icon={<MarkdownLogoIcon className="size-4" />}
@@ -122,9 +125,10 @@ export function CopyMarkdownButton({ href }: { href: string }) {
 }
 
 export function ViewInRepoButton({ href }: { href: string }) {
+  const { messages } = useUiLanguage();
   return (
     <Action
-      label="View in repo"
+      label={messages.viewRepo}
       onClick={() => {
         playSound("pop");
         window.open(href, "_blank", "noopener,noreferrer");
@@ -138,6 +142,7 @@ export function ViewInRepoButton({ href }: { href: string }) {
 const THEME_CYCLE = ["system", "light", "dark"] as const;
 
 export function ThemeSwitcher() {
+  const { messages } = useUiLanguage();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
@@ -149,7 +154,7 @@ export function ThemeSwitcher() {
 
   return (
     <Action
-      label={mounted ? `Theme: ${current}` : "Theme"}
+      label={mounted ? `${messages.theme}: ${messages[current]}` : messages.theme}
       onClick={() => {
         playSound("toggle");
         setTheme(next);
@@ -167,12 +172,13 @@ export function ThemeSwitcher() {
 }
 
 export function SoundToggle() {
+  const { messages } = useUiLanguage();
   const [muted, setMutedState] = useState(true);
   useEffect(() => setMutedState(isMuted()), []);
 
   return (
     <Action
-      label={muted ? "Unmute sounds" : "Mute sounds"}
+      label={muted ? messages.unmute : messages.mute}
       onClick={() => {
         const next = !muted;
         setMuted(next);

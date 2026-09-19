@@ -1,5 +1,6 @@
 "use client";
 
+import { useDemoText } from "@/components/app/demo-messages";
 import { ArrowsClockwiseIcon } from "@phosphor-icons/react";
 import { useReducedMotion } from "motion/react";
 import { useState } from "react";
@@ -59,6 +60,7 @@ function MailRow({
   duration: number;
   compact?: boolean;
 }) {
+  const t = useDemoText();
   return (
     <li
       className={cn(
@@ -83,7 +85,7 @@ function MailRow({
         </span>
         {!compact && (
           <span className="truncate text-[11px] text-muted-foreground">
-            {mail.subject}
+            {t(mail.subject)}
           </span>
         )}
       </span>
@@ -131,15 +133,17 @@ function MailList({
 }
 
 function ReplayButton({ onClick }: { onClick: () => void }) {
+  const t = useDemoText();
   return (
     <Button onClick={onClick} variant="secondary">
       <ArrowsClockwiseIcon weight="bold" />
-      Replay
+      {t("Replay")}
     </Button>
   );
 }
 
 export function StaggerDemo() {
+  const t = useDemoText();
   const reduceMotion = useReducedMotion();
   const [step, setStep] = useState(40);
   const [run, setRun] = useState(0);
@@ -159,11 +163,11 @@ export function StaggerDemo() {
       <div className="flex w-full max-w-xs flex-col items-center gap-5">
         <label className="grid w-full gap-2.5">
           <span className="flex justify-between text-xs text-muted-foreground">
-            Delay between items
+            {t("Delay between items")}
             <span className="tabular-nums text-foreground">{step}ms</span>
           </span>
           <Slider
-            aria-label="Delay between items"
+            aria-label={t("Delay between items")}
             max={120}
             min={0}
             onValueChange={(value) => {
@@ -223,6 +227,7 @@ const FIXED_STEP = 60;
 const TOTAL_CAP = 300;
 
 export function StaggerCapDemo() {
+  const t = useDemoText();
   const reduceMotion = useReducedMotion();
   const [mode, setMode] = useState<CapMode>("fixed");
   const [run, setRun] = useState(0);
@@ -243,18 +248,18 @@ export function StaggerCapDemo() {
           step={reduceMotion ? 0 : step}
         />
         <span className="text-[10px] tabular-nums text-muted-foreground">
-          Last item starts at {lastStart}ms
+          {t("Last item starts at {time}ms", { time: lastStart })}
         </span>
       </div>
 
       <div className="flex flex-col items-center gap-5">
         <SegmentedControl
-          ariaLabel="Stagger strategy"
+          ariaLabel={t("Stagger strategy")}
           onChange={(value) => {
             setMode(value);
             setRun((n) => n + 1);
           }}
-          options={CAP_MODES}
+          options={CAP_MODES.map((option) => ({ ...option, label: t(option.label) }))}
           value={mode}
         />
         <ReplayButton onClick={() => setRun((n) => n + 1)} />

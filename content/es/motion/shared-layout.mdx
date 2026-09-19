@@ -1,0 +1,91 @@
+---
+title: "Shared layout"
+description: "Un elemento que se mueve se entiende mejor que dos que se sustituyen."
+section: Motion
+order: 7
+publishedAt: "2026-07-16"
+resources:
+  - url: https://jakub.kr/work/shared-layout-animations
+    title: How I Use Shared Layout Animations
+    description: "Jakub Krehel explica layoutId, FLIP y cuándo tiene sentido un morph."
+  - url: https://motion.dev/docs/react-layout-animations
+    title: Layout animations in Motion
+    description: "La guía oficial de layout y layoutId, incluido cómo corregir la distorsión del radio de borde."
+  - url: https://aerotwist.com/blog/flip-your-animations/
+    title: FLIP Your Animations
+    description: "El artículo original de Paul Lewis sobre First, Last, Invert, Play, la técnica en la que se basa shared layout."
+  - url: https://developer.chrome.com/docs/web-platform/view-transitions
+    title: View Transitions API
+    description: "La forma nativa de transformar elementos entre estados y entre páginas sin una librería."
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "7898832e7e9741cdc595ad212ab9e07870020919919f663ea3dd3405d213905e"
+---
+
+Cuando el indicador de una pestaña salta a otra, el ojo tiene que buscarlo de nuevo. Cuando se desliza, nunca lo pierdes. Una animación de **shared layout** trata el indicador como un solo elemento que se mueve, aunque en el DOM sean dos elementos que se sustituyen.
+
+Pulsa las pestañas. Las dos filas se actualizan a la vez.
+
+<SharedLayoutDemo />
+
+A la izquierda, el resaltado desaparece de una pestaña y aparece bajo otra. A la derecha, se desplaza. La segunda versión comunica dos cosas a la vez: qué pestaña está activa y de dónde viene. Ese es todo el valor de la técnica. La continuidad aporta información.
+
+Por debajo funciona FLIP. Motion mide dónde estaba el elemento y dónde está ahora, y anima la diferencia con una transformación. Asignas el mismo `layoutId` a dos elementos y, cuando uno se desmonta y el otro se monta, Motion reproduce el desplazamiento.
+
+## De la lista al detalle
+
+La misma idea va mucho más allá de las pestañas. Una miniatura en una lista puede convertirse en la cabecera de una vista de detalle. El título de una fila puede pasar a ser el de una página. Pulsa un proyecto y después cambia al modo de sustitución para probar de nuevo.
+
+<SharedLayoutDetailDemo />
+
+Con shared layout, la miniatura y el título siguen siendo los mismos en tu cabeza mientras todo cambia a su alrededor. Con una sustitución directa se reemplaza la vista entera y tienes que volver a leerla para confirmar que has llegado al sitio correcto.
+
+Haz que el movimiento se asiente pronto. Un spring sin rebote que termina en menos de 300 ms responde con agilidad. Si dura más, empieza a parecer que la interfaz quiere lucirse.
+
+## Dónde falla
+
+Las animaciones de shared layout escalan los elementos para moverlos, y la escala distorsiona el radio de borde y las sombras. Motion corrige `borderRadius` cuando lo defines en `style`, en lugar de mediante una clase. El texto también puede estirarse brevemente cuando un contenedor cambia de forma. Por eso el título del ejemplo usa `layout="position"`: se mueve, pero nunca se escala.
+
+Elige también con cuidado qué compartes. Dos elementos con el mismo `layoutId` deberían representar lo mismo para el usuario. Compartir la miniatura de una tarjeta con la cabecera de su detalle tiene sentido. Compartir un botón con un panel que no guarda relación parece un fallo visual.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Motion",
+      language: "tsx",
+      code: `import { motion } from "motion/react";
+
+{tabs.map((tab) => (
+  <button key={tab} onClick={() => setActive(tab)}>
+    {tab === active && (
+      <motion.span
+        className="absolute inset-0 rounded-md bg-card"
+        layoutId="indicator"
+        transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+      />
+    )}
+    <span className="relative">{tab}</span>
+  </button>
+))}`,
+    },
+    {
+      label: "View Transitions",
+      language: "css",
+      icon: "css",
+      code: `/* Give the element the same name in both states. */
+.thumbnail,
+.detail-header {
+  view-transition-name: project-thumb;
+}
+
+::view-transition-group(project-thumb) {
+  animation-duration: 300ms;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}`,
+    },
+  ]}
+/>
+
+El navegador ya tiene una versión nativa. Envuelve un cambio de estado en `document.startViewTransition()` y cualquier elemento con un `view-transition-name` coincidente se transformará automáticamente, también entre rutas. Merece la pena probarla primero si no necesitas Motion para nada más.

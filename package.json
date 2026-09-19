@@ -7,6 +7,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "bun test tests/i18n.test.ts",
+    "test:e2e": "playwright test",
+    "typecheck": "tsc --noEmit",
+    "i18n:status": "bun scripts/translation-status.ts",
     "build:skill": "bun scripts/build-skill.ts",
     "video": "remotion studio --config video/remotion.config.ts",
     "video:render": "remotion render --config video/remotion.config.ts Craft video/out/craft.mp4",
@@ -36,6 +40,7 @@
     "input-otp": "^1.4.2",
     "motion": "^12.42.2",
     "next": "16.2.10",
+    "next-intl": "4.14.5",
     "next-themes": "^0.4.6",
     "react": "19.2.4",
     "react-day-picker": "9.14.0",
@@ -52,6 +57,8 @@
     "zod": "4.5.4"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/mdx": "^2.0.14",
     "@types/node": "^20",

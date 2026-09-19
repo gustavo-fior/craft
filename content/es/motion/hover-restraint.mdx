@@ -1,0 +1,66 @@
+---
+title: "Moderación en hover"
+description: "Las interacciones frecuentes deben ser instantáneas."
+section: Motion
+order: 6
+publishedAt: "2026-07-15"
+resources:
+  - url: https://emilkowal.ski/ui/you-dont-need-animations
+    title: You don't need animations
+    description: "Emil Kowalski explica cuándo ayuda una animación y cuándo estorba, con hover como caso principal."
+  - url: https://emilkowal.ski/ui/7-practical-animation-tips
+    title: 7 practical animation tips
+    description: "Reglas breves y concretas para animar interfaces, incluido el comportamiento de los tooltips."
+  - url: https://base-ui.com/react/components/tooltip
+    title: Base UI Tooltip
+    description: "El tooltip que utiliza este sitio, con retardo y apertura instantánea incorporados."
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/:hover
+    title: The :hover pseudo-class
+    description: "Qué se considera hover con ratón, lápiz y pantalla táctil, y por qué no es fiable en esta última."
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "40c60962aec54024441d5c028830edb68fcc2807ef66e2cb3a101180df0d1f6e"
+---
+
+Hover se activa más que cualquier otra interacción. Al recorrer una navegación con el cursor puedes pasar por diez elementos en un segundo. Si cada uno aparece con un fade-in, la interfaz siempre va unos fotogramas por detrás del puntero y parece lenta aunque no lo sea.
+
+**Cuanto más a menudo ocurre algo, menos animación admite.**
+
+<HoverRestraintDemo />
+
+El de la derecha activa el resaltado sin transición. La respuesta instantánea es la opción correcta por defecto para hover.
+
+## Tooltips
+
+Los tooltips son uno de los casos de hover en los que un retardo ayuda. Sin él, aparecen cuando solo estás pasando de camino a otro sitio.
+
+El primer tooltip debería esperar entre 400 y 700 ms, aproximadamente; los siguientes deberían aparecer de inmediato. Ya has mostrado que quieres leer las etiquetas y esperar otra vez por cada una resulta frustrante.
+
+<HoverTooltipDemo />
+
+## Acciones de teclado
+
+El mismo criterio se aplica fuera del puntero.
+
+<KeyboardActionDemo />
+
+Quien muestra y oculta una barra lateral con un atajo está entre tus usuarios más rápidos. No necesita ver de dónde viene el panel. Ya sabe lo que hace el atajo, y un deslizamiento de 250 ms le obliga a frenar.
+
+El criterio debe ser la frecuencia y la intención, no el dispositivo de entrada. Un modal que se abre una vez por sesión puede animarse. Un panel que alternas cuarenta veces al día no debería hacerlo.
+
+Algunos ejemplos de interacciones que empeorarían con una animación:
+
+<LinkList
+  links={[
+    {
+      url: "https://www.raycast.com/",
+      title: "Raycast launcher",
+      description: "Se abre y se cierra sin transición, siempre.",
+    },
+    {
+      url: "https://rauno.me/craft/interaction-design",
+      title: "macOS Alt+Tab",
+      description: "Rauno Freiberg explica por qué el selector de aplicaciones aparece al instante.",
+    },
+  ]}
+/>

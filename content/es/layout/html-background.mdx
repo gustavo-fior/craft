@@ -1,0 +1,75 @@
+---
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "0f6080dc4295e9d18dc23f05654517ed984ce40b9fc67333cafbd199bde97ca0"
+title: Fondo de HTML
+description: Pinta el canvas que queda detrás de la página.
+section: Layout
+order: 3
+publishedAt: "2026-07-15"
+resources:
+  - url: https://css-tricks.com/html-vs-body-in-css/
+    title: HTML vs Body in CSS
+    description: Una explicación práctica de cómo se comportan el elemento raíz y body.
+  - url: https://www.w3.org/TR/css-backgrounds-3/#special-backgrounds
+    title: Canvas backgrounds
+    description: Cómo pintan los navegadores el canvas del documento a partir del elemento raíz o de body.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/overscroll-behavior
+    title: overscroll-behavior
+    description: Controla qué ocurre cuando el desplazamiento llega a un límite.
+  - url: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meta/name/theme-color
+    title: theme-color
+    description: Adapta la interfaz de los navegadores compatibles al color de fondo de la página.
+---
+
+Si tiras más allá del borde superior de una página oscura en Safari, puede
+aparecer una franja blanca detrás. La aplicación es oscura, pero el canvas del
+documento sigue siendo blanco.
+
+El canvas es la superficie que el navegador pinta detrás de la página.
+
+<HtmlBackgroundDemo />
+
+## El canvas del documento
+
+Un wrapper solo pinta su propia caja. Cuando se mueve durante el overscroll
+(desplazamiento más allá del límite), deja ver el canvas. Define el fondo en el
+elemento raíz para pintar también esa superficie.
+
+Normalmente, los navegadores usan el fondo de `body` cuando `html` es
+transparente. Definirlo directamente en `html` deja claro el color que debe
+tener el canvas y evita depender de ese comportamiento.
+
+## Otros detalles en los bordes
+
+- **Theme color:** La etiqueta meta `theme-color` puede teñir la interfaz de los
+  navegadores compatibles para que coincida con la página. Mantenla sincronizada al cambiar de tema.
+- **Overscroll:** `overscroll-behavior: none` puede eliminar el rebote y detener
+  el scroll chaining (la propagación del desplazamiento). Úsalo con cuidado:
+  el rebote es una parte familiar de la plataforma.
+- **Ambos temas:** El fondo raíz debe seguir el tema activo; si no, el destello
+  blanco puede reaparecer en uno de los modos.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<html class="bg-background">`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `html {
+    background-color: var(--background);
+}`,
+    },
+  ]}
+/>
+
+Usa el mismo token de fondo para el elemento raíz y para la aplicación.
+Si cambia el tema, ese token debe cambiar con él.

@@ -9,6 +9,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -33,6 +34,7 @@ const LIST_NAMES = Object.keys(LISTS) as ListName[];
 const ROW_HEIGHT = 40;
 
 export function NoveltyBudgetDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<Mode>("everywhere");
   const [list, setList] = useState<ListName>("Today");
   const [done, setDone] = useState<Set<string>>(() => new Set());
@@ -103,13 +105,13 @@ export function NoveltyBudgetDemo() {
                       }}
                     />
                   ) : null}
-                  <span className="relative">{name}</span>
+                  <span className="relative">{t(name)}</span>
                 </button>
               );
             })}
           </div>
           <Button
-            aria-label="Reset tasks"
+            aria-label={t("Reset tasks")}
             className={cn(!everywhere && "transition-none")}
             onClick={reset}
             size="icon-xs"
@@ -190,7 +192,7 @@ export function NoveltyBudgetDemo() {
                             : "text-foreground"
                         )}
                       >
-                        {task}
+                        {t(task)}
                       </span>
                     </button>
                   </motion.li>
@@ -242,7 +244,7 @@ export function NoveltyBudgetDemo() {
                   />
                 </span>
                 <span className="text-xs font-medium text-foreground">
-                  All clear
+                  {t("All clear")}
                 </span>
               </motion.div>
             ) : null}
@@ -251,9 +253,12 @@ export function NoveltyBudgetDemo() {
       </div>
 
       <SegmentedControl
-        ariaLabel="Where the animation budget goes"
+        ariaLabel={t("Where the animation budget goes")}
         onChange={setMode}
-        options={MODES}
+        options={MODES.map((option) => ({
+          ...option,
+          label: t(option.label),
+        }))}
         value={mode}
       />
     </Demo>
@@ -265,6 +270,7 @@ function getSliderValue(value: number | readonly number[]) {
 }
 
 export function AnimationCostDemo() {
+  const t = useDemoText();
   const [duration, setDuration] = useState(300);
   const [usesPerDay, setUsesPerDay] = useState(200);
 
@@ -275,21 +281,21 @@ export function AnimationCostDemo() {
       <div className="flex flex-col items-center gap-1">
         <span className="text-5xl font-medium tracking-tight tabular-nums text-foreground">
           {hoursPerYear.toFixed(1)}
-          <span className="ml-1.5 text-2xl text-muted-foreground">hours</span>
+          <span className="ml-1.5 text-2xl text-muted-foreground">{t("hours")}</span>
         </span>
         <span className="text-[10px] text-muted-foreground">
-          a year, per person
+          {t("a year, per person")}
         </span>
       </div>
 
       <div className="mb-2 grid w-full max-w-xs gap-5">
         <label className="grid gap-2.5">
           <span className="flex items-center justify-between text-xs text-muted-foreground">
-            Animation
+            {t("Animation")}
             <span className="tabular-nums text-foreground">{duration}ms</span>
           </span>
           <Slider
-            aria-label="Animation duration"
+            aria-label={t("Animation duration")}
             max={600}
             min={50}
             onValueChange={(value) => setDuration(getSliderValue(value))}
@@ -299,11 +305,11 @@ export function AnimationCostDemo() {
         </label>
         <label className="grid gap-2.5">
           <span className="flex items-center justify-between text-xs text-muted-foreground">
-            Times a day
+            {t("Times a day")}
             <span className="tabular-nums text-foreground">{usesPerDay}</span>
           </span>
           <Slider
-            aria-label="Uses per day"
+            aria-label={t("Uses per day")}
             max={500}
             min={10}
             onValueChange={(value) => setUsesPerDay(getSliderValue(value))}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useDemoText } from "@/components/app/demo-messages";
 import { useEffect, useRef, useState } from "react";
 import {
   ArchiveIcon,
@@ -48,6 +49,7 @@ export function SoundCuesView({
   onChange?: (next: Partial<SoundCuesState>) => void;
   onSend?: () => void;
 }) {
+  const t = useDemoText();
   const { synced, done, sent, attached } = state;
   const reduced = useReducedMotion();
 
@@ -60,9 +62,9 @@ export function SoundCuesView({
         )}
       >
         <div className={ROW}>
-          <span>Sync across devices</span>
+          <span>{t("Sync across devices")}</span>
           <Switch
-            aria-label="Sync across devices"
+            aria-label={t("Sync across devices")}
             checked={synced}
             onCheckedChange={(next) => {
               playSoundAlways("toggle");
@@ -73,7 +75,7 @@ export function SoundCuesView({
 
         <label className={cn(ROW, "cursor-pointer justify-start gap-3")}>
           <Checkbox
-            aria-label="Ship the release notes"
+            aria-label={t("Ship the release notes")}
             checked={done}
             onCheckedChange={(next) => {
               playSoundAlways("tick");
@@ -86,12 +88,12 @@ export function SoundCuesView({
               done && "text-muted-foreground line-through"
             )}
           >
-            Ship the release notes
+            {t("Ship the release notes")}
           </span>
         </label>
 
         <div className={ROW}>
-          <span className="min-w-0 truncate">Reply to Ana</span>
+          <span className="min-w-0 truncate">{t("Reply to Ana")}</span>
           <Button
             variant="secondary"
             size="sm"
@@ -102,19 +104,19 @@ export function SoundCuesView({
             {sent ? (
               <>
                 <CheckIcon weight="bold" aria-hidden="true" />
-                Sent
+                {t("Sent")}
               </>
             ) : (
               <>
                 <PaperPlaneTiltIcon aria-hidden="true" />
-                Send
+                {t("Send")}
               </>
             )}
           </Button>
         </div>
 
         <div className={ROW}>
-          <span>Attachment</span>
+          <span>{t("Attachment")}</span>
           <AnimatePresence mode="wait" initial={false}>
             {attached ? (
               <motion.span
@@ -128,7 +130,7 @@ export function SoundCuesView({
                 <Button
                   variant="ghost"
                   size="icon-xs"
-                  aria-label="Remove brief.pdf"
+                  aria-label={t("Remove brief.pdf")}
                   className="size-5 rounded-sm"
                   onClick={() => {
                     playSoundAlways("pop");
@@ -153,7 +155,7 @@ export function SoundCuesView({
                     onChange?.({ attached: true });
                   }}
                 >
-                  Undo
+                  {t("Undo")}
                 </Button>
               </motion.span>
             )}
@@ -230,6 +232,7 @@ const LEVEL_OPTIONS = [
 ] as const satisfies readonly { value: Level; label: string }[];
 
 export function SoundLevelDemo() {
+  const t = useDemoText();
   const [level, setLevel] = useState<Level>("quiet");
   const [copied, setCopied] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -264,16 +267,16 @@ export function SoundLevelDemo() {
           {copied ? (
             <>
               <CheckIcon weight="bold" aria-hidden="true" />
-              Copied
+              {t("Copied")}
             </>
           ) : (
-            "Copy"
+            t("Copy")
           )}
         </Button>
       </div>
       <SegmentedControl
-        ariaLabel="Sound level"
-        options={LEVEL_OPTIONS}
+        ariaLabel={t("Sound level")}
+        options={LEVEL_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={level}
         onChange={setLevel}
       />
@@ -299,6 +302,7 @@ const NAV = [
 ] as const;
 
 export function HoverSoundDemo() {
+  const t = useDemoText();
   const [hoverSound, setHoverSound] = useState<HoverSound>("whisper");
   const [active, setActive] = useState(0);
 
@@ -312,7 +316,7 @@ export function HoverSoundDemo() {
 
   return (
     <Demo className="gap-8">
-      <nav aria-label="Lists" className={cn(CARD, "p-1.5")}>
+      <nav aria-label={t("Lists")} className={cn(CARD, "p-1.5")}>
         <ul className="grid gap-0.5">
           {NAV.map(({ label, icon: Icon, count }, i) => (
             <li key={label}>
@@ -334,7 +338,7 @@ export function HoverSoundDemo() {
                 )}
               >
                 <Icon aria-hidden="true" className="size-4 shrink-0" />
-                <span className="flex-1">{label}</span>
+                <span className="flex-1">{t(label)}</span>
                 {count > 0 && (
                   <span className="text-xs tabular-nums text-muted-foreground">
                     {count}
@@ -346,8 +350,8 @@ export function HoverSoundDemo() {
         </ul>
       </nav>
       <SegmentedControl
-        ariaLabel="Hover sound"
-        options={HOVER_OPTIONS}
+        ariaLabel={t("Hover sound")}
+        options={HOVER_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={hoverSound}
         onChange={setHoverSound}
       />

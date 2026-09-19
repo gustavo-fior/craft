@@ -1,5 +1,6 @@
 import { withContentCollections } from "@content-collections/next";
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   images: {
@@ -7,4 +8,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withContentCollections(nextConfig);
+export default withContentCollections(createNextIntlPlugin()(nextConfig));

@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { Slider } from "@/components/ui/slider";
 
@@ -35,6 +36,7 @@ function SwatchRow({
 }
 
 export function OklchDemo() {
+  const t = useDemoText();
   const [lightness, setLightness] = useState(65);
 
   return (
@@ -52,11 +54,11 @@ export function OklchDemo() {
 
       <label className="grid w-full max-w-xs gap-2.5">
         <span className="flex items-center justify-between text-xs text-muted-foreground">
-          Lightness
+          {t("Lightness")}
           <span className="tabular-nums text-foreground">{lightness}%</span>
         </span>
         <Slider
-          aria-label="Lightness"
+          aria-label={t("Lightness")}
           max={85}
           min={40}
           onValueChange={(value) => setLightness(getSliderValue(value))}
@@ -105,6 +107,7 @@ function GradientRow({ label, style }: { label: string; style: string }) {
 }
 
 export function OklchGradientDemo() {
+  const t = useDemoText();
   const [pair, setPair] = useState<PairId>("blue-yellow");
   const current = PAIRS.find((option) => option.value === pair) ?? PAIRS[0];
 
@@ -122,9 +125,9 @@ export function OklchGradientDemo() {
       </div>
 
       <SegmentedControl
-        ariaLabel="Gradient colors"
+        ariaLabel={t("Gradient colors")}
         onChange={setPair}
-        options={PAIRS}
+        options={PAIRS.map((option) => ({ ...option, label: t(option.label) }))}
         value={pair}
       />
     </Demo>
@@ -145,6 +148,7 @@ const RAMP = [
 ] as const;
 
 export function OklchPaletteDemo() {
+  const t = useDemoText();
   const [hue, setHue] = useState(250);
   const step = (index: number) =>
     `oklch(${RAMP[index].l} ${RAMP[index].c} ${hue})`;
@@ -174,30 +178,30 @@ export function OklchPaletteDemo() {
             className="rounded-full px-2.5 py-1 text-xs font-medium dark:hidden"
             style={{ background: step(1), color: step(6) }}
           >
-            Shipped
+            {t("Shipped")}
           </span>
           <span
             className="hidden rounded-full px-2.5 py-1 text-xs font-medium dark:inline"
             style={{ background: step(7), color: step(2) }}
           >
-            Shipped
+            {t("Shipped")}
           </span>
           <span
             className="rounded-full px-3 py-1.5 text-xs font-medium text-white"
             style={{ background: step(5) }}
           >
-            Continue
+            {t("Continue")}
           </span>
         </div>
       </div>
 
       <label className="grid w-full max-w-xs gap-2.5">
         <span className="flex items-center justify-between text-xs text-muted-foreground">
-          Hue
+          {t("Hue")}
           <span className="tabular-nums text-foreground">{hue}°</span>
         </span>
         <Slider
-          aria-label="Hue"
+          aria-label={t("Hue")}
           max={360}
           min={0}
           onValueChange={(value) => setHue(getSliderValue(value))}

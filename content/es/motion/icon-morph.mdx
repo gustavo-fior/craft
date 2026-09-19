@@ -1,0 +1,77 @@
+---
+title: "Morph de iconos"
+description: "Combina blur, escala y desvanecimiento al cambiar de icono."
+section: Motion
+order: 1
+publishedAt: "2026-07-14"
+resources:
+  - url: https://motion.dev/docs/react-animate-presence
+    title: AnimatePresence
+    description: "El componente de Motion que mantiene un elemento el tiempo suficiente para animar su salida."
+  - url: https://rauno.me/craft/interaction-design
+    title: Invisible details of interaction design
+    description: "Rauno Freiberg analiza las transiciones que explican cambios de estado en lugar de limitarse a decorarlos."
+  - url: https://emilkowal.ski/ui/great-animations
+    title: Great animations
+    description: "Por qué el blur hace que un crossfade se perciba como un objeto que cambia y no como dos que se intercambian."
+  - url: https://motion.dev/docs/react-transitions#spring
+    title: Spring transitions
+    description: "Las opciones duration y bounce utilizadas en el ejemplo."
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "7cd9a27efab7c7cb6a5ce0fc0c5e225a6eac3740e0c5ff6520e9f676e4848f2f"
+---
+
+Los iconos que cambian de estado —de copiar a confirmación, de reproducir a pausar o de menú a cerrar— se sustituyen en un solo fotograma por defecto. Funciona, pero el ojo percibe un salto. Un crossfade completo es la solución habitual, aunque resulta lento y poco definido. El punto justo combina **blur, escala y desvanecimiento** en una animación breve impulsada por un spring.
+
+Pulsa los dos botones.
+
+<IconMorphDemo />
+
+El blur es lo que hace creíble el efecto. El icono anterior pierde el enfoque mientras se encoge y el nuevo gana nitidez mientras crece. Las dos formas nunca se superponen nítidas, así que se percibe un solo objeto cambiando, no dos que se sustituyen. Todo el movimiento dura unos 300 ms.
+
+## Ajustarlo
+
+Importan dos valores: cuánto blur aplicas y con qué escala empieza el icono. Mueve los controles y sigue alternando.
+
+<IconMorphTuningDemo />
+
+Sin blur, el crossfade muestra los dos iconos a la vez durante unos fotogramas. Esa superposición produce el aspecto poco definido que quieres evitar. Alrededor de `4px`, la superposición deja de apreciarse. Una escala inicial cercana a `0.25` da al nuevo icono un punto de partida. En `1` solo hay desvanecimiento; en `0`, el icono crece desde la nada y parece un efecto.
+
+El spring tiene `bounce: 0`, así que está críticamente amortiguado. Los cambios de icono piden una respuesta ágil, sin oscilaciones. En un spring, `duration: 0.3` indica el tiempo que tarda en asentarse, que es el dato que interesa tener en cuenta.
+
+## Cuando las formas están relacionadas
+
+Algunas parejas comparten geometría. El icono de menú hamburguesa y el de cerrar están hechos de líneas, así que puedes moverlas en lugar de hacer un crossfade entre iconos. Las barras superior e inferior giran hasta formar una X mientras la del medio se encoge y desaparece.
+
+<HamburgerMorphDemo />
+
+Esto solo compensa cuando las formas están realmente relacionadas. Forzar un morph entre un icono de copiar y uno de confirmación exigiría animar los datos del path. Un crossfade con blur consigue gran parte del efecto con mucho menos esfuerzo.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { AnimatePresence, motion } from "motion/react";
+
+<span className="relative inline-flex">
+    <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+            key={copied ? "check" : "copy"}
+            initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+            transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+        >
+            {copied ? <CheckIcon /> : <CopyIcon />}
+        </motion.span>
+    </AnimatePresence>
+</span>`,
+    },
+  ]}
+/>
+
+Conviene conservar dos detalles. `mode="popLayout"` saca del layout el icono que se va para que ambos se superpongan en lugar de apilarse; por eso el contenedor usa `relative`. Y `initial={false}` evita ejecutar la animación en el primer render, cuando no hay un icono anterior que transformar. El botón para copiar el enlace de la cabecera de este sitio utiliza exactamente este componente.

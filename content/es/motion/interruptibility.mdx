@@ -1,0 +1,99 @@
+---
+title: "Animaciones interrumpibles"
+description: "Una animación que puede cambiar de rumbo."
+section: Motion
+order: 5
+publishedAt: "2026-07-15"
+resources:
+  - url: https://emilkowal.ski/ui/building-a-toast-component
+    title: Building a Toast Component
+    description: "Emil Kowalski explica Sonner, donde cada toast debe poder interrumpirse mientras llegan otros."
+  - url: https://rauno.me/craft/interaction-design
+    title: Invisible Details of Interaction Design
+    description: "Rauno Freiberg explica por qué una interfaz nunca debe bloquear al usuario mientras algo se mueve."
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_transitions/Using_CSS_transitions
+    title: Using CSS transitions
+    description: "La referencia de MDN, incluido el comportamiento de una transición cuando cambia su destino a mitad del recorrido."
+  - url: https://motion.dev/docs/react-transitions
+    title: Transitions in Motion
+    description: "Cómo los springs de Motion conservan la velocidad cuando cambia el destino de una animación antes de que termine."
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "008c186b3e34dc99b1d1c61e4fd266325e30a43be235d4d5beea8751cfbb3f71"
+---
+
+Los usuarios cambian de idea. Abren un panel y lo cierran antes de que llegue a su sitio. Hacen hover, se apartan y vuelven. La **interruptibilidad** describe lo que le ocurre a tu animación en ese momento: ¿continúa desde donde está o empieza de nuevo?
+
+Pulsa Abrir y después Cerrar antes de que llegue el panel. Repítelo unas cuantas veces seguidas. Aquí hemos ralentizado el recorrido a propósito para que puedas interrumpirlo a mitad.
+
+<InterruptibilityDemo />
+
+El panel de la izquierda usa keyframes de CSS. Una animación con keyframes tiene un principio y un final fijos, por lo que cada clic la reinicia desde el primer fotograma. El panel salta hasta abajo y vuelve a subir. El de la derecha usa una transición CSS, que anima desde el valor actual hasta el nuevo destino, esté donde esté el elemento. No hay saltos.
+
+Esa es toda la regla. Los keyframes describen una secuencia fija. Las transiciones describen un destino. Cualquier elemento cuyo estado pueda alternar el usuario necesita un destino.
+
+## Los springs conservan la velocidad
+
+Una transición resuelve el salto, pero un tween sigue frenando en seco y reiniciando su curva de easing cuando cambia el destino. Pasa de ir a toda velocidad a empezar otro ease-in. Un spring conserva la velocidad al dirigirse al nuevo destino, de modo que el cambio de sentido se percibe como un único movimiento, no como dos.
+
+Alterna dos veces seguidas con rapidez y observa cómo cambia de dirección cada punto.
+
+<SpringVelocityDemo />
+
+La diferencia es sutil a velocidades bajas y considerable a velocidades altas. Para cualquier elemento que el usuario pueda mover rápidamente de un lado a otro —un interruptor, una barra lateral o un tirador de arrastre—, un spring es la opción más segura por defecto.
+
+## Un layout que sigue moviéndose
+
+La interruptibilidad no solo consiste en invertir la dirección. Si llegan elementos nuevos mientras otros siguen animándose, cada elemento en movimiento necesita un destino nuevo. Una pila de toasts es el ejemplo clásico: pulsa el botón deprisa y cada toast subirá para dejar sitio mientras el anterior todavía se está asentando.
+
+<ToastStackDemo />
+
+La prop `layout` de Motion ajusta el destino de cada toast cuando entran o salen sus hermanos. Así, un clic a mitad de la animación se incorpora al movimiento en lugar de reiniciarlo.
+
+## Uso
+
+Una transición basta para la mayoría de los cambios de estado. Recurre a keyframes solo cuando la animación sea una secuencia independiente que nada pueda interrumpir, como un spinner de carga.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Transition",
+      language: "css",
+      icon: "css",
+      code: `.sheet {
+  transform: translateY(100%);
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.sheet[data-open] {
+  transform: translateY(0);
+}`,
+    },
+    {
+      label: "Keyframes",
+      language: "css",
+      icon: "css",
+      code: `/* Restarts from the first frame every time it is applied. */
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.sheet[data-open] {
+  animation: slide-up 300ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}`,
+    },
+    {
+      label: "Spring",
+      language: "tsx",
+      code: `import { motion } from "motion/react";
+
+<motion.div
+  animate={{ y: open ? 0 : "100%" }}
+  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+/>`,
+    },
+  ]}
+/>
+
+Una prueba rápida para cualquier componente que publiques: ábrelo y ciérralo tan rápido como puedas, diez veces. Si algo parpadea, salta o termina la animación anterior antes de empezar la nueva, todavía no es interrumpible.

@@ -1,4 +1,7 @@
 import { GITHUB_URL, SITE_URL } from "./site";
+import { localizedPath, splitLocalePath, type Locale } from "../i18n/locales";
+import { englishUi } from "../i18n/ui";
+type MarkdownLabels = typeof englishUi.markdown;
 
 // Converts a concept's MDX into plain Markdown for agents: `<CodeBlock>` tabs
 // become fenced code blocks, `<LinkList>` becomes a bullet list, and every
@@ -83,8 +86,8 @@ function humanize(componentName: string) {
     .trim();
 }
 
-function renderDemo(name: string, pageUrl: string) {
-  return `> **Interactive demo: ${humanize(name)}.** Open ${pageUrl} to try it.`;
+function renderDemo(name: string, pageUrl: string, labels: MarkdownLabels) {
+  return `> **${labels.demo}: ${humanize(name)}.** ${labels.openDemo.replace("{url}", pageUrl)}`;
 }
 
 // Finds the end of a flow-level self-closing JSX tag starting at `start`,
@@ -111,7 +114,7 @@ function findTagEnd(source: string, start: number) {
 
 const FLOW_TAG = /^<([A-Z][A-Za-z0-9]*)\b/gm;
 
-export function mdxToMarkdown(content: string, pageUrl: string) {
+export function mdxToMarkdown(content: string, pageUrl: string, labels: MarkdownLabels = englishUi.markdown) {
   let out = "";
   let cursor = 0;
   let match: RegExpExecArray | null;
@@ -127,16 +130,21 @@ export function mdxToMarkdown(content: string, pageUrl: string) {
         ? renderCodeBlock(attrs)
         : name === "LinkList"
           ? renderLinkList(attrs)
-          : renderDemo(name, pageUrl);
+          : renderDemo(name, pageUrl, labels);
     out += content.slice(cursor, match.index) + replacement;
     cursor = end;
     FLOW_TAG.lastIndex = end;
   }
   out += content.slice(cursor);
 
+  const interfaceLocale = splitLocalePath(new URL(pageUrl).pathname).locale;
   return out
     // Root-relative links become absolute so they resolve outside the site.
-    .replace(/\]\(\/(?!\/)/g, `](${SITE_URL}/`)
+    .replace(/\]\((\/(?!\/)[^\s)]+)\)/g, (_match, href: string) => {
+      const url = new URL(href, SITE_URL);
+      url.pathname = localizedPath(interfaceLocale, splitLocalePath(url.pathname).pathname);
+      return `](${url.href})`;
+    })
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
@@ -145,24 +153,26 @@ export function conceptUrl(slug: string) {
   return `${SITE_URL}/${slug}`;
 }
 
-export function conceptMarkdown(concept: MarkdownConcept) {
-  const url = conceptUrl(concept.slug);
+export function conceptMarkdown(concept: MarkdownConcept, options?: { pageUrl: string; canonicalUrl: string; locale: Locale; labels: MarkdownLabels }) {
+  const url = options?.pageUrl ?? conceptUrl(concept.slug);
+  const labels = options?.labels ?? englishUi.markdown;
   const lines = [
     `# ${concept.title}`,
     "",
     `> ${concept.description}`,
     "",
-    `- Section: ${concept.section}`,
+    `- ${labels.section}: ${concept.section}`,
     `- URL: ${url}`,
-    `- Published: ${concept.publishedAt}`,
+    `- ${labels.published}: ${concept.publishedAt}`,
   ];
+  if (options) lines.push(`- ${labels.language}: ${options.locale}`, `- Canonical: ${options.canonicalUrl}`);
   if (concept.sourcePath) {
-    lines.push(`- Source: ${GITHUB_URL}/blob/main/content/${concept.sourcePath}`);
+    lines.push(`- ${labels.source}: ${GITHUB_URL}/blob/main/content/${concept.sourcePath}`);
   }
-  lines.push("", mdxToMarkdown(concept.content, url));
+  lines.push("", mdxToMarkdown(concept.content, url, labels));
 
   if (concept.resources.length > 0) {
-    lines.push("", "## Resources", "");
+    lines.push("", `## ${labels.resources}`, "");
     for (const resource of concept.resources) {
       lines.push(
         `- [${resource.title}](${resource.url})${resource.description ? `: ${resource.description}` : ""}`,

@@ -24,6 +24,7 @@ type Concept = MarkdownConcept & { order: number };
 async function loadConcepts(): Promise<Concept[]> {
   const concepts: Concept[] = [];
   for (const section of await readdir(CONTENT_DIR)) {
+    if (!SECTIONS.some((known) => known.toLowerCase() === section)) continue;
     const dir = path.join(CONTENT_DIR, section);
     for (const file of await readdir(dir)) {
       if (!file.endsWith(".mdx")) continue;

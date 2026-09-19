@@ -1,0 +1,100 @@
+---
+title: "Entradas con escala"
+description: "Crece desde el control que te abre, no desde cero."
+section: Motion
+order: 9
+publishedAt: "2026-07-16"
+resources:
+  - url: https://emilkowal.ski/ui/7-practical-animation-tips
+    title: 7 Practical Animation Tips
+    description: "La lista de Emil Kowalski, incluido por qué los popovers nunca deberían empezar desde cero."
+  - url: https://emilkowal.ski/ui/css-transforms
+    title: CSS Transforms
+    description: "Un recorrido claro y visual por scale, translate y transform-origin."
+  - url: https://base-ui.com/react/components/popover
+    title: Base UI Popover
+    description: "Expone el origen de transformación calculado mediante una variable CSS para que el menú crezca desde su punto de anclaje."
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/transform-origin
+    title: transform-origin
+    description: "La referencia de MDN sobre la propiedad que decide desde dónde crece una transformación de escala."
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "e9887ff6344b1a7a356c33dc66fcb863399a47efdda6f1dd4b4a67ccaffd6610"
+---
+
+Los menús, popovers y diálogos suelen entrar con un pequeño cambio de escala. Da la sensación de que el elemento llega, en lugar de encenderse. Pero la magnitud importa. Una **entrada con escala** que empieza desde cero parece un zoom de dibujos animados. Una que empieza en `0.95` parece un pequeño ajuste hasta quedar en su sitio.
+
+Abre los dos menús. Comparten duración y easing. Solo cambia la escala inicial.
+
+<ScaleEntrancesDemo />
+
+El menú de la izquierda pasa la primera parte de la animación convertido en una mancha diminuta e ilegible. El texto se escala con la caja, así que las letras quedan comprimidas casi hasta el final. El de la derecha se puede leer desde el primer fotograma. La escala sugiere movimiento, sin convertirse en todo el movimiento.
+
+El intervalo habitual está entre `0.9` y `0.97`. Combínalo con un fade de opacidad para que el elemento no aparezca de golpe con su tamaño inicial.
+
+## Crecer desde el control que abre el elemento
+
+La escala necesita un origen. Por defecto, un elemento se escala desde el centro, algo adecuado para un diálogo situado en mitad de la pantalla. Un menú que se abre bajo un botón de una esquina debería crecer desde esa esquina para que parezca unido al control que has pulsado.
+
+<TransformOriginDemo />
+
+A la izquierda, el menú se infla desde su propio centro y parece alejarse del botón. A la derecha, nace del botón. Misma escala y mismos tiempos. Solo cambia `transform-origin`.
+
+Las librerías de posicionamiento conocen el punto de anclaje. Base UI y Floating UI lo exponen como variable CSS, de modo que puedes escribir `transform-origin: var(--transform-origin)` una vez y obtener la esquina correcta en cada posición.
+
+## Encontrar tu valor
+
+Mueve el control para cambiar la escala inicial del menú. Aquí hemos ralentizado la animación para que resulte más fácil observar su forma.
+
+<StartingScaleDemo />
+
+Por debajo de `0.8`, la entrada empieza a parecer un zoom. Por encima de `0.98`, casi puedes prescindir de la escala y quedarte solo con el fade. El punto justo es tan sutil que apenas lo notarías si no lo estuvieras buscando.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<div
+  class="origin-(--transform-origin) transition duration-200 ease-out
+         data-closed:scale-95 data-closed:opacity-0"
+>
+  ...
+</div>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.menu {
+  transform-origin: var(--transform-origin, top center);
+  transition:
+    opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.menu[data-closed] {
+  opacity: 0;
+  transform: scale(0.95);
+}`,
+    },
+    {
+      label: "Motion",
+      language: "tsx",
+      code: `import { motion } from "motion/react";
+
+<motion.div
+  initial={{ opacity: 0, scale: 0.95 }}
+  animate={{ opacity: 1, scale: 1 }}
+  exit={{ opacity: 0, scale: 0.95 }}
+  transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+  style={{ transformOrigin: "var(--transform-origin)" }}
+/>`,
+    },
+  ]}
+/>
+
+Haz que las salidas sean más cortas que las entradas. Un menú que tarda 200 ms en abrirse puede cerrarse en 120 ms: el usuario ya ha decidido salir y no necesita leer nada durante la salida.

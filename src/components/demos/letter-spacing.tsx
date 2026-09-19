@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { Compare, CompareItem } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ function unwrap(value: number | readonly number[]) {
 }
 
 export function LetterSpacingDemo() {
+  const t = useDemoText();
   const [size, setSize] = useState(48);
   const tracking = interTracking(size);
 
@@ -48,7 +50,7 @@ export function LetterSpacingDemo() {
                 letterSpacing: `${value}em`,
               }}
             >
-              Headline
+              {t("Headline")}
             </span>
             <span className="shrink-0 text-[10px] tabular-nums text-muted-foreground">
               {formatEm(value)}
@@ -58,11 +60,11 @@ export function LetterSpacingDemo() {
       </div>
       <label className="grid w-full max-w-xs gap-2.5">
         <span className="flex justify-between text-xs text-muted-foreground">
-          Size
+          {t("Size")}
           <span className="tabular-nums text-foreground">{size}px</span>
         </span>
         <Slider
-          aria-label="Font size"
+          aria-label={t("Font size")}
           max={72}
           min={16}
           onValueChange={(value) => setSize(unwrap(value))}
@@ -94,6 +96,7 @@ const SCALE = [
 ] as const;
 
 export function TrackingScaleDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<Tracking>("flat");
 
   return (
@@ -114,14 +117,17 @@ export function TrackingScaleDemo() {
                 mode === "scaled" ? `${interTracking(step.size)}em` : "0",
             }}
           >
-            {step.text}
+            {t(step.text)}
           </span>
         ))}
       </div>
       <SegmentedControl
-        ariaLabel="Letter spacing across the scale"
+        ariaLabel={t("Letter spacing across the scale")}
         onChange={setMode}
-        options={TRACKING_OPTIONS}
+        options={TRACKING_OPTIONS.map((option) => ({
+          ...option,
+          label: t(option.label),
+        }))}
         value={mode}
       />
     </Demo>
@@ -135,13 +141,14 @@ const PINNED = [
 ] as const;
 
 function PinnedList({ tracking }: { tracking: string }) {
+  const t = useDemoText();
   return (
     <div className="w-full rounded-xl bg-card p-2 shadow-(--custom-shadow)">
       <span
         className="block px-2 pt-1 pb-2 text-[10px] font-semibold uppercase text-muted-foreground"
         style={{ letterSpacing: tracking }}
       >
-        Pinned
+        {t("Pinned")}
       </span>
       <ul className="flex flex-col">
         {PINNED.map((page) => (
@@ -149,7 +156,7 @@ function PinnedList({ tracking }: { tracking: string }) {
             key={page.name}
             className="flex items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-xs font-medium text-foreground"
           >
-            <span className="truncate">{page.name}</span>
+            <span className="truncate">{t(page.name)}</span>
             <span
               className={cn(
                 "shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase",
@@ -159,7 +166,7 @@ function PinnedList({ tracking }: { tracking: string }) {
               )}
               style={{ letterSpacing: tracking }}
             >
-              {page.status}
+              {t(page.status)}
             </span>
           </li>
         ))}

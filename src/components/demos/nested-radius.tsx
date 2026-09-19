@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import waterLiliesImage from "@/assets/claude-monet-water-lilies.jpg";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -97,6 +98,7 @@ function DimensionLabel({
 }
 
 export function NestedRadiusDemo() {
+  const t = useDemoText();
   const innerRadius = 16;
   const inset = 12;
   const examples = [
@@ -131,17 +133,17 @@ export function NestedRadiusDemo() {
               {example.label === "Wrong" ? (
                 <XCircleIcon
                   className="h-4 w-4"
-                  aria-label="Wrong"
+                  aria-label={t("Wrong")}
                   weight="fill"
                 />
               ) : (
                 <CheckCircleIcon
                   className="h-4 w-4"
-                  aria-label="Correct"
+                  aria-label={t("Correct")}
                   weight="fill"
                 />
               )}
-              {example.label}
+              {t(example.label)}
             </div>
 
             <div
@@ -159,7 +161,7 @@ export function NestedRadiusDemo() {
                     {innerRadius}px
                   </span>
                   <span className="text-[10px] text-muted-foreground">
-                    outer <span className="mx-3.5"></span> inner
+                    {t("outer")} <span className="mx-3.5"></span> {t("inner")}
                   </span>
                 </div>
               </div>
@@ -169,14 +171,14 @@ export function NestedRadiusDemo() {
       </div>
 
       <p className="max-w-sm text-center text-xs text-pretty text-muted-foreground/70">
-        With a 12px inset, the outer radius should be 28px so both curves follow
-        each other.
+        {t("With a 12px inset, the outer radius should be 28px so both curves follow each other.")}
       </p>
     </Demo>
   );
 }
 
 export function RadiusCalculatorDemo() {
+  const t = useDemoText();
   const [outerRadius, setOuterRadius] = useState(32);
   const [inset, setInset] = useState(12);
   const innerRadius = Math.max(0, outerRadius - inset);
@@ -217,7 +219,7 @@ export function RadiusCalculatorDemo() {
             className="right-0 bottom-0 translate-y-1/2"
           />
           <DimensionLabel
-            name="outer"
+            name={t("outer")}
             value={outerRadius}
             className="top-full right-0 mt-1.5"
           />
@@ -234,7 +236,7 @@ export function RadiusCalculatorDemo() {
               className="bottom-0 left-0 translate-y-1/2"
             />
             <DimensionLabel
-              name="inner"
+              name={t("inner")}
               value={innerRadius}
               className="bottom-2.5 left-3"
             />
@@ -245,13 +247,13 @@ export function RadiusCalculatorDemo() {
       <div className="grid w-full max-w-xs gap-5 mb-4">
         <label className="grid gap-2.5">
           <span className="flex items-center justify-between text-xs text-muted-foreground">
-            Outer radius
+            {t("Outer radius")}
             <span className="font-mono text-[10px] text-foreground">
               {outerRadius}px
             </span>
           </span>
           <Slider
-            aria-label="Outer radius"
+            aria-label={t("Outer radius")}
             max={48}
             min={0}
             onValueChange={(value) => setOuterRadius(getSliderValue(value))}
@@ -261,13 +263,13 @@ export function RadiusCalculatorDemo() {
         </label>
         <label className="grid gap-2.5">
           <span className="flex items-center justify-between text-xs text-muted-foreground">
-            Inset
+            {t("Inset")}
             <span className="font-mono text-[10px] text-foreground">
               {inset}px
             </span>
           </span>
           <Slider
-            aria-label="Inset"
+            aria-label={t("Inset")}
             max={28}
             min={4}
             onValueChange={(value) => setInset(getSliderValue(value))}
@@ -277,13 +279,13 @@ export function RadiusCalculatorDemo() {
         </label>
         <label className="grid gap-2.5">
           <span className="flex items-center justify-between text-xs text-muted-foreground">
-            Inner radius
+            {t("Inner radius")}
             <span className="font-mono text-[10px] text-foreground">
               {innerRadius}px
             </span>
           </span>
           <Slider
-            aria-label="Inner radius"
+            aria-label={t("Inner radius")}
             max={Math.max(0, 48 - inset)}
             min={0}
             onValueChange={(value) => updateInnerRadius(getSliderValue(value))}
@@ -297,6 +299,7 @@ export function RadiusCalculatorDemo() {
 }
 
 export function NestedRadiusExamplesDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<RadiusMode>("same");
   const nested = mode === "nested";
 
@@ -335,7 +338,7 @@ export function NestedRadiusExamplesDemo() {
           </div>
           <div className="flex items-center justify-between px-2 pb-1 pt-3">
             <div>
-              <p className="text-xs text-foreground">Water Lilies</p>
+              <p className="text-xs text-foreground">{t("Water Lilies")}</p>
               <p className="mt-0.5 text-[10px] text-muted-foreground">
                 Claude Monet
               </p>
@@ -357,16 +360,16 @@ export function NestedRadiusExamplesDemo() {
               style={{ borderRadius: nested ? 8 : 12 }}
             >
               <item.icon aria-hidden="true" className="size-3.5 shrink-0" />
-              {item.label}
+              {t(item.label)}
             </div>
           ))}
         </div>
       </div>
 
       <SegmentedControl
-        ariaLabel="Component radius comparison"
+        ariaLabel={t("Component radius comparison")}
         onChange={setMode}
-        options={RADIUS_OPTIONS}
+        options={RADIUS_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={mode}
       />
     </Demo>

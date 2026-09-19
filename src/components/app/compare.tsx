@@ -3,6 +3,7 @@
 import { CheckCircleIcon, XCircleIcon } from "@phosphor-icons/react";
 
 import { cn } from "@/lib/utils";
+import { useDemoText } from "./demo-messages";
 
 type Verdict = "wrong" | "right";
 
@@ -17,6 +18,7 @@ export function CompareLabel({
   className?: string;
 }) {
   const Icon = verdict === "wrong" ? XCircleIcon : CheckCircleIcon;
+  const t = useDemoText();
 
   return (
     <div
@@ -27,7 +29,7 @@ export function CompareLabel({
       )}
     >
       <Icon aria-hidden="true" className="size-4" weight="fill" />
-      {children ?? (verdict === "wrong" ? "Wrong" : "Right")}
+      {children ?? t(verdict === "wrong" ? "Wrong" : "Right")}
     </div>
   );
 }

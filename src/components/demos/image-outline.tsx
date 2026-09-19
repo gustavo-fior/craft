@@ -14,6 +14,7 @@ import reeded from "@/assets/gradient-reeded.jpg";
 import gustavo from "@/assets/gustavo.jpg";
 import { RIGHT_ICON, WRONG_ICON } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -102,6 +103,7 @@ function Initials({ label, opacity }: { label: string; opacity: number }) {
 const TILES = [beach, cliffWalk, clouds];
 
 export function ImageOutlineDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<EdgeMode>("none");
   const opacity = mode === "outline" ? 0.1 : 0;
 
@@ -120,9 +122,9 @@ export function ImageOutlineDemo() {
       </div>
 
       <SegmentedControl
-        ariaLabel="Image edge"
+        ariaLabel={t("Image edge")}
         onChange={setMode}
-        options={EDGE_OPTIONS}
+        options={EDGE_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={mode}
       />
     </Demo>
@@ -130,6 +132,7 @@ export function ImageOutlineDemo() {
 }
 
 export function ImageOutlineStrengthDemo() {
+  const t = useDemoText();
   const [percent, setPercent] = useState(10);
 
   return (
@@ -145,11 +148,11 @@ export function ImageOutlineStrengthDemo() {
 
       <label className="grid w-full max-w-xs gap-2.5">
         <span className="flex items-center justify-between text-xs text-muted-foreground">
-          Opacity
+          {t("Opacity")}
           <span className="tabular-nums text-foreground">{percent}%</span>
         </span>
         <Slider
-          aria-label="Outline opacity"
+          aria-label={t("Outline opacity")}
           max={40}
           min={0}
           onValueChange={(value) => setPercent(getSliderValue(value))}
@@ -177,6 +180,7 @@ const AVATARS: Avatar[] = [
 ];
 
 export function ImageOutlineAvatarDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<EdgeMode>("none");
   const opacity = mode === "outline" ? 0.1 : 0;
 
@@ -204,9 +208,9 @@ export function ImageOutlineAvatarDemo() {
       </div>
 
       <SegmentedControl
-        ariaLabel="Avatar edge"
+        ariaLabel={t("Avatar edge")}
         onChange={setMode}
-        options={EDGE_OPTIONS}
+        options={EDGE_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={mode}
       />
     </Demo>

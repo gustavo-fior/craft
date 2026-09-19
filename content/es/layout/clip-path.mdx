@@ -1,0 +1,99 @@
+---
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "28be7b049355876e9635a9ea1378eeecbb8ba1712cbc9176d3b4b6aa81eaf85a"
+title: Clip-Path
+description: Revela el contenido recortándolo, sin cambiar su tamaño.
+section: Layout
+order: 4
+publishedAt: "2026-07-16"
+resources:
+  - url: https://emilkowal.ski/ui/the-magic-of-clip-path
+    title: The Magic of Clip Path
+    description: Emil Kowalski explica pestañas, botones de mantener pulsado para eliminar y sliders de comparación construidos con una sola propiedad.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path
+    title: clip-path en MDN
+    description: Todas las funciones de forma que admite clip-path, con notas sobre compatibilidad y animación.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/basic-shape/inset
+    title: inset() en MDN
+    description: La forma que más usarás, incluida la palabra clave round para redondear las esquinas.
+  - url: https://web.dev/articles/animations-guide
+    title: How to create high-performance CSS animations
+    description: Por qué animar width y height tiene un coste alto y qué propiedades puede animar el navegador con poco trabajo.
+---
+
+**clip-path** recorta parte de un elemento sin cambiar su layout. El elemento conserva su tamaño, su posición y los saltos de línea del texto. Solo cambia la ventana visible. Esta única propiedad ahorra una cantidad sorprendente de trabajo que, de otro modo, exigiría cambiar el tamaño de cajas, duplicar layouts o recurrir a JavaScript.
+
+La demo siguiente anima la misma tarjeta de dos formas. A la izquierda se reduce el ancho, por lo que el texto se redistribuye y el icono se comprime. A la derecha se recorta la tarjeta, que simplemente desaparece de la vista al deslizarse.
+
+<ClipPathRevealDemo />
+
+El recorte no provoca un recálculo del layout. El navegador mantiene el elemento pintado a tamaño completo y oculta parte de él durante la composición. Por eso sigue siendo fluido incluso con listas largas o contenido pesado.
+
+## Pestañas con transiciones bien resueltas
+
+Imagina un control segmentado con una píldora oscura que se desliza entre opciones. La píldora puede moverse con un transform, pero el texto también debe cambiar de color. Si aplicas una transición de `color` a cada etiqueta, la que sale se desvanece mientras aparece la que entra. Por un momento, ambas quedan a medio camino del gris y el control se ve apagado.
+
+En vez de cambiar el color de las etiquetas, renderiza la lista de pestañas dos veces. Coloca la segunda copia encima, con los colores invertidos, y recórtala a la forma de la píldora. Después, anima el recorte.
+
+<ClipPathTabsDemo />
+
+La copia oscura de la derecha no está desvaneciendo nada. Siempre tiene su color completo; solo se mueve la ventana recortada. El texto cambia de color justo en el borde de la píldora, como ocurriría con un selector físico.
+
+## Mantener pulsado para eliminar
+
+En las acciones destructivas, mantener pulsado un breve instante puede ser útil. Un overlay recortado permite mostrar ese tiempo que transcurre. El estado rojo completo se renderiza debajo, recortado a ancho cero, y se revela con una transición lineal mientras se mantiene pulsado.
+
+<ClipPathHoldDemo />
+
+El truco está en los dos tiempos de transición. La aparición es lenta y lineal para que el progreso refleje el tiempo real. Al soltar, el overlay vuelve al inicio en `200ms` con una curva ease-out. Nadie quiere esperar para cancelar.
+
+## Slider de comparación
+
+Superpón dos capas a tamaño completo y recorta la superior. Como las dos imágenes tienen el mismo tamaño y posición, desplazar el borde del recorte crea un slider de antes y después sin distorsión. Arrastra el control.
+
+<ClipPathCompareDemo />
+
+Fíjate en que ninguna imagen se mueve ni cambia de tamaño. Solo cambia el borde derecho del inset de la capa superior.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<!-- Shown -->
+<div class="[clip-path:inset(0_0_0_0)] transition-[clip-path] duration-300 ease-out">
+  ...
+</div>
+
+<!-- Hidden, slides out to the right -->
+<div class="[clip-path:inset(0_100%_0_0)] transition-[clip-path] duration-300 ease-out">
+  ...
+</div>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.card {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.card[data-hidden] {
+  /* top right bottom left */
+  clip-path: inset(0 100% 0 0);
+}
+
+/* Rounded corners on the visible window */
+.pill {
+  clip-path: inset(2px 66% 2px 2px round 9999px);
+}`,
+    },
+  ]}
+/>
+
+Hay una limitación que conviene conocer: clip-path solo interpola entre formas del mismo tipo con el mismo número de argumentos. De `inset(0 0 0 0)` a `inset(0 100% 0 0)` se anima. De `inset(0)` a `inset(0 100% 0 0)`, no; tampoco de `inset()` a `circle()`. Escribe los dos extremos de la transición con la misma forma.

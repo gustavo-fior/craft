@@ -1,0 +1,105 @@
+---
+title: "Suavizado de curvas"
+description: "Líneas suaves que no inventan datos."
+section: Data
+order: 2
+publishedAt: "2026-07-16"
+resources:
+  - url: https://d3js.org/d3-shape/curve
+    title: d3-shape curves
+    description: "Todas las interpolaciones de d3 dibujadas sobre los mismos puntos. La forma más rápida de entender cómo se comportan."
+  - url: https://en.wikipedia.org/wiki/Monotone_cubic_interpolation
+    title: Monotone cubic interpolation
+    description: "El método de Fritsch y Carlson en el que se basan las curvas monótonas, con sus reglas para las tangentes."
+  - url: https://shud.in/thoughts/adaptive-polynomial-curve-fitting
+    title: Adaptive Polynomial Curve Fitting
+    description: "Shu Ding explica el ajuste de curvas a datos en tiempo real y dónde falla un suavizado ingenuo."
+  - url: https://developer.mozilla.org/en-US/docs/Web/SVG/Reference/Attribute/d
+    title: The SVG path d attribute
+    description: "Los comandos Bézier cúbicos que generan estas demos y el significado de cada número."
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "a45fb306b945bde06eeb60510910c9d210559ab495fd071099d4e3dbca62b659"
+---
+
+Un gráfico de líneas conecta puntos. Cómo los conectas es una decisión de diseño y cambia lo que parece decir el gráfico. Los segmentos rectos son fieles, pero angulosos. Una **curva suavizada** se lee con más calma, aunque algunos métodos añaden ondulaciones que nunca estuvieron en los datos.
+
+El gráfico dibuja los mismos quince valores de tres formas. Alterna entre ellas y observa qué ocurre entre los puntos.
+
+<CurveSmoothingDemo />
+
+La interpolación lineal es la referencia. La cúbica monótona mantiene cada subida y bajada exactamente donde la sitúan los datos: la curva nunca supera ni queda por debajo de los dos puntos que une. Catmull-Rom es la más suave, y lo consigue sobrepasando los puntos en los cambios de dirección pronunciados.
+
+## Overshoot en datos acotados
+
+El overshoot (sobrepaso) es una cuestión estética en datos sin límites, pero un problema real cuando están acotados. Los porcentajes, los recuentos y cualquier valor que no pueda ser negativo nunca deberían bajar de cero en el gráfico: quien lo lee creerá antes al trazo que al eje.
+
+En el siguiente ejemplo, una serie de disponibilidad permanece en cero y en cien durante varios puntos seguidos.
+
+<CurveOvershootDemo />
+
+A la izquierda, la curva Catmull-Rom baja del mínimo y supera el máximo para suavizar los giros. A la derecha, la curva monótona se mantiene dentro de los límites sin dejar de parecer una curva. Si los tramos planos importan, como suele ocurrir, la interpolación monótona es la opción segura por defecto.
+
+## Elegir
+
+> Usa interpolación monótona en cualquier serie en la que el lector vaya a deducir valores entre puntos. Reserva Catmull-Rom para líneas decorativas.
+
+Las sparklines, los dashboards y cualquier gráfico con un tooltip en hover pertenecen al primer grupo. Un adorno de fondo en una landing page pertenece al segundo.
+
+## Uso
+
+La curva monótona de este ejemplo ocupa unas cuarenta líneas y no tiene dependencias. Calcula una tangente por punto con la regla de Fritsch y Carlson y después genera un segmento cúbico por cada pareja de puntos.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "React",
+      language: "tsx",
+      code: `type Point = { x: number; y: number };
+
+export function monotonePath(points: Point[]) {
+  const n = points.length;
+  const dx: number[] = [];
+  const slope: number[] = [];
+  for (let i = 0; i < n - 1; i++) {
+    dx[i] = points[i + 1].x - points[i].x;
+    slope[i] = (points[i + 1].y - points[i].y) / dx[i];
+  }
+
+  // One tangent per point. Zero where the slope changes sign,
+  // so the curve flattens instead of overshooting.
+  const tangent: number[] = [];
+  tangent[0] = slope[0];
+  tangent[n - 1] = slope[n - 2];
+  for (let i = 1; i < n - 1; i++) {
+    const a = slope[i - 1];
+    const b = slope[i];
+    if (a * b <= 0) {
+      tangent[i] = 0;
+    } else {
+      const w1 = 2 * dx[i] + dx[i - 1];
+      const w2 = dx[i] + 2 * dx[i - 1];
+      tangent[i] = (w1 + w2) / (w1 / a + w2 / b);
+    }
+  }
+
+  return points
+    .map((p, i) => {
+      if (i === 0) return \`M\${p.x},\${p.y}\`;
+      const a = points[i - 1];
+      const h = (p.x - a.x) / 3;
+      const c1x = a.x + h;
+      const c1y = a.y + h * tangent[i - 1];
+      const c2x = p.x - h;
+      const c2y = p.y - h * tangent[i];
+      return \`C\${c1x},\${c1y} \${c2x},\${c2y} \${p.x},\${p.y}\`;
+    })
+    .join(" ");
+}
+
+// <path d={monotonePath(points)} fill="none" stroke="currentColor" />`,
+    },
+  ]}
+/>
+
+Si ya utilizas d3, `d3.line().curve(d3.curveMonotoneX)` hace lo mismo. En ambos casos, mantén visibles los puntos de datos mientras desarrollas el gráfico. El overshoot pasa fácilmente desapercibido en una línea sola y resulta evidente en cuanto ves dónde están los valores reales.

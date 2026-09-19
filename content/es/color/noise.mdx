@@ -1,0 +1,131 @@
+---
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "f84f2baafe70d26a4ffa50a9a8fb893f25b3ae34b2910d4bf2447e9a2d31d433"
+title: Noise
+description: El grano disimula el banding y aporta textura.
+section: Color
+order: 2
+publishedAt: "2026-07-15"
+resources:
+  - url: https://developer.mozilla.org/en-US/docs/Web/SVG/Element/feTurbulence
+    title: feTurbulence
+    description: La primitiva de filtro SVG que genera el noise. Todos los ejemplos se basan en ella.
+  - url: https://css-tricks.com/grainy-gradients/
+    title: Grainy Gradients
+    description: Una explicación detallada del noise sobre degradados y de los trucos con matrices de color.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/mix-blend-mode
+    title: mix-blend-mode
+    description: Cómo se combina la capa de grano con el color que tiene debajo.
+---
+
+Cuando la interfaz parece demasiado plana, a veces me gusta añadir noise a algunos componentes para darles textura.
+
+El **noise** (ruido) es una capa de píxeles claros y oscuros distribuidos al azar sobre una superficie. Disimula los saltos entre tonos y da textura al color.
+
+<NoiseDemo />
+
+## Tamaño del grano
+
+El atributo `baseFrequency` controla lo fino que es el noise. Los valores bajos producen manchas grandes y suaves; los altos, el moteado fino del grano de película.
+
+<NoiseFrequencyDemo />
+
+## Uso
+
+Coloca el filtro en un SVG en cualquier parte de la página y haz referencia a él desde un overlay (capa superpuesta). El overlay es un elemento vacío, así que apenas añade marcado y puede colocarse sobre cualquier contenedor posicionado.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<svg class="absolute size-0" aria-hidden="true">
+  <filter id="grain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+    <feColorMatrix type="saturate" values="0" />
+  </filter>
+</svg>
+
+<div class="relative isolate overflow-hidden rounded-2xl bg-violet-600">
+  <div class="pointer-events-none absolute inset-0 opacity-[0.08] mix-blend-overlay filter-[url(#grain)]" aria-hidden="true"></div>
+  <!-- content -->
+</div>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.surface {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.surface::after {
+content: "";
+position: absolute;
+inset: 0;
+filter: url(#grain);
+opacity: 0.08;
+mix-blend-mode: overlay;
+pointer-events: none;
+}`,
+},
+]}
+/>
+
+El `isolate` del contenedor es importante. Sin él, `mix-blend-mode` mezcla el grano con todo lo que hay detrás de la tarjeta, incluido el fondo de la página, y el efecto cambia según dónde esté la tarjeta. Con él, el grano solo se mezcla con su propia superficie.
+
+## Rendimiento
+
+El filtro tiene un coste. `feTurbulence` se genera píxel a píxel y se vuelve a renderizar cada vez que se repinta el elemento. En una tarjeta de unos pocos cientos de píxeles de ancho, no lo notarás. Si ocupa un hero a pantalla completa, sobre todo si se desplaza o anima, puede reducir la página a unos pocos fotogramas por segundo en un móvil o un portátil de gama baja.
+
+La solución es renderizar el noise una vez y repetirlo como un mosaico. Con `stitchTiles="stitch"` y la región del filtro limitada a cada pieza, una imagen pequeña se repite sin juntas visibles. Después del primer paint, repetir esa imagen apenas cuesta trabajo al navegador. El resultado es el mismo si el grano es estático. Solo renuncias a ajustar `baseFrequency` en directo, porque la frecuencia queda fijada en la imagen.
+
+Ni siquiera necesitas un archivo de imagen. Incluye el filtro en una data URI de SVG y deja que el navegador lo rasterice una vez por pieza:
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<div class="relative isolate min-h-screen overflow-hidden bg-violet-600">
+  <div
+    class="pointer-events-none absolute inset-0 opacity-[0.08] mix-blend-overlay bg-size-[200px_200px] bg-repeat"
+    style="background-image: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E&quot;)"
+    aria-hidden="true"
+  ></div>
+  <!-- content -->
+</div>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  background-repeat: repeat;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}`,
+    },
+  ]}
+/>
+
+Una pieza de 200px es lo bastante pequeña para tener un coste bajo y lo bastante grande para que la repetición no se note al mezclarla. Si ves las juntas, exporta la pieza como PNG a 2x y úsala como `background-image`.
+
+Como regla general, usa el filtro en directo en superficies pequeñas y en demos donde quieras ajustar el grano. Usa una imagen repetida cuando el overlay sea grande o se espere movimiento en la página.

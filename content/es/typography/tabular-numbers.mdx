@@ -1,0 +1,89 @@
+---
+title: Tabular numbers (cifras tabulares)
+description: Dígitos estables para valores que cambian.
+section: Typography
+order: 3
+publishedAt: "2026-07-15"
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: 33e91c1103e2c37376e7cb95f7477f3995f6cca7dfede1eb788b831cc911ba4c
+resources:
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: Una colección práctica de pequeñas mejoras de interfaz.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/font-variant-numeric
+    title: font-variant-numeric
+    description: Sintaxis, ejemplos y compatibilidad con navegadores en MDN.
+  - url: https://www.w3.org/TR/css-fonts-4/#font-variant-numeric-prop
+    title: CSS Fonts Module Level 4 — Numerical formatting
+    description: La especificación que define las cifras proporcionales y tabulares.
+  - url: https://learn.microsoft.com/en-us/typography/opentype/otspec190/features_pt#tag-tnum
+    title: OpenType tabular figures
+    description: Cómo la función tipográfica tnum asigna la misma anchura a todos los dígitos.
+  - url: https://wakamaifondue.com
+    title: Wakamai Fondue
+    description: Arrastra un archivo de fuente para ver todas las funciones OpenType que incluye.
+---
+
+Los dígitos pueden tener dos tipos de anchura.
+
+Las **proportional figures** (cifras proporcionales) utilizan la anchura natural
+de cada forma: el `1` es estrecho y el `8` es ancho. Las **tabular figures**
+(cifras tabulares) dan la misma anchura a todos los dígitos.
+
+<TabularNumsDemo />
+
+Usa cifras proporcionales cuando los números formen parte de una frase: se leen
+con más naturalidad. Usa cifras tabulares cuando los valores que cambian deban
+mantenerse estables o alinearse en vertical.
+
+## Valores que cambian
+
+Un temporizador con cifras proporcionales cambia de ancho mientras avanza.
+Todo lo que tiene al lado también se mueve. Fíjate en la línea azul:
+
+<TabularTimerDemo />
+
+Las cifras tabulares dan a cada carácter un espacio estable. Úsalas en relojes,
+contadores, marcadores, precios y métricas en tiempo real.
+
+El primer impulso suele ser cambiar a una fuente monospace (monoespaciada),
+pero no hace falta. Una fuente mono cambia toda la voz de la interfaz.
+A menudo basta con utilizar cifras tabulares.
+
+## Tablas
+
+En una columna numérica, los dígitos de igual anchura forman una retícula
+vertical. Las unidades quedan alineadas con las unidades, las decenas con las
+decenas, y las diferencias se detectan de un vistazo. Los datos se leen mucho mejor así.
+
+<TabularTableDemo />
+
+Alinea también las columnas numéricas a la derecha. Así, los números de
+distinta longitud quedan sujetos al mismo borde.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<span class="tabular-nums">12:45</span>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.numeric-column {
+    font-variant-numeric: tabular-nums;
+}`,
+    },
+  ]}
+/>
+
+Para que funcione, la fuente debe incluir cifras tabulares. Si `tabular-nums`
+no produce ninguna diferencia visible, arrastra el archivo de fuente a
+[Wakamai Fondue](https://wakamaifondue.com) y comprueba si aparece `tnum`
+entre sus funciones.

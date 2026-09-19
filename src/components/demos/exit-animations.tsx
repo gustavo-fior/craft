@@ -1,5 +1,6 @@
 "use client";
 
+import { useDemoText } from "@/components/app/demo-messages";
 import { CheckCircleIcon, XIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
@@ -12,6 +13,7 @@ const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 const EASE_IN = [0.42, 0, 1, 1] as const;
 
 function Toast() {
+  const t = useDemoText();
   return (
     <div className="flex items-center gap-2 rounded-lg bg-foreground px-3 py-2 text-xs text-background shadow-md">
       <CheckCircleIcon
@@ -19,8 +21,8 @@ function Toast() {
         className="size-4 text-emerald-500"
         weight="fill"
       />
-      <span className="font-medium">Changes saved</span>
-      <span className="ml-1 text-background/60">Undo</span>
+      <span className="font-medium">{t("Changes saved")}</span>
+      <span className="ml-1 text-background/60">{t("Undo")}</span>
     </div>
   );
 }
@@ -77,16 +79,17 @@ function ToastWindow({
 }
 
 export function ExitAnimationsDemo() {
+  const t = useDemoText();
   const [open, setOpen] = useState(true);
   const reduceMotion = useReducedMotion() ?? false;
 
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
-        <CompareItem verdict="wrong" label="Enter, reversed">
+        <CompareItem verdict="wrong" label={t("Enter, reversed")}>
           <ToastWindow open={open} reduceMotion={reduceMotion} reversed />
         </CompareItem>
-        <CompareItem verdict="right" label="Quick fade">
+        <CompareItem verdict="right" label={t("Quick fade")}>
           <ToastWindow
             open={open}
             reduceMotion={reduceMotion}
@@ -96,7 +99,7 @@ export function ExitAnimationsDemo() {
       </Compare>
 
       <Button onClick={() => setOpen((value) => !value)} variant="secondary">
-        {open ? "Dismiss" : "Show"}
+        {open ? t("Dismiss") : t("Show")}
       </Button>
     </Demo>
   );
@@ -110,9 +113,10 @@ const TASKS = [
 ] as const;
 
 function DeleteButton({ onClick }: { onClick: () => void }) {
+  const t = useDemoText();
   return (
     <Button
-      aria-label="Remove"
+      aria-label={t("Remove")}
       className="shrink-0 text-muted-foreground"
       onClick={onClick}
       size="icon-xs"
@@ -166,16 +170,18 @@ function TaskList({
 }
 
 function TaskRow({ task, onRemove }: { task: string; onRemove: () => void }) {
+  const t = useDemoText();
   return (
     <div className="flex h-9 items-center gap-2 rounded-lg px-2 text-xs text-foreground">
       <span className="size-3.5 shrink-0 rounded-full border border-foreground/25" />
-      <span className="min-w-0 flex-1 truncate">{task}</span>
+      <span className="min-w-0 flex-1 truncate">{t(task)}</span>
       <DeleteButton onClick={onRemove} />
     </div>
   );
 }
 
 export function ExitListDemo() {
+  const t = useDemoText();
   const [left, setLeft] = useState<readonly string[]>(TASKS);
   const [right, setRight] = useState<readonly string[]>(TASKS);
   const reduceMotion = useReducedMotion() ?? false;
@@ -184,7 +190,7 @@ export function ExitListDemo() {
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
-        <CompareItem verdict="wrong" label="No exit">
+        <CompareItem verdict="wrong" label={t("No exit")}>
           <TaskList
             animated={false}
             onRemove={(task) => setLeft((list) => list.filter((t) => t !== task))}
@@ -192,7 +198,7 @@ export function ExitListDemo() {
             tasks={left}
           />
         </CompareItem>
-        <CompareItem verdict="right" label="Collapse">
+        <CompareItem verdict="right" label={t("Collapse")}>
           <TaskList
             animated
             onRemove={(task) => setRight((list) => list.filter((t) => t !== task))}
@@ -210,7 +216,7 @@ export function ExitListDemo() {
         }}
         variant="secondary"
       >
-        Reset
+        {t("Reset")}
       </Button>
     </Demo>
   );

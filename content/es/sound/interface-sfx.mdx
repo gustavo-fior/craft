@@ -1,0 +1,98 @@
+---
+title: "SFX de interfaz"
+description: "Sonidos discretos que confirman acciones."
+section: Sound
+order: 1
+publishedAt: "2026-07-14"
+resources:
+  - url: https://audio.raphaelsalaja.com
+    title: "@web-kits/audio"
+    description: "La pequeña librería de síntesis que usa este sitio. Sin archivos de audio, solo patches."
+  - url: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Best_practices
+    title: Web Audio API best practices
+    description: "Las reglas de reproducción automática y por qué el sonido debe esperar a un gesto del usuario."
+  - url: https://developer.apple.com/design/human-interface-guidelines/playing-audio
+    title: Playing audio, Human Interface Guidelines
+    description: "Apple explica cuándo ayuda el sonido de interfaz y cuándo debería mantenerse en silencio."
+  - url: https://m2.material.io/design/sound/applying-sound-to-ui.html
+    title: Applying sound to UI
+    description: "Las recomendaciones de Material para adaptar cada sonido a lo que hace la interfaz."
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "5ab0aaba63a561965abe50a06b42156e00a92b8e1e03fe75933eef8a8e5bce59"
+---
+
+Un sonido de interfaz es una señal, no una banda sonora. Dura unos milisegundos y dice una sola cosa: ha funcionado.
+
+Los **SFX de interfaz** deben corresponderse con la acción que confirman. Un interruptor recibe dos notas alternadas; una tarea completada, un tic breve; un mensaje enviado, un pequeño acorde ascendente; y una eliminación, un pop descendente. Prueba los controles. Utilizan el mismo patch que reproduce este sitio.
+
+<SoundCuesDemo />
+
+Cada sonido va acompañado de algo visible: el interruptor se mueve, el texto se tacha, el botón muestra Enviado o el chip desaparece. El sonido nunca transmite un mensaje por sí solo. Hay quien lo tiene desactivado, quien va en tren y quien simplemente no lo quiere.
+
+## Dónde ayuda el sonido
+
+El sonido se gana su sitio cuando termina una acción y quizá estés mirando hacia otro lado. Enviar, copiar, guardar, una subida larga que termina o un interruptor que has accionado con el teclado. Los errores también son buenos candidatos, siempre que el sonido sea tranquilo y no una alarma estridente.
+
+En casi cualquier otro caso, molesta: escribir, hacer scroll, abrir menús, cambiar de página o cualquier acción que ocurra decenas de veces por minuto. Si una señal puede sonar dos veces en el mismo segundo, no debería existir.
+
+## Mantén el volumen bajo
+
+El error más habitual es el volumen. Una buena señal se sitúa en el límite de la atención. En términos de `@web-kits/audio`, eso significa un gain (ganancia) por capa de entre `0.05` y `0.1`, muy por debajo del valor predeterminado de la librería. Copia el enlace con cada nivel.
+
+<SoundLevelDemo />
+
+El silencio está bien. Un volumen bajo es lo que debería oír la mayoría. Un volumen alto es lo que la gente recordará como el motivo por el que silenció tu aplicación. Si puedes tararear la señal después de oírla una vez, es demasiado fuerte o demasiado larga.
+
+## Hover: un susurro o nada
+
+Hover se activa constantemente, así que un sonido marcado en cada hover convierte una barra lateral en un instrumento de teclado. Recorre la lista con cada opción.
+
+<HoverSoundDemo />
+
+El susurro es una onda sinusoidal con gain `0.01` que sube un cuarto de semitono por elemento. Así, bajar por la lista se parece a deslizar el dedo por un raíl. El tic es el sonido de clic, y en hover resulta agotador. El silencio también es una opción perfectamente válida.
+
+Dos reglas más. Los navegadores mantienen el audio suspendido hasta el primer clic o pulsación de tecla, así que las señales de hover anteriores deben descartarse, no ponerse en cola. Y el control para silenciar debe estar a la vista. Este sitio lo tiene en la cabecera y recuerda la elección.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { definePatch, ensureReady } from "@web-kits/audio";
+
+const ui = definePatch({
+  name: "Minimal",
+  sounds: {
+    tick: {
+      source: { type: "sine", frequency: 1200 },
+      envelope: { attack: 0, decay: 0.012, sustain: 0, release: 0.004 },
+      gain: 0.08,
+    },
+  },
+});
+
+async function play(name: string) {
+  try {
+    await ensureReady(); // resolves after the first user gesture
+    ui.play(name);
+  } catch {
+    // no audio available, the visual still happens
+  }
+}
+
+<Button
+  onClick={() => {
+    setDone(true);
+    play("tick");
+  }}
+>
+  Done
+</Button>`,
+    },
+  ]}
+/>
+
+Una prueba rápida: activa tu señal veinte veces seguidas. Si a la décima ya te has cansado, reduce el gain, acorta el decay o elimínala.

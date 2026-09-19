@@ -1,0 +1,19 @@
+{
+  "Same radius": "Mismo radio",
+  "Nested": "Anidados",
+  "Duplicate": "Duplicar",
+  "Move to folder": "Mover a una carpeta",
+  "Archive": "Archivar",
+  "Wrong": "Incorrecto",
+  "Right": "Correcto",
+  "Correct": "Correcto",
+  "Radius + inset": "Radio + inset",
+  "outer": "exterior",
+  "inner": "interior",
+  "With a 12px inset, the outer radius should be 28px so both curves follow each other.": "Con un inset de 12px, el radio exterior debe ser de 28px para que ambas curvas se sigan.",
+  "Outer radius": "Radio exterior",
+  "Inset": "Inset",
+  "Inner radius": "Radio interior",
+  "Water Lilies": "Nenúfares",
+  "Component radius comparison": "Comparación de radios de los componentes"
+}

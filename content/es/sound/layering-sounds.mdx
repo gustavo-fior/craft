@@ -1,0 +1,94 @@
+---
+title: "Capas de sonido"
+description: "Superpone fuentes breves para formar una señal con cuerpo."
+section: Sound
+order: 2
+publishedAt: "2026-07-15"
+resources:
+  - url: https://audio.raphaelsalaja.com/library/retro
+    title: Retro, @web-kits/audio
+    description: "El patch de 8 bits del que procede el sonido de éxito de este sitio."
+  - url: https://audio.raphaelsalaja.com
+    title: "@web-kits/audio"
+    description: "Capas, envolventes y retardos en una pequeña librería."
+  - url: https://developer.mozilla.org/en-US/docs/Web/API/OscillatorNode
+    title: OscillatorNode
+    description: "Las cuatro formas de onda con las que se construyen las capas de estos ejemplos."
+  - url: https://en.wikipedia.org/wiki/Chorus_(audio_effect)
+    title: Chorus effect
+    description: "Por qué varias copias de un sonido ligeramente desafinadas suenan más amplias que el original."
+  - url: https://learningsynths.ableton.com
+    title: Learning Synths
+    description: "La introducción práctica de Ableton a los osciladores, las envolventes y el detune."
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "d6648c414f41e3701e23d844c4d70f480a1a0e656af777e172d9735611dad8c6"
+---
+
+Una sola onda sinusoidal es el sonido más fino que puede producir un altavoz. Sirve para un tic y poco más.
+
+Una **capa** es una segunda fuente que suena junto a la primera: otra forma de onda, unos cents de diferencia de afinación, un poco menos de volumen y unos milisegundos de retraso. Superpón tres o cuatro y la misma nota dejará de sonar como un tono de prueba. Reproduce la nota y después añade capas.
+
+<SoundLayersDemo />
+
+Cada barra es una capa en una línea de tiempo. Dos factores hacen que el conjunto se perciba como un solo sonido: las capas empiezan con unos `30ms` a `60ms` de separación y cada una suena más baja que la anterior. Si aumentas el intervalo a `80ms`, empezarás a oír las uniones.
+
+El pequeño detune (desajuste de afinación) importa tanto como el retardo. Dos copias con exactamente la misma frecuencia solo aumentan el volumen. Si las separan entre `5` y `8` cents, se desfasan entre sí, y ese desfase es lo que se percibe como amplitud.
+
+## Del acorde al arpegio
+
+Las capas no tienen por qué compartir la misma nota. El sonido de éxito de este sitio son cuatro ondas cuadradas en C, E, G y C (do, mi, sol y do), cada una con `60ms` de retraso respecto a la anterior. Mueve el control del intervalo para oír en qué momento el acorde se convierte en arpegio.
+
+<ArpeggioSpacingDemo />
+
+En `0ms`, las cuatro notas llegan juntas y producen más peso del que necesita una confirmación. Entre `40ms` y `80ms`, el oído percibe un único gesto ascendente. Por encima de `120ms` se convierte en una melodía, y una señal de medio segundo reclama más atención de la que merece un botón de copiar.
+
+## Mezclar texturas
+
+No todas las capas son notas. Una ráfaga breve de ruido filtrado no tiene una altura definida, pero sí un ataque, y eso hace que el sonido sugiera que has pulsado algo. Acciona el interruptor con cada textura seleccionada.
+
+<TextureLayersDemo />
+
+El tono por sí solo es un pitido. El ruido por sí solo es un golpecito. Juntos forman un clic con altura tonal, parecido al sonido de la mayoría de los interruptores físicos. La capa de ruido dura menos de `30ms` y pasa por un filtro bandpass (paso de banda), así que añade definición sin siseo.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "React",
+      language: "ts",
+      code: `import { definePatch } from "@web-kits/audio";
+
+export const patch = definePatch({
+  name: "Minimal",
+  sounds: {
+    // one note, three layers
+    note: {
+      layers: [
+        {
+          source: { type: "sine", frequency: 523 },
+          envelope: { attack: 0.002, decay: 0.09, sustain: 0, release: 0.03 },
+          gain: 0.08,
+        },
+        {
+          source: { type: "triangle", frequency: 523, detune: 8 },
+          envelope: { attack: 0.002, decay: 0.09, sustain: 0, release: 0.03 },
+          gain: 0.05,
+          delay: 0.04,
+        },
+        {
+          source: { type: "noise", color: "white" },
+          filter: { type: "bandpass", frequency: 2600 },
+          envelope: { attack: 0, decay: 0.018, sustain: 0, release: 0.01 },
+          gain: 0.06,
+        },
+      ],
+    },
+  },
+});`,
+    },
+  ]}
+/>
+
+Construye el sonido capa a capa. Ajusta bien la primera por sí sola; después añade la siguiente con un gain menor y consérvala solo si puedes oír lo que aporta. Si silenciar una capa no cambia nada, elimínala.

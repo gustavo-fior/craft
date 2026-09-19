@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { Compare, CompareItem } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { Slider } from "@/components/ui/slider";
 
@@ -19,14 +20,15 @@ function WidthSlider({
   value: number;
   onChange: (value: number) => void;
 }) {
+  const t = useDemoText();
   return (
     <label className="grid w-full max-w-xs gap-2.5">
       <span className="flex justify-between text-xs text-muted-foreground">
-        Width
+        {t("Width")}
         <span className="tabular-nums text-foreground">{value}%</span>
       </span>
       <Slider
-        aria-label="Container width"
+        aria-label={t("Container width")}
         max={100}
         min={55}
         onValueChange={(next) => onChange(unwrap(next))}
@@ -40,13 +42,14 @@ function WidthSlider({
 const HEADING = "Introducing the new dashboard for teams";
 
 function HeadingCard({ textWrap, width }: { textWrap: string; width: number }) {
+  const t = useDemoText();
   return (
     <div className="flex w-full justify-center rounded-xl bg-card px-4 py-5 shadow-(--custom-shadow)">
       <h3
         className="text-base leading-snug font-semibold text-foreground"
         style={{ textWrap: textWrap as React.CSSProperties["textWrap"], width: `${width}%` }}
       >
-        {HEADING}
+        {t(HEADING)}
       </h3>
     </div>
   );
@@ -80,13 +83,14 @@ function ParagraphCard({
   textWrap: string;
   width: number;
 }) {
+  const t = useDemoText();
   return (
     <div className="flex w-full justify-center rounded-xl bg-card px-4 py-4 shadow-(--custom-shadow)">
       <p
         className="text-sm leading-relaxed text-foreground"
         style={{ textWrap: textWrap as React.CSSProperties["textWrap"], width: `${width}%` }}
       >
-        {PARAGRAPH}
+        {t(PARAGRAPH)}
       </p>
     </div>
   );
@@ -118,6 +122,7 @@ const WRAPPING_OPTIONS = [
 ] as const;
 
 export function TextWrapToastDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<Wrapping>("off");
   const on = mode === "on";
 
@@ -137,21 +142,23 @@ export function TextWrapToastDemo() {
             className="text-sm leading-snug font-medium text-foreground"
             style={{ textWrap: on ? "balance" : "normal" }}
           >
-            Your workspace export is ready to download
+            {t("Your workspace export is ready to download")}
           </span>
           <span
             className="text-xs leading-relaxed text-muted-foreground"
             style={{ textWrap: on ? "pretty" : "normal" }}
           >
-            The link works for 24 hours. After that, start a new export from
-            settings to get a fresh one.
+            {t("The link works for 24 hours. After that, start a new export from settings to get a fresh one.")}
           </span>
         </div>
       </div>
       <SegmentedControl
-        ariaLabel="Text wrapping"
+        ariaLabel={t("Text wrapping")}
         onChange={setMode}
-        options={WRAPPING_OPTIONS}
+        options={WRAPPING_OPTIONS.map((option) => ({
+          ...option,
+          label: t(option.label),
+        }))}
         value={mode}
       />
     </Demo>

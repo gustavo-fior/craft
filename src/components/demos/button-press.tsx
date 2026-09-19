@@ -1,5 +1,6 @@
 "use client";
 
+import { useDemoText } from "@/components/app/demo-messages";
 import {
   CalendarBlankIcon,
   ImageIcon,
@@ -19,20 +20,21 @@ function getSliderValue(value: number | readonly number[]) {
 }
 
 export function ButtonPressDemo() {
+  const t = useDemoText();
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
         <CompareItem verdict="wrong">
           <div className="grid h-28 w-full place-items-center rounded-xl bg-card shadow-(--custom-shadow)">
             <Button className="transition-none active:scale-100">
-              Save changes
+              {t("Save changes")}
             </Button>
           </div>
         </CompareItem>
         <CompareItem verdict="right">
           <div className="grid h-28 w-full place-items-center rounded-xl bg-card shadow-(--custom-shadow)">
             <Button className="transition-transform duration-100 ease-out hover:duration-100 active:scale-[0.97]">
-              Save changes
+              {t("Save changes")}
             </Button>
           </div>
         </CompareItem>
@@ -58,6 +60,7 @@ export function PressAmountView({
   onAmountChange?: (amount: number) => void;
   onDurationChange?: (duration: number) => void;
 }) {
+  const t = useDemoText();
   const scale = 1 - amount / 100;
 
   return (
@@ -75,20 +78,20 @@ export function PressAmountView({
             } as React.CSSProperties
           }
         >
-          Save changes
+          {t("Save changes")}
         </Button>
       </div>
 
       <div className="grid w-full max-w-xs gap-5">
         <label className="grid gap-2.5">
           <span className="flex items-center justify-between text-xs text-muted-foreground">
-            Scale
+            {t("Scale")}
             <span className="tabular-nums text-foreground">
               {scale.toFixed(2)}
             </span>
           </span>
           <Slider
-            aria-label="Press scale"
+            aria-label={t("Press scale")}
             max={12}
             min={0}
             onValueChange={(value) => onAmountChange?.(getSliderValue(value))}
@@ -98,11 +101,11 @@ export function PressAmountView({
         </label>
         <label className="grid gap-2.5">
           <span className="flex items-center justify-between text-xs text-muted-foreground">
-            Duration
+            {t("Duration")}
             <span className="tabular-nums text-foreground">{duration}ms</span>
           </span>
           <Slider
-            aria-label="Press duration"
+            aria-label={t("Press duration")}
             max={400}
             min={0}
             onValueChange={(value) =>
@@ -145,6 +148,7 @@ const TILES = [
 ] as const;
 
 export function PressEverywhereDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<PressMode>("none");
 
   return (
@@ -167,10 +171,10 @@ export function PressEverywhereDemo() {
             />
             <span className="flex min-w-0 flex-col">
               <span className="truncate text-xs font-medium text-foreground">
-                {tile.label}
+                {t(tile.label)}
               </span>
               <span className="truncate text-[10px] text-muted-foreground">
-                {tile.detail}
+                {t(tile.detail)}
               </span>
             </span>
           </button>
@@ -178,9 +182,9 @@ export function PressEverywhereDemo() {
       </div>
 
       <SegmentedControl
-        ariaLabel="Press feedback"
+        ariaLabel={t("Press feedback")}
         onChange={setMode}
-        options={PRESS_OPTIONS}
+        options={PRESS_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={mode}
       />
     </Demo>

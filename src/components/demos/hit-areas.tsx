@@ -15,6 +15,7 @@ import { useState } from "react";
 
 import { Compare, CompareItem } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +41,7 @@ const TOOLS = [
 ] as const;
 
 function Toolbar({ padded, paint }: { padded: boolean; paint: boolean }) {
+  const t = useDemoText();
   return (
     <div
       className={cn(
@@ -47,12 +49,12 @@ function Toolbar({ padded, paint }: { padded: boolean; paint: boolean }) {
         padded ? "gap-1 p-1" : "gap-4 px-4 py-3"
       )}
       role="toolbar"
-      aria-label={padded ? "Padded toolbar" : "Unpadded toolbar"}
+      aria-label={t(padded ? "Padded toolbar" : "Unpadded toolbar")}
     >
       {TOOLS.map(({ label, Icon }) => (
         <button
           key={label}
-          aria-label={label}
+          aria-label={t(label)}
           className={cn(
             "grid shrink-0 cursor-pointer place-items-center rounded-md text-foreground outline-none transition-colors duration-150 hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/50 active:bg-muted motion-reduce:transition-none",
             padded ? "size-8" : "size-4 rounded-sm",
@@ -68,6 +70,7 @@ function Toolbar({ padded, paint }: { padded: boolean; paint: boolean }) {
 }
 
 export function HitAreasToolbarDemo() {
+  const t = useDemoText();
   const [overlay, setOverlay] = useState<Overlay>("hidden");
   const paint = overlay === "shown";
 
@@ -82,9 +85,9 @@ export function HitAreasToolbarDemo() {
         </CompareItem>
       </Compare>
       <SegmentedControl
-        ariaLabel="Hit area overlay"
+        ariaLabel={t("Hit area overlay")}
         onChange={setOverlay}
-        options={OVERLAY_OPTIONS}
+        options={OVERLAY_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={overlay}
       />
     </Demo>
@@ -96,6 +99,7 @@ export function HitAreasToolbarDemo() {
 const FILTERS = ["Design", "Engineering", "Product"] as const;
 
 function FilterChips({ expanded, paint }: { expanded: boolean; paint: boolean }) {
+  const t = useDemoText();
   const [removed, setRemoved] = useState<string[]>([]);
   const visible = FILTERS.filter((filter) => !removed.includes(filter));
 
@@ -106,9 +110,9 @@ function FilterChips({ expanded, paint }: { expanded: boolean; paint: boolean })
           key={filter}
           className="flex h-7 items-center gap-1 rounded-full bg-card pr-1.5 pl-2.5 text-xs font-medium text-foreground shadow-(--custom-shadow)"
         >
-          {filter}
+          {t(filter)}
           <button
-            aria-label={`Remove ${filter}`}
+            aria-label={t("Remove {filter}", { filter: t(filter) })}
             className={cn(
               "relative grid size-3.5 cursor-pointer place-items-center rounded-full text-muted-foreground outline-none transition-colors duration-150 hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/50 motion-reduce:transition-none",
               expanded && "after:absolute after:-inset-2 after:rounded-full after:content-['']",
@@ -130,7 +134,7 @@ function FilterChips({ expanded, paint }: { expanded: boolean; paint: boolean })
           onClick={() => setRemoved([])}
           type="button"
         >
-          Reset filters
+          {t("Reset filters")}
         </button>
       )}
     </div>
@@ -138,6 +142,7 @@ function FilterChips({ expanded, paint }: { expanded: boolean; paint: boolean })
 }
 
 export function HitAreasExpandDemo() {
+  const t = useDemoText();
   const [overlay, setOverlay] = useState<Overlay>("hidden");
   const paint = overlay === "shown";
 
@@ -152,9 +157,9 @@ export function HitAreasExpandDemo() {
         </CompareItem>
       </Compare>
       <SegmentedControl
-        ariaLabel="Hit area overlay"
+        ariaLabel={t("Hit area overlay")}
         onChange={setOverlay}
-        options={OVERLAY_OPTIONS}
+        options={OVERLAY_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={overlay}
       />
     </Demo>
@@ -171,6 +176,7 @@ const MENU = [
 ] as const;
 
 function Menu({ gapped, paint }: { gapped: boolean; paint: boolean }) {
+  const t = useDemoText();
   return (
     <div
       className={cn(
@@ -178,7 +184,7 @@ function Menu({ gapped, paint }: { gapped: boolean; paint: boolean }) {
         gapped && "gap-2"
       )}
       role="menu"
-      aria-label={gapped ? "Menu with gaps" : "Menu without gaps"}
+      aria-label={t(gapped ? "Menu with gaps" : "Menu without gaps")}
     >
       {MENU.map(({ label, Icon }) => (
         <button
@@ -193,7 +199,7 @@ function Menu({ gapped, paint }: { gapped: boolean; paint: boolean }) {
           type="button"
         >
           <Icon aria-hidden="true" className="size-3.5 shrink-0" weight="duotone" />
-          <span className="truncate">{label}</span>
+          <span className="truncate">{t(label)}</span>
         </button>
       ))}
     </div>
@@ -201,6 +207,7 @@ function Menu({ gapped, paint }: { gapped: boolean; paint: boolean }) {
 }
 
 export function HitAreasGapDemo() {
+  const t = useDemoText();
   const [overlay, setOverlay] = useState<Overlay>("hidden");
   const paint = overlay === "shown";
 
@@ -215,9 +222,9 @@ export function HitAreasGapDemo() {
         </CompareItem>
       </Compare>
       <SegmentedControl
-        ariaLabel="Hit area overlay"
+        ariaLabel={t("Hit area overlay")}
         onChange={setOverlay}
-        options={OVERLAY_OPTIONS}
+        options={OVERLAY_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={overlay}
       />
     </Demo>

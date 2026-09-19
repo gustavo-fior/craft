@@ -1,0 +1,104 @@
+---
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "74ce91c82ff895cb3dcc21f9406d198761c90d5002ab338a5474e8b855aee8e8"
+title: Sombras en lugar de bordes
+description: Las sombras por capas definen el contorno y dan profundidad.
+section: Color
+order: 3
+publishedAt: "2026-07-15"
+resources:
+  - url: https://www.joshwcomeau.com/css/designing-shadows/
+    title: Designing Beautiful Shadows in CSS
+    description: La mejor explicación de las sombras por capas y de por qué un único desenfoque grande no funciona.
+  - url: https://jakub.kr/components/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: Incluye la receta de ring más sombra y sus ajustes para el modo oscuro.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow
+    title: box-shadow
+    description: Referencia de sintaxis, incluidos inset y spread, en los que se apoya la versión para modo oscuro.
+  - url: https://shadows.brumm.af/
+    title: Smooth Shadow
+    description: Un generador de sombras por capas con una curva de easing, útil para crear escalas de elevación.
+---
+
+Un borde de 1px es la forma habitual de delimitar una tarjeta. Funciona, pero cada borde es una línea, y una pantalla llena de líneas empieza a parecer una hoja de cálculo. Una **sombra por capas** dibuja el mismo contorno con un ring tenue y añade un poco de profundidad debajo. La misma tarjeta, dos tratamientos.
+
+<ShadowsNotBordersDemo />
+
+La versión con sombra no es más suave ni está más desenfocada: el contorno sigue siendo nítido. La diferencia es que ahora la tarjeta parece estar ligeramente elevada sobre la página, en vez de dibujada en ella. Eso permite apilar superficies, como una tarjeta dentro de un panel dentro de una página, sin acumular líneas.
+
+## Tres capas
+
+La receta que usa este sitio tiene tres partes, cada una con una función. Recorre las capas una a una.
+
+<ShadowLayersDemo />
+
+- El **ring** es una sombra `0 0 0 1px` de negro al 6 %. Define el contorno. Sustituye al borde, pero, al ser una sombra, no ocupa espacio ni cambia el tamaño de la caja.
+- La capa de **contacto** es una sombra estrecha, desplazada 1px, al 6 %. Oscurece los píxeles justo debajo del borde inferior, donde un objeto real tocaría la superficie.
+- La capa **ambiental** tiene un desenfoque más amplio, de 4px, al 4 %. Sugiere luz desde arriba sin llegar a convertirse en una mancha visible.
+
+> Varias sombras tenues parecen una sombra real. Una sombra intensa parece un filtro drop-shadow.
+
+Ninguna capa supera el 6 % de opacidad. Si te fijas conscientemente en la sombra, es demasiado intensa.
+
+## Elevación
+
+Una vez construida la base con capas, elevar el componente consiste en añadir más. Una tarjeta en reposo tiene un ring y una sombra de contacto. En hover añade un desenfoque intermedio. Un popover suma una sombra larga y suave.
+
+<ShadowElevationDemo />
+
+Mantén iguales las dos primeras capas en todos los niveles. Así se perciben como un mismo material a distintas alturas, en lugar de tres estilos diferentes.
+
+## Modo oscuro
+
+Las sombras son oscuras, y una sombra oscura sobre un fondo oscuro es invisible. Aquí está la sombra del modo claro sobre una superficie oscura, junto a la versión que este sitio usa realmente en modo oscuro.
+
+<ShadowDarkModeDemo />
+
+En modo oscuro, el contorno lo define la luz. Un ring interior de 1px de blanco al 3 % dibuja el contorno desde dentro, y un brillo interior de 1px en el borde superior sugiere luz sobre la superficie. Las sombras exteriores se mantienen, pero sirven para separarla de lo que hay debajo, no para definir el contorno.
+
+## Uso
+
+Estos son los valores reales de los tokens de `globals.css` de este sitio. La pestaña Tailwind usa el token directamente; la pestaña CSS muestra su contenido.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<div class="rounded-xl bg-card shadow-(--custom-shadow)">
+  <!-- content -->
+</div>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `:root {
+  --custom-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 1px 2px -1px rgba(0, 0, 0, 0.06),
+    0 2px 4px 0 rgba(0, 0, 0, 0.04);
+}
+
+.dark {
+  --custom-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.03),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 0 0 1px rgba(0, 0, 0, 0.1),
+    0 2px 2px 0 rgba(0, 0, 0, 0.1),
+    0 4px 4px 0 rgba(0, 0, 0, 0.1),
+    0 8px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+.card {
+  border-radius: 12px;
+  box-shadow: var(--custom-shadow);
+}`,
+    },
+  ]}
+/>
+
+Los bordes siguen teniendo su sitio. Los inputs, las filas de tablas y los separadores necesitan una línea sencilla, porque no son superficies y no deberían parecer elevados. Reserva la sombra para los elementos que contienen otros elementos.

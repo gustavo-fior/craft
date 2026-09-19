@@ -9,6 +9,7 @@ import {
 import { useEffect, useState } from "react";
 
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -54,11 +55,12 @@ function Flaw({
 }
 
 function ProjectCard({ flawed, revealed }: { flawed: boolean; revealed: boolean }) {
+  const t = useDemoText();
   const show = flawed && revealed;
   return (
     <div className="w-full max-w-60 rounded-2xl bg-card p-4 shadow-(--custom-shadow)">
       <div className="flex items-center gap-2.5">
-        <Flaw active={show} label="Radius">
+        <Flaw active={show} label={t("Radius")}>
           <div
             className={cn(
               "grid size-8 shrink-0 place-items-center bg-foreground text-background",
@@ -74,13 +76,13 @@ function ProjectCard({ flawed, revealed }: { flawed: boolean; revealed: boolean 
         </Flaw>
         <div className="min-w-0 flex-1">
           <div className="truncate text-sm font-medium text-foreground">
-            Launch week
+            {t("Launch week")}
           </div>
           <div className="truncate text-xs text-muted-foreground">
-            12 tasks, 3 open
+            {t("12 tasks, 3 open")}
           </div>
         </div>
-        <Flaw active={show} label="1px low">
+        <Flaw active={show} label={t("1px low")}>
           <BellIcon
             aria-hidden="true"
             className={cn(
@@ -96,7 +98,7 @@ function ProjectCard({ flawed, revealed }: { flawed: boolean; revealed: boolean 
       </div>
 
       <div className="mt-4 flex items-center gap-2">
-        <Flaw active={show} label="Off center">
+        <Flaw active={show} label={t("Off center")}>
           <button
             className={cn(
               "inline-flex h-8 cursor-pointer items-center gap-1.5 rounded-lg bg-foreground text-xs font-medium text-background",
@@ -106,7 +108,7 @@ function ProjectCard({ flawed, revealed }: { flawed: boolean; revealed: boolean 
             type="button"
           >
             <PlusIcon aria-hidden="true" className="size-3.5" weight="bold" />
-            Add task
+            {t("Add task")}
           </button>
         </Flaw>
         <button
@@ -114,7 +116,7 @@ function ProjectCard({ flawed, revealed }: { flawed: boolean; revealed: boolean 
           tabIndex={-1}
           type="button"
         >
-          Share
+          {t("Share")}
         </button>
       </div>
     </div>
@@ -122,6 +124,7 @@ function ProjectCard({ flawed, revealed }: { flawed: boolean; revealed: boolean 
 }
 
 export function SpotTheDifferenceDemo() {
+  const t = useDemoText();
   const [revealed, setRevealed] = useState(false);
   const [flawedSide, setFlawedSide] = useState<"left" | "right">("right");
 
@@ -144,7 +147,7 @@ export function SpotTheDifferenceDemo() {
         size="sm"
         variant="secondary"
       >
-        {revealed ? "Hide" : "Reveal"}
+        {t(revealed ? "Hide" : "Reveal")}
       </Button>
     </Demo>
   );
@@ -234,13 +237,14 @@ function MenuStage({
   open: boolean;
   style: React.CSSProperties;
 }) {
+  const t = useDemoText();
   return (
     <div className="relative h-44 w-full max-w-44">
       <div
         aria-hidden="true"
         className="inline-flex h-7 items-center rounded-md bg-muted px-2.5 text-xs font-medium text-foreground"
       >
-        Options
+        {t("Options")}
       </div>
       <div
         aria-hidden="true"
@@ -255,7 +259,7 @@ function MenuStage({
             key={item}
             className="flex h-7 items-center rounded-md px-2 text-xs text-foreground first:bg-muted"
           >
-            {item}
+            {t(item)}
           </div>
         ))}
       </div>
@@ -264,6 +268,7 @@ function MenuStage({
 }
 
 export function PairJudgementDemo() {
+  const t = useDemoText();
   const [variable, setVariable] = useState<Variable>("duration");
   const [open, setOpen] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -294,7 +299,7 @@ export function PairJudgementDemo() {
           >
             <MenuStage open={open} style={side.style} />
             <span className="text-[10px] text-muted-foreground">
-              {side.label}
+              {t(side.label)}
             </span>
           </div>
         ))}
@@ -302,16 +307,19 @@ export function PairJudgementDemo() {
       <div className="flex flex-col items-center gap-4">
         <Button onClick={play} size="sm" variant="secondary">
           <PlayIcon weight="fill" />
-          Play
+          {t("Play")}
         </Button>
         <SegmentedControl
-          ariaLabel="Variable to compare"
+          ariaLabel={t("Variable to compare")}
           onChange={(value) => {
             setVariable(value);
             setOpen(false);
             setBusy(true);
           }}
-          options={VARIABLES}
+          options={VARIABLES.map((option) => ({
+          ...option,
+          label: t(option.label),
+        }))}
           value={variable}
         />
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useDemoText } from "@/components/app/demo-messages";
 import {
   ArrowsClockwiseIcon,
   CopyIcon,
@@ -50,6 +51,7 @@ function Menu({
   className?: string;
   style?: React.CSSProperties;
 }) {
+  const t = useDemoText();
   return (
     <ul
       aria-hidden="true"
@@ -69,7 +71,7 @@ function Menu({
             className="size-3.5 shrink-0 text-muted-foreground"
             weight="duotone"
           />
-          {item.label}
+          {t(item.label)}
         </li>
       ))}
     </ul>
@@ -77,6 +79,7 @@ function Menu({
 }
 
 function FakeTrigger({ open }: { open: boolean }) {
+  const t = useDemoText();
   return (
     <span
       aria-hidden="true"
@@ -86,12 +89,13 @@ function FakeTrigger({ open }: { open: boolean }) {
       )}
     >
       <ShareNetworkIcon className="size-3.5" weight="duotone" />
-      Share
+      {t("Share")}
     </span>
   );
 }
 
 export function ScaleEntrancesDemo() {
+  const t = useDemoText();
   const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
   const ms = reduceMotion ? 0 : ENTER_MS;
@@ -107,13 +111,13 @@ export function ScaleEntrancesDemo() {
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
-        <CompareItem verdict="wrong" caption="From scale(0)">
+        <CompareItem verdict="wrong" caption={t("From scale(0)")}>
           <div className="flex h-44 w-full flex-col items-center gap-2 rounded-xl bg-muted pt-4 dark:bg-muted/40">
             <FakeTrigger open={open} />
             <Menu items={SHARE_ITEMS} style={popover(0)} />
           </div>
         </CompareItem>
-        <CompareItem verdict="right" caption="From scale(0.95)">
+        <CompareItem verdict="right" caption={t("From scale(0.95)")}>
           <div className="flex h-44 w-full flex-col items-center gap-2 rounded-xl bg-muted pt-4 dark:bg-muted/40">
             <FakeTrigger open={open} />
             <Menu items={SHARE_ITEMS} style={popover(0.95)} />
@@ -122,7 +126,7 @@ export function ScaleEntrancesDemo() {
       </Compare>
 
       <Button onClick={() => setOpen((value) => !value)} variant="secondary">
-        {open ? "Close" : "Open"}
+        {open ? t("Close") : t("Open")}
       </Button>
     </Demo>
   );
@@ -168,6 +172,7 @@ function CornerCard({
 }
 
 export function TransformOriginDemo() {
+  const t = useDemoText();
   const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
   const ms = reduceMotion ? 0 : ENTER_MS;
@@ -175,22 +180,23 @@ export function TransformOriginDemo() {
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
-        <CompareItem verdict="wrong" caption="Origin: center">
+        <CompareItem verdict="wrong" caption={t("Origin: center")}>
           <CornerCard ms={ms} open={open} origin="center" />
         </CompareItem>
-        <CompareItem verdict="right" caption="Origin: top right">
+        <CompareItem verdict="right" caption={t("Origin: top right")}>
           <CornerCard ms={ms} open={open} origin="top right" />
         </CompareItem>
       </Compare>
 
       <Button onClick={() => setOpen((value) => !value)} variant="secondary">
-        {open ? "Close" : "Open"}
+        {open ? t("Close") : t("Open")}
       </Button>
     </Demo>
   );
 }
 
 export function StartingScaleDemo() {
+  const t = useDemoText();
   const reduceMotion = useReducedMotion();
   const [from, setFrom] = useState(0.95);
   const [run, setRun] = useState(0);
@@ -223,13 +229,13 @@ export function StartingScaleDemo() {
       <div className="flex w-full max-w-xs flex-col items-center gap-5">
         <label className="grid w-full gap-2.5">
           <span className="flex justify-between text-xs text-muted-foreground">
-            Start scale
+            {t("Start scale")}
             <span className="tabular-nums text-foreground">
               {from.toFixed(2)}
             </span>
           </span>
           <Slider
-            aria-label="Starting scale"
+            aria-label={t("Starting scale")}
             max={1}
             min={0}
             onValueChange={(value) => {
@@ -242,7 +248,7 @@ export function StartingScaleDemo() {
         </label>
         <Button onClick={() => setRun((n) => n + 1)} variant="secondary">
           <ArrowsClockwiseIcon weight="bold" />
-          Replay
+          {t("Replay")}
         </Button>
       </div>
     </Demo>

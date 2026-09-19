@@ -1,0 +1,95 @@
+---
+title: El rendimiento también es diseño
+description: La rapidez que se percibe es una decisión de diseño.
+section: Craft
+order: 1
+publishedAt: "2026-07-15"
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: 758ac32c342b49416daeb9d080bb6b5631998d5bbc3e88a64e12bdb236b8c044
+resources:
+  - url: https://shud.in/thoughts/performance-is-not-a-technical-problem
+    title: Performance is not a technical problem
+    description: Shu Ding explica por qué los productos lentos son la suma de pequeñas decisiones de las que nadie se hizo cargo.
+  - url: https://www.nngroup.com/articles/response-times-3-important-limits/
+    title: Response times, the three important limits
+    description: Los umbrales clásicos de 100 ms, 1 s y 10 s, y lo que implica cada uno para la respuesta de la interfaz.
+  - url: https://www.nngroup.com/articles/progress-indicators/
+    title: Progress indicators make a slow system less insufferable
+    description: Cuándo basta con un spinner, cuándo hace falta una barra de progreso y cuándo conviene no mostrar nada.
+  - url: https://emilkowal.ski/ui/you-dont-need-animations
+    title: You don't need animations
+    description: Emil Kowalski explica cómo el movimiento puede hacer que una interfaz rápida parezca lenta.
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: Una colección de pequeñas decisiones, varias de ellas sobre la espera.
+---
+
+La velocidad se percibe antes de medirse. Dos aplicaciones pueden obtener los
+mismos datos en el mismo tiempo y una parecerá rápida mientras la otra parece
+estar pensándoselo. La diferencia está en lo que muestras durante la espera.
+
+Eso convierte la espera en un problema de diseño. **Perceived performance**
+(rendimiento percibido) es la parte de la velocidad que controlas con píxeles,
+y suele ser la más barata de mejorar.
+
+Pulsa el botón. Las dos tarjetas tardan los mismos 1,2 segundos en cargar.
+
+<PerceivedPerformanceDemo />
+
+El spinner (indicador de carga giratorio) dice «espera, por favor». El skeleton
+(esqueleto de carga) dice «esto es lo que va a aparecer». La espera es la misma,
+pero la segunda parece más corta porque la mirada ya tiene dónde detenerse.
+
+## Las esperas breves piden silencio
+
+Los estados de carga tienen su propio coste. Cada placeholder es un elemento
+que aparece y luego desaparece, y esos destellos rápidos transmiten agitación.
+
+Para una espera que termina en un parpadeo, lo más tranquilo es mantener el
+layout (la distribución de los elementos) y no mostrar nada. Después, haz
+aparecer el contenido real con un fundido.
+
+<LoadingFlashDemo />
+
+Esta orientación aproximada ha dado buenos resultados:
+
+- Por debajo de unos 300 ms, no muestres nada. Reserva el espacio para que ningún elemento salte.
+- Entre 300 ms y un segundo, mantén el layout y muestra el contenido con un fundido. Un skeleton está bien si la espera suele situarse en la mitad superior de ese intervalo.
+- Por encima de un segundo, debes explicar qué ocurre. Aquí tienen sentido los skeletons, los indicadores de progreso y los mensajes sinceros.
+
+Nunca alargues un estado de carga para que resulte «fluido». Si los datos están
+listos, muéstralos.
+
+## No esperes a la confirmación
+
+La mayoría de las acciones salen bien. Cuando ya sabes qué aspecto tendrá el
+resultado, muéstralo al momento y deja que la petición termine después. Si
+falla, puedes deshacer el cambio y avisar.
+
+<OptimisticDemo />
+
+Esto es lo que hace que Linear y Things parezcan instantáneos. Su conexión de
+red no tiene nada especial. Simplemente han dejado de obligarte a esperar a
+que la petición vaya y vuelva.
+
+## Hasta el spinner tiene su velocidad
+
+Cuando de verdad necesitas un spinner, la velocidad a la que gira cambia la
+duración percibida de la espera. La misma carga, dos spinners.
+
+<SpinnerSpeedDemo />
+
+El más rápido no está mintiendo. Simplemente no añade su propia lentitud a
+la que ya existe.
+
+## La solución de fondo
+
+Shu Ding sostiene que los productos lentos rara vez tienen una sola causa.
+Son cientos de pequeñas decisiones, todas defendibles por separado, que nadie
+ha examinado en conjunto. Diseñar consiste en mirarlas juntas.
+
+Por eso, el mejor estado de carga suele ser el que has eliminado. Guarda los
+datos en caché. Renderízalos en el servidor. Haz prefetch al hacer hover.
+Entonces la interfaz puede hacer lo más seguro de sí misma que existe:
+mostrar el contenido, sin más.

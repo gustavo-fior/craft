@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { playSound } from "@/lib/sounds";
+import { localizedPath } from "@/i18n/locales";
+import { useUiLanguage } from "./ui-language";
 
 // Redaction's cuts get progressively more degraded (35 → 50 → 70). On hover
 // the wordmark glitches through the pixelated cuts and settles back.
@@ -18,6 +20,7 @@ const GLITCH_FRAMES = [
 const FRAME_MS = 90;
 
 export function Wordmark() {
+  const { locale } = useUiLanguage();
   const [frame, setFrame] = useState<string>("font-redaction");
   const frameTimeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
   const glitching = useRef(false);
@@ -40,7 +43,7 @@ export function Wordmark() {
 
   return (
     <Link
-      href="/"
+      href={localizedPath(locale, "/")}
       onClick={() => playSound("tick")}
       onMouseEnter={glitch}
       className={`${frame} text-base text-foreground`}

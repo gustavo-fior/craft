@@ -1,0 +1,100 @@
+---
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "b26617ae7c2598e71e6561bec5806c1d824fbb821e922455df4eb81b66f70808"
+title: Contornos de imagen
+description: Un borde interior tenue que delimita las imágenes.
+section: Color
+order: 4
+publishedAt: "2026-07-15"
+resources:
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: La lista de pequeños detalles de Jakub Krehel, incluido el contorno interior de las imágenes que explica este artículo.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/outline-offset
+    title: outline-offset
+    description: La propiedad que desplaza el contorno hacia el interior de la caja.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow
+    title: box-shadow
+    description: La variante inset permite dibujar la misma línea y respeta las esquinas redondeadas.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/color-mix
+    title: color-mix()
+    description: Útil para mezclar el color del contorno con el color actual del texto y adaptarlo a cualquier tema.
+---
+
+Las imágenes no saben qué tienen detrás. Un cielo pálido sobre una tarjeta blanca
+pierde por completo su límite, y una foto con una esquina luminosa se funde con la página.
+
+Un **inset outline** (contorno interior) lo resuelve con una sola línea, dibujada
+justo dentro de la imagen con una opacidad de alrededor del 10 %.
+
+La visibilidad del contorno puede variar según el modo claro u oscuro y el contenido de la imagen.
+
+<ImageOutlineDemo />
+
+La línea es demasiado tenue para percibirse como un borde. Lo que notas es que,
+de pronto, todas las imágenes tienen una forma definida.
+
+Este truco lo aprendí de
+[Jakub](https://jakub.kr/writing/details-that-make-interfaces-feel-better).
+Es uno de esos detalles que, una vez que te los señalan, ya no puedes dejar de ver.
+
+## Por qué no usar border
+
+Un `border` se sitúa entre el padding y el margin, así que ocupa espacio.
+Al añadirlo, desplazas el contenido y cambias el tamaño de la caja.
+
+**Dibuja la línea sobre la imagen, no a su alrededor.** Un `outline` con un
+`outline-offset` negativo, o un `box-shadow` con `inset`, se superpone a
+los píxeles del perímetro.
+
+## Qué intensidad usar
+
+El 10 % es un buen punto de partida, aunque a veces prefiero ajustarlo de forma distinta para el modo claro y el oscuro.
+
+<ImageOutlineStrengthDemo />
+
+Por debajo de aproximadamente el 5 %, la línea desaparece contra el cielo pálido.
+Por encima de aproximadamente el 20 %, empieza a parecer un marco: el ojo la
+interpreta como un elemento de diseño en lugar de una corrección. Quédate entre ambos valores.
+
+## Avatares
+
+En los avatares es donde más se nota. Son pequeños, redondos y a menudo casi
+blancos: una inicial sobre un fondo claro, un logotipo pálido o una foto de
+alguien delante de una pared. Sin un contorno, parecen flotar sobre la superficie.
+
+<ImageOutlineAvatarDemo />
+
+## Uso
+
+Define el color del contorno para cada tema. Negro al 10 % en el claro y blanco al 10 % en el oscuro.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<img
+  class="rounded-lg outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10"
+  src="/cover.jpg"
+  alt="Album cover"
+/>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `img {
+  border-radius: 8px;
+  outline: 1px solid rgb(0 0 0 / 0.1);
+  outline-offset: -1px;
+}
+
+.dark img {
+outline-color: rgb(255 255 255 / 0.1);
+}`,
+},
+]}
+/>

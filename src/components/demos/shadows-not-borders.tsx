@@ -5,6 +5,7 @@ import { type CSSProperties, useState } from "react";
 
 import { Compare, CompareItem } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +26,7 @@ function SampleCard({
   style?: CSSProperties;
   dark?: boolean;
 }) {
+  const t = useDemoText();
   return (
     <div
       aria-hidden="true"
@@ -57,7 +59,7 @@ function SampleCard({
               dark ? "text-white/90" : "text-foreground"
             )}
           >
-            Design review
+            {t("Design review")}
           </span>
           <span
             className={cn(
@@ -65,7 +67,7 @@ function SampleCard({
               dark ? "text-white/50" : "text-muted-foreground"
             )}
           >
-            Tomorrow, 10:00
+            {t("Tomorrow, 10:00")}
           </span>
         </span>
       </div>
@@ -84,7 +86,7 @@ function SampleCard({
             dark ? "bg-white/8 text-white/60" : "bg-muted text-muted-foreground"
           )}
         >
-          3 comments
+          {t("3 comments")}
         </span>
       </div>
     </div>
@@ -92,13 +94,14 @@ function SampleCard({
 }
 
 export function ShadowsNotBordersDemo() {
+  const t = useDemoText();
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
-        <CompareItem verdict="wrong" label="Border">
+        <CompareItem verdict="wrong" label={t("Border")}>
           <SampleCard className="border border-black/10 dark:border-white/10" />
         </CompareItem>
-        <CompareItem verdict="right" label="Shadow">
+        <CompareItem verdict="right" label={t("Shadow")}>
           <SampleCard className="shadow-(--custom-shadow)" />
         </CompareItem>
       </Compare>
@@ -117,6 +120,7 @@ const LAYER_OPTIONS = [
 ] as const;
 
 export function ShadowLayersDemo() {
+  const t = useDemoText();
   const [layer, setLayer] = useState<Layer>("ring");
   const active = LAYER_ORDER.slice(0, LAYER_ORDER.indexOf(layer) + 1);
 
@@ -132,9 +136,9 @@ export function ShadowLayersDemo() {
       </div>
 
       <SegmentedControl
-        ariaLabel="Shadow layers"
+        ariaLabel={t("Shadow layers")}
         onChange={setLayer}
-        options={LAYER_OPTIONS}
+        options={LAYER_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={layer}
       />
     </Demo>
@@ -160,6 +164,7 @@ const LEVELS = [
 ] as const;
 
 export function ShadowElevationDemo() {
+  const t = useDemoText();
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <div className="grid w-full max-w-md grid-cols-3 gap-3 sm:gap-6">
@@ -180,7 +185,7 @@ export function ShadowElevationDemo() {
               <span className="h-1.5 w-2/3 rounded-full bg-foreground/8" />
             </div>
             <span className="text-[10px] text-muted-foreground">
-              {level.label}
+              {t(level.label)}
             </span>
           </div>
         ))}

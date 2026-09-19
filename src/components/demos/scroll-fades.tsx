@@ -15,6 +15,7 @@ import {
 
 import { Compare, CompareItem, CompareLabel } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { cn } from "@/lib/utils";
 
 const TASKS = [
@@ -63,6 +64,7 @@ function useSyncedScroll() {
 }
 
 function TaskList() {
+  const t = useDemoText();
   return (
     <ul className="divide-y divide-[#E7E7E7] dark:divide-[#1E1E1E]">
       {TASKS.map((task) => (
@@ -84,7 +86,7 @@ function TaskList() {
             />
           )}
           <span className={cn("truncate", task.done && "text-muted-foreground line-through")}>
-            {task.title}
+            {t(task.title)}
           </span>
         </li>
       ))}
@@ -250,6 +252,7 @@ function ChipRow({
   style?: CSSProperties;
   className?: string;
 }) {
+  const t = useDemoText();
   const [active, setActive] = useState<string>("All");
 
   return (
@@ -275,7 +278,7 @@ function ChipRow({
           onClick={() => setActive(topic)}
           type="button"
         >
-          {topic}
+          {t(topic)}
         </button>
       ))}
     </div>

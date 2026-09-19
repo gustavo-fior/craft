@@ -9,6 +9,8 @@ import { CopyIcon } from "@/components/app/copy-icon";
 import { Button } from "@/components/ui/button";
 import { playSound } from "@/lib/sounds";
 import { cn } from "@/lib/utils";
+import { useUiLanguage } from "./ui-language";
+import { languageTag } from "@/i18n/locales";
 
 export type HighlightedCodeTab = {
   label: string;
@@ -96,6 +98,7 @@ export function CodeBlockClient({
   /** Drops the filename/tab bar; for one-liners like a terminal command. */
   hideHeader?: boolean;
 }) {
+  const { locale, messages } = useUiLanguage();
   const [activeIndex, setActiveIndex] = useState(0);
   const [copied, setCopied] = useState(false);
   const copiedTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -150,7 +153,7 @@ export function CodeBlockClient({
   }
 
   return (
-    <div className="my-6 overflow-hidden rounded-xl bg-card shadow-(--custom-shadow)">
+    <div lang={languageTag(locale)} className="my-6 overflow-hidden rounded-xl bg-card shadow-(--custom-shadow)">
       {!hideHeader && (
         <div className="flex items-center justify-between gap-3 border-b border-[#E7E7E7] dark:border-[#1E1E1E] py-2 pr-2 pl-4">
           {/* One label per tab, stacked and crossfaded on the same 200ms
@@ -178,7 +181,7 @@ export function CodeBlockClient({
             {tabs.length > 1 && (
               <div
                 role="tablist"
-                aria-label="Code examples"
+                aria-label={messages.codeExamples}
                 className="inline-flex h-8 items-center rounded-full bg-card p-0.5"
               >
                 {tabs.map((tab, index) => {
@@ -249,7 +252,7 @@ export function CodeBlockClient({
           size="icon-sm"
           variant="ghost"
           className="absolute top-2.5 right-2.5 z-10 backdrop-blur-sm hover:bg-muted dark:hover:bg-input/50"
-          aria-label={copied ? "Code copied" : `Copy ${activeTab.label} code`}
+          aria-label={copied ? messages.codeCopied : `${messages.copyCode}: ${activeTab.label}`}
           onClick={() => void copyCode()}
         >
           <CopyIcon copied={copied} icon={<CopyGlyph weight="duotone" />} />
@@ -265,6 +268,7 @@ export function CodeBlockClient({
               id={`${tabId}-panel-${index}`}
               role="tabpanel"
               aria-labelledby={`${tabId}-tab-${index}`}
+              lang="en"
               inert={!active}
               className={cn(
                 "code-block-panel min-w-0 transition-opacity duration-200",

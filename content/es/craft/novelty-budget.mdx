@@ -1,0 +1,79 @@
+---
+title: Novelty budget (presupuesto de novedad)
+description: Reserva las sorpresas para los momentos especiales.
+section: Craft
+order: 3
+publishedAt: "2026-07-15"
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: dee9ff01ede472c23560213c84de5731d2602f36c428cc30b8b41adff423f188
+resources:
+  - url: https://rauno.me/craft/novelty
+    title: Novelty
+    description: La propuesta original de Rauno Freiberg de tratar las sorpresas como un presupuesto con un límite aproximado del diez por ciento.
+  - url: https://benji.org/family-values
+    title: Family Values
+    description: Benji Taylor explica cómo Family decidió dónde concentrar sus momentos más expresivos.
+  - url: https://emilkowal.ski/ui/you-dont-need-animations
+    title: You don't need animations
+    description: La regla de la frecuencia aplicada al movimiento, con ejemplos de interfaces reales.
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: Incluye el cálculo del tiempo que cuesta una animación repetida a lo largo de un año.
+  - url: https://en.wikipedia.org/wiki/Semantic_satiation
+    title: Semantic satiation
+    description: El efecto por el que repetir una palabra acaba vaciándola de significado. También ocurre en las interfaces.
+---
+
+Repite una palabra veinte veces seguidas y se convertirá en ruido. Con las
+interfaces ocurre lo mismo. El confeti que te hizo sonreír la primera vez
+pasa inadvertido a la décima y molesta a la centésima.
+
+La respuesta de Rauno Freiberg es tratar la novedad como el dinero. Tienes un
+pequeño **novelty budget** (presupuesto de novedad), en torno al diez por ciento
+de la experiencia, y la pregunta no es si gastarlo, sino dónde.
+
+Prueba la pequeña aplicación de tareas de abajo en ambos modos. Completa unas
+cuantas tareas y termina una lista.
+
+<NoveltyBudgetDemo />
+
+Cuando todo se anima, nada destaca y el conjunto parece un poco lento. Cuando
+solo se anima un momento, ese momento sí tiene efecto.
+
+## Gasta según la frecuencia
+
+La regla es sencilla: cuanto menos habitual sea el momento, más expresivo puede ser.
+
+- Hacer hover, cambiar de pestaña, marcar una casilla. Ocurre constantemente. No gastes nada aquí, o casi nada.
+- Abrir un diálogo, enviar un mensaje. Ocurre de vez en cuando. Basta con una transición breve y discreta.
+- Completar el onboarding, vaciar la bandeja de entrada, ver el resumen del año. Son momentos poco frecuentes. Aquí es donde se gasta el presupuesto.
+
+Algunos momentos deberían ocurrir una sola vez. Una introducción de bienvenida
+que se repite cada vez que recargas es una factura que el usuario no deja de pagar.
+
+## Calcula el coste
+
+Los pequeños retrasos se acumulan de una forma que es fácil subestimar. Arrastra
+los controles y fíjate en la cifra.
+
+<AnimationCostDemo />
+
+Jakub Krehel hizo este cálculo para un producto real y cambió la forma en que
+el equipo veía una animación de 300 ms. Para valorar una sorpresa agradable,
+hay que tener en cuenta cuántas veces se repite.
+
+## La novedad también tiene un coste de aprendizaje
+
+Cada patrón desconocido obliga a aprender tu interfaz en vez de aprovechar lo
+que la gente ya sabe. Un scroll personalizado, un gesto que nadie espera, un
+menú que se abre hacia un lado. Todo eso también consume presupuesto, y vuelve
+a consumirlo cada vez que llega alguien nuevo.
+
+Sé aún más prudente con las interacciones novedosas que con los recursos visuales.
+
+## La clave está en el contraste
+
+Nada de esto significa renunciar a sorprender. Significa partir de una base
+tranquila para que el único momento expresivo tenga con qué contrastar. Las
+partes discretas de una interfaz son las que hacen que funcione la más llamativa.

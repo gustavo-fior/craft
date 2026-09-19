@@ -1,0 +1,90 @@
+---
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "d921925f7b61e05b60e657250ff03944942b86dc1970160214386c8e0220e815"
+title: Hit areas
+description: Haz que el área interactiva sea mayor que el icono.
+section: Layout
+order: 2
+publishedAt: "2026-07-15"
+resources:
+  - url: https://en.wikipedia.org/wiki/Fitts%27s_law
+    title: Ley de Fitts
+    description: El modelo que explica este comportamiento. El tiempo para alcanzar un objetivo aumenta cuando este se hace más pequeño o se aleja.
+  - url: https://rauno.me/craft/interaction-design
+    title: Invisible Details of Interaction Design
+    description: Rauno Freiberg sobre hit targets, huecos entre elementos contiguos y otros detalles que solo notas cuando fallan.
+  - url: https://devouringdetails.com/prototypes/nextjs-dev-tools
+    title: Next.js Dev Tools prototype
+    description: Un ejemplo en el que el badge visible es diminuto, pero el área interactiva a su alrededor es generosa.
+  - url: https://developer.apple.com/design/human-interface-guidelines/accessibility#Buttons-and-controls
+    title: Apple Human Interface Guidelines sobre botones y controles
+    description: El origen del mínimo de 44 por 44 puntos del que parten muchas recomendaciones para controles táctiles.
+---
+
+Una **hit area** (área interactiva) es la región que responde a un clic o a un toque. No tiene por qué coincidir con lo que se ve. Un icono de 16px puede estar dentro de un botón de 32px, y quien lo usa no lo notará salvo que falle al apuntar y aun así lo pulse.
+
+Las dos barras de herramientas siguientes usan los mismos iconos. A la izquierda, cada botón mide exactamente lo mismo que su icono. A la derecha, los botones son de 32px y tienen el icono centrado. Pasa el puntero por las dos y cambia el control para ver las cajas que realmente admiten clics.
+
+<HitAreasToolbarDemo />
+
+La ley de Fitts dice que el tiempo para alcanzar un objetivo depende de su tamaño y de su distancia. Reducir su ancho a la mitad hace que cueste bastante más acertar con el ratón; con el pulgar, pasa a ser una apuesta. Apple pide al menos 44 puntos para controles táctiles. En ordenador, 32px es una base cómoda para botones de icono y 24px es el mínimo que deberías publicar.
+
+## Amplía el área, no el icono
+
+A veces no hay espacio para un botón más grande. El control de cerrar de un chip es un buen ejemplo: un círculo mayor quedaría tosco. La solución es un pseudoelemento que extienda el área de clic más allá de los bordes visibles.
+
+<HitAreasExpandDemo />
+
+A la derecha, cada botón de cerrar tiene una caja `::after` invisible que se extiende 8px más allá del círculo. Acerca el puntero al icono y se resaltará antes de que llegues a él. El chip se ve igual; solo es más fácil de usar.
+
+## Los huecos son zonas muertas
+
+Los objetivos contiguos tienen otro problema: el espacio entre ellos. Si separas los elementos de un menú con margin, el puntero atraviesa una franja que no pertenece a ninguno. Los estados hover parpadean y los clics caen sobre el fondo.
+
+<HitAreasGapDemo />
+
+Baja despacio por el menú izquierdo y observa cómo desaparece el resaltado entre elementos. A la derecha, los elementos se tocan. El espacio visual lo aporta el padding de cada uno, de modo que cada píxel del menú pertenece a un elemento.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<!-- A 16px icon inside a 32px button -->
+<button class="grid size-8 place-items-center rounded-md" aria-label="Bold">
+  <svg class="size-4">...</svg>
+</button>
+
+<!-- Extend a tiny button by 8px on every side -->
+<button
+  class="relative size-3.5 after:absolute after:-inset-2 after:content-['']"
+  aria-label="Remove"
+>
+  <svg class="size-2.5">...</svg>
+</button>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.close {
+  position: relative;
+  width: 14px;
+  height: 14px;
+}
+
+/* Invisible, but it receives the click */
+.close::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}`,
+    },
+  ]}
+/>
+
+Para revisar tu interfaz, añade `* { outline: 1px dashed rgb(244 63 94 / 0.6) }` en las dev tools durante un momento. Todos los elementos tendrán un contorno y los pequeños destacarán. Conviene revisar cualquier elemento interactivo que mida menos de 24px.

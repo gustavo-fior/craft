@@ -8,6 +8,8 @@ import { cn } from "@/lib/utils";
 import { playSound, progressionDetune } from "@/lib/sounds";
 import type { NavSection } from "@/lib/sections";
 import { isConceptAvailable, isConceptLaunched } from "@/lib/concepts";
+import { localizedPath, splitLocalePath, languageTag } from "@/i18n/locales";
+import { useUiLanguage } from "./ui-language";
 import {
   SectionIcon,
   dotColorFrom,
@@ -17,12 +19,6 @@ import {
 
 // Flip back on to restore the "New" badge next to launched concepts.
 const SHOW_NEW_BADGE = false;
-
-const PAGES = [
-  { href: "/", label: "Index" },
-  { href: "/goats", label: "GOATs" },
-  { href: "/resources", label: "Resources" },
-];
 
 // Flight time (ms) of the dot's arc and colour crossfade. The layout spring
 // below settles in roughly the same window, so the three stay in step.
@@ -120,7 +116,13 @@ export function SidebarNav({
   sections: NavSection[];
   className?: string;
 }) {
-  const pathname = usePathname();
+  const pathname = splitLocalePath(usePathname()).pathname;
+  const { locale, messages } = useUiLanguage();
+  const pages = [
+    { href: "/", label: messages.index },
+    { href: "/goats", label: messages.goats },
+    { href: "/resources", label: messages.resources },
+  ];
   // The nav renders twice (sidebar + mobile sheet) - keep the dot's
   // shared-layout animation scoped to each instance.
   const dotId = useId();
@@ -129,7 +131,7 @@ export function SidebarNav({
   // which colour it is leaving behind. Unavailable concepts still count as
   // rows since they take up space in the list.
   const rows: { href: string; color: DotColor }[] = [
-    ...PAGES.map((page) => ({ href: page.href, color: "foreground" as const })),
+    ...pages.map((page) => ({ href: page.href, color: "foreground" as const })),
     ...sections.flatMap(({ section, concepts }) =>
       concepts.map((concept) => ({ href: `/${concept.slug}`, color: section }))
     ),
@@ -176,7 +178,7 @@ export function SidebarNav({
 
   return (
     <nav
-      aria-label="Concepts"
+      aria-label={messages.concepts}
       // py-12 matches the 3rem fade-mask-y stops, so at rest the list sits
       // fully inside the opaque zone and only overflow fades at the edges.
       // overflow-y also clips horizontally, so pl-10/-ml-10 give the active dot
@@ -195,13 +197,13 @@ export function SidebarNav({
       }
     >
       <ul className="flex flex-col gap-1 text-xs">
-        {PAGES.map((page) => {
+        {pages.map((page) => {
           const active = pathname === page.href;
           return (
             <li key={page.href} className="relative">
               {active && renderDot("foreground")}
               <Link
-                href={page.href}
+                href={localizedPath(locale, page.href)}
                 onClick={() => playSound("tick")}
                 onMouseEnter={() => playSound("hover", { detune: 0 })}
                 className={cn(
@@ -227,7 +229,7 @@ export function SidebarNav({
           <li key={section} className="mt-5">
             <div className="flex items-center gap-1.5 py-1 text-foreground">
               <SectionIcon section={section} size={13} className="mb-px" />
-              <span>{section}</span>
+              <span>{messages.sections[section]}</span>
             </div>
             <ul className="flex flex-col mt-1">
               {concepts.map((concept) => {
@@ -240,7 +242,7 @@ export function SidebarNav({
                     {active && renderDot(section)}
                     {available ? (
                       <Link
-                        href={`/${concept.slug}`}
+                        href={localizedPath(locale, `/${concept.slug}`)}
                         onClick={() => playSound("tick")}
                         onMouseEnter={() => playSound("hover", { detune })}
                         className={cn(
@@ -257,6 +259,7 @@ export function SidebarNav({
                           transition={nameTransition(active, travelling)}
                         >
                           <span
+                            lang={languageTag(concept.contentLocale ?? locale)}
                             className={cn(
                               dotColorTo[section],
                               // Class is added when the row becomes active,
@@ -266,12 +269,13 @@ export function SidebarNav({
                           >
                             {concept.title}
                           </span>
+                          {concept.untranslated && <span className="text-[10px] text-muted-foreground">({messages.inEnglish})</span>}
                           {/* "New" badge hidden; flip SHOW_NEW_BADGE to
                               restore it next to launched concepts. */}
                           {SHOW_NEW_BADGE &&
                             isConceptLaunched(concept.slug) && (
                               <span className="new-badge inline-flex items-center rounded-full ml-0.5 bg-green-100 px-1.5 py-px text-[8px] text-green-600 dark:bg-green-950 dark:text-green-400 shadow-(--custom-shadow-green)">
-                                New
+                                {messages.new}
                               </span>
                             )}
                         </motion.span>
@@ -279,7 +283,8 @@ export function SidebarNav({
                     ) : (
                       <span
                         aria-disabled="true"
-                        title="Coming soon"
+                        title={messages.comingSoon}
+                        lang={languageTag(concept.contentLocale ?? locale)}
                         className="inline-block cursor-not-allowed py-1 text-muted-foreground/40 select-none"
                       >
                         {concept.title}

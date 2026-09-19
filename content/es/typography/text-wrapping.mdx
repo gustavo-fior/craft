@@ -1,0 +1,96 @@
+---
+title: Text wrapping (ajuste de líneas)
+description: Titulares equilibrados, sin palabras sueltas al final.
+section: Typography
+order: 2
+publishedAt: "2026-07-14"
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: 11059d46c7992b84c3ab9dcfa427cc2b5f7ecf62b3310fc0e100e1a87b6c92bc
+resources:
+  - url: https://developer.chrome.com/docs/css-ui/css-text-wrap-balance
+    title: CSS text-wrap balance
+    description: La explicación de Chrome sobre cómo funciona el equilibrado de líneas y cuáles son sus límites.
+  - url: https://developer.chrome.com/blog/css-text-wrap-pretty
+    title: CSS text-wrap pretty
+    description: Qué corrige pretty, además de las palabras sueltas al final, con ejemplos.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/text-wrap
+    title: text-wrap
+    description: La referencia de la propiedad y su compatibilidad actual con los navegadores.
+  - url: https://tailwindcss.com/docs/text-wrap
+    title: Text wrap in Tailwind
+    description: Las utilidades text-balance y text-pretty.
+---
+
+Los navegadores distribuyen el texto línea a línea. En cada una colocan tantas
+palabras como caben y después saltan a la siguiente. Es rápido, pero produce
+muchos titulares que dicen «Presentamos el nuevo dashboard para» y dejan
+«equipos» sola en la última línea.
+
+**text-wrap: balance** examina el bloque completo y elige saltos que dejan
+todas las líneas con una longitud parecida. Ajusta el ancho y observa cómo
+el titular de la izquierda deja una palabra sola mientras el de la derecha
+se mantiene equilibrado.
+
+<TextBalanceDemo />
+
+Balance sirve para textos cortos: titulares, títulos de tarjetas, mensajes
+toast y textos de estados vacíos. Chromium solo equilibra bloques de hasta
+seis líneas; en cualquier caso, el trabajo adicional de layout no compensaría
+en textos largos.
+
+## Párrafos
+
+Para el texto de párrafo conviene algo más discreto. **text-wrap: pretty**
+mantiene las líneas más o menos como estaban y solo interviene al final para
+que la última no contenga una única palabra.
+
+<TextPrettyDemo />
+
+Las versiones más recientes de Chrome también permiten que pretty corrija
+últimas líneas demasiado cortas y ríos de espacio en blanco dentro del párrafo.
+Firefox y Safari también admiten este valor, así que puedes aplicarlo a todos
+los párrafos.
+
+## Los dos juntos
+
+Muchos elementos pequeños de una interfaz tienen un título y una línea de
+descripción. Aplica balance al título y pretty a la descripción.
+
+<TextWrapToastDemo />
+
+Es un cambio pequeño y conviene reconocerlo. Nadie te dará las gracias.
+Simplemente, el toast resultará un poco más fácil de leer sin que nadie sepa por qué.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<h2 class="text-balance">Introducing the new dashboard for teams</h2>
+
+<p class="text-pretty">
+    Exports now run in the background, so you can keep working.
+</p>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `h1, h2, h3, blockquote {
+    text-wrap: balance;
+}
+
+p, li {
+    text-wrap: pretty;
+}`,
+    },
+  ]}
+/>
+
+Ambos valores son progressive enhancement (mejora progresiva). Si un navegador
+no los reconoce, utiliza el ajuste de líneas habitual, así que no hay motivo
+para esperar. Defínelos una vez en los estilos base y olvídate de ellos.
