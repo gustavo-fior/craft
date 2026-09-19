@@ -1,5 +1,6 @@
 "use client";
 
+import { useDemoText } from "@/components/app/demo-messages";
 import { motion, useReducedMotion } from "motion/react";
 import { type ReactNode, useState } from "react";
 
@@ -154,6 +155,7 @@ const CURVE_OPTIONS = [
 ] as const;
 
 export function CurveSmoothingDemo() {
+  const t = useDemoText();
   const [curve, setCurve] = useState<Curve>("linear");
   const points = layout(SERIES, LARGE);
 
@@ -163,9 +165,9 @@ export function CurveSmoothingDemo() {
         <Chart className="h-auto w-full" curve={curve} points={points} size={LARGE} />
       </div>
       <SegmentedControl
-        ariaLabel="Curve type"
+        ariaLabel={t("Curve type")}
         onChange={setCurve}
-        options={CURVE_OPTIONS}
+        options={CURVE_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={curve}
       />
     </Demo>

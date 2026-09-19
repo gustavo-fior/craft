@@ -1,0 +1,22 @@
+{
+  "Review pull request #482": "Revisar la pull request #482",
+  "Update onboarding copy": "Actualizar los textos del onboarding",
+  "Fix focus ring on the date picker": "Corregir el focus ring del selector de fechas",
+  "Write release notes for 2.4": "Escribir las notas de la versión 2.4",
+  "Reply to the design review thread": "Responder al hilo de revisión de diseño",
+  "Migrate icons to the new set": "Migrar los iconos al nuevo conjunto",
+  "Check contrast on the dark theme": "Comprobar el contraste del tema oscuro",
+  "Prepare the roadmap for Q4": "Preparar el roadmap del cuarto trimestre",
+  "Book the offsite venue": "Reservar el lugar del encuentro de equipo",
+  "Archive the old marketing site": "Archivar la antigua web de marketing",
+  "All": "Todos",
+  "Design": "Diseño",
+  "Engineering": "Ingeniería",
+  "Product": "Producto",
+  "Marketing": "Marketing",
+  "Research": "Investigación",
+  "Support": "Soporte",
+  "Finance": "Finanzas",
+  "Legal": "Legal",
+  "People": "Personas"
+}

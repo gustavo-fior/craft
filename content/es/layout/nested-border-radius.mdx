@@ -1,0 +1,70 @@
+---
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "90535adf40c0a0a4b96691381a804bcb4a2d89feb2162897ad3edffddaa197b5"
+title: Border radius anidados
+description: El radio interior es el exterior menos el padding.
+section: Layout
+order: 1
+publishedAt: "2026-07-14"
+resources:
+  - url: https://cloudfour.com/thinks/the-math-behind-nesting-rounded-corners/
+    title: The math behind nesting rounded corners
+    description: La explicación de Cloud Four sobre la fórmula del radio, con ejemplos prácticos en CSS.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/border-radius
+    title: border-radius
+    description: La referencia de MDN para la propiedad CSS border-radius.
+  - url: https://www.w3.org/TR/css-backgrounds-3/#corners
+    title: CSS corner shaping
+    description: La especificación de los radios de los bordes exterior, de padding y de contenido.
+---
+
+Las esquinas redondeadas quedan mejor cuando una curva sigue a la otra.
+Si una caja está dentro de otra, usar el mismo radio en ambas suele ensanchar
+el hueco cerca de la esquina.
+
+Es uno de esos pequeños detalles que hacen que una interfaz se vea rara.
+
+<NestedRadiusDemo />
+
+La solución es una relación sencilla:
+
+> **radio exterior = radio interior + inset**
+
+El inset es la distancia entre los dos bordes. Suele ser el padding del
+contenedor. Si el contenedor tiene border, incluye también su grosor.
+
+En la demo, el radio interior es de `16px` y el inset, de `12px`.
+Por tanto, el radio exterior es de `28px`.
+
+## Partir del radio exterior
+
+Los design systems suelen partir del radio del componente exterior.
+En ese caso, invierte la fórmula:
+
+> **radio interior = radio exterior − inset**
+
+<RadiusCalculatorDemo />
+
+El radio interior no puede ser negativo. Si el inset supera el radio exterior,
+usa una esquina interior recta. En CSS, `max()` puede aplicar ese límite.
+
+## Componentes reales
+
+La diferencia se aprecia mejor en una tarjeta o un menú que en un diagrama vacío.
+
+<NestedRadiusExamplesDemo />
+
+La tarjeta tiene un radio exterior de `16px` y un inset de `8px`, así que su
+imagen usa `8px`. El menú tiene un radio exterior de `12px` y un inset de
+`4px`, por lo que su elemento resaltado usa `8px`.
+
+## Cuándo ajustarlo
+
+La fórmula es un buen punto de partida, no una regla para cualquier forma.
+Ajusta el resultado a ojo cuando el inset varíe alrededor del componente,
+el elemento interior no llegue a la esquina o las superficies usen formas
+de esquina distintas.
+
+El nombre técnico es **concentric corners** (esquinas concéntricas):
+esquinas anidadas cuyas curvas comparten el mismo centro.

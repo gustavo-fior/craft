@@ -1,0 +1,83 @@
+---
+title: "Easings"
+description: "Ease-out para lo que activa el usuario."
+section: Motion
+order: 3
+publishedAt: "2026-07-15"
+resources:
+  - url: https://emilkowal.ski/ui/great-animations
+    title: Great animations
+    description: "Emil Kowalski explica por qué el easing importa más que la duración y qué curvas utiliza."
+  - url: https://easings.net
+    title: Easing functions cheat sheet
+    description: "Todas las curvas habituales, dibujadas y con sus valores cubic-bezier listos para copiar."
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/easing-function
+    title: The easing-function type
+    description: "La sintaxis completa de CSS, incluidas cubic-bezier, steps y la función linear()."
+  - url: https://www.raphaelsalaja.com/library/12-principles-of-animation
+    title: 12 principles of animation
+    description: "Los principios de Disney, incluidos slow in y slow out, aplicados a las interfaces."
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "0e77f7e310e64c7b3bfaa67b612916e585b00e95bad5fde51b74ffc4cbaf1a07"
+---
+
+Un **easing** define cómo varía la velocidad de una animación: lo rápido que empieza, cómo cambia durante el recorrido y cómo se detiene. La duración indica cuánto tarda en abrirse un menú. El easing determina si parece que se abre para ti o se te echa encima.
+
+Los dos menús siguientes duran los mismos 250 ms. Ábrelos.
+
+<EasingsDemo />
+
+El de la izquierda usa ease-in. Empieza despacio y alcanza la velocidad máxima justo al final, así que parece dudar y después caer de golpe en su sitio. El de la derecha usa ease-out. Empieza a toda velocidad y frena al llegar, como casi cualquier objeto físico cuando se detiene.
+
+Ease-out es la opción por defecto para lo que aparece como respuesta al usuario. Has hecho clic: la interfaz debe moverse de inmediato y después asentarse. Ease-in obliga a esperar durante el inicio lento, algo que casi nunca interesa en una interfaz.
+
+## Leer una curva
+
+El gráfico representa el tiempo de izquierda a derecha y el progreso de abajo arriba. El punto sobre la curva y la bola sobre la pista siguen el mismo reloj, ralentizado a un segundo para que puedas observarlos.
+
+<EasingCurveDemo />
+
+Linear es una diagonal recta: mantiene la misma velocidad durante todo el recorrido y transmite una sensación mecánica. Ease-in se curva hacia abajo; ease-out, hacia arriba. In-out combina ambas formas y encaja con elementos que se desplazan de un sitio a otro en pantalla, más que con elementos que aparecen.
+
+## Más fuerza que las curvas predeterminadas
+
+El `ease-out` del navegador es suave. Su tramo más pronunciado no lo es tanto, por lo que el movimiento resulta algo blando. Una curva personalizada con un inicio más rápido y una cola más larga hace que los mismos 250 ms parezcan más breves sin cambiar la duración.
+
+<StrongEasingDemo />
+
+Ambas curvas son ease-out. La de la derecha, `cubic-bezier(0.23, 1, 0.32, 1)`, recorre casi toda la distancia en el primer tercio y dedica el resto a asentarse. Después de usarla un tiempo, la predeterminada empieza a parecer lenta.
+
+Los springs son la otra opción. No son curvas, sino simulaciones, y por eso se pueden interrumpir a mitad del recorrido. Los explicamos en el artículo sobre [animaciones interrumpibles](/interruptibility).
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<div class="transition-[opacity,transform] duration-200 ease-(--ease-out)">
+    ...
+</div>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `:root {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+.menu {
+    transition:
+        opacity 200ms var(--ease-out),
+        transform 200ms var(--ease-out);
+}`,
+    },
+  ]}
+/>
+
+Guarda las curvas en variables y utiliza las mismas dos o tres en todo el producto. Un easing coherente aporta más unidad que cualquier animación por sí sola.

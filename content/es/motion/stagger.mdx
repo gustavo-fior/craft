@@ -1,0 +1,101 @@
+---
+title: "Stagger"
+description: "Convierte un bloque en una secuencia."
+section: Motion
+order: 4
+publishedAt: "2026-07-15"
+resources:
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details That Make Interfaces Feel Better
+    description: "Jakub Krehel explica las pequeñas decisiones de tiempo, incluido stagger, que distinguen una interfaz cuidada."
+  - url: https://rauno.me/craft/depth
+    title: Depth
+    description: "Rauno Freiberg explica cómo la secuencia y los tiempos crean una sensación de capas en una pantalla plana."
+  - url: https://motion.dev/docs/react-transitions#orchestration
+    title: Orchestration in Motion
+    description: "Las opciones staggerChildren y delayChildren para escalonar variantes a lo largo de un árbol."
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/animation-delay
+    title: animation-delay
+    description: "La referencia de MDN sobre la propiedad que permite crear stagger en CSS."
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "45dd10468b740949082c56e4245baa5a38e13630846ed29606908cb41105ec3f"
+---
+
+Cuando una lista aparece de golpe, se percibe como un bloque. Cuando cada fila llega unos milisegundos después de la anterior, se percibe como una lista. **Stagger** es ese pequeño desfase entre elementos hermanos, una de las formas más económicas de dar un acabado cuidado a una interfaz.
+
+Mueve el control y vuelve a reproducir. Las filas aparecen y suben; lo único que cambia es el intervalo entre ellas.
+
+<StaggerDemo />
+
+Entre `30ms` y `60ms`, la lista cobra vida sin resultar lenta. Por encima de `100ms`, la última fila todavía está entrando cuando el usuario ya ha empezado a leer la primera. El efecto deja de ser un detalle y se convierte en una espera.
+
+## Bloque frente a secuencia
+
+Esta es la misma lista con y sin stagger. La animación de cada fila es idéntica.
+
+<StaggerCompareDemo />
+
+La versión con stagger no es más rápida ni más útil. Simplemente se entiende mejor. El ojo recibe un punto de partida y una dirección, de arriba abajo, y los sigue. La versión en bloque te presenta cinco cosas a la vez.
+
+## Listas largas
+
+El efecto de stagger se multiplica. Un intervalo de `60ms` funciona bien en cinco filas y fatal en veinte, porque la última aparece con más de un segundo de retraso. Si la lista puede crecer, limita el tiempo total en lugar de fijar el intervalo.
+
+<StaggerCapDemo />
+
+Una regla útil: el último elemento debería empezar aproximadamente en los `300ms` siguientes al primero. Divide ese tiempo entre el número de elementos para obtener el intervalo. En listas muy largas, aplica stagger solo a las filas visibles y deja que el resto se renderice al instante.
+
+## Nunca bloquees la interacción
+
+Stagger decora un contenido que ya está ahí. Las filas deben poder pulsarse mientras aparecen, y el usuario no debería sufrir ninguna penalización por hacer scroll más allá de la animación. Usa `opacity` y `transform` para que los elementos ocupen su espacio desde el primer fotograma, y nunca condiciones la interacción a que termine la animación.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `@keyframes rise-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.list > li {
+  animation: rise-in 360ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation-delay: calc(var(--index) * 40ms);
+}
+
+/* Or without a variable, for a fixed number of rows. */
+.list > li:nth-child(2) { animation-delay: 40ms; }
+.list > li:nth-child(3) { animation-delay: 80ms; }
+.list > li:nth-child(4) { animation-delay: 120ms; }`,
+    },
+    {
+      label: "Motion",
+      language: "tsx",
+      code: `import { motion } from "motion/react";
+
+const list = {
+  visible: { transition: { staggerChildren: 0.04 } },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0 },
+};
+
+<motion.ul animate="visible" initial="hidden" variants={list}>
+  {rows.map((row) => (
+    <motion.li key={row.id} variants={item}>
+      {row.title}
+    </motion.li>
+  ))}
+</motion.ul>`,
+    },
+  ]}
+/>
+
+Configura `animation-fill-mode: both` —la palabra `both` en la sintaxis abreviada del ejemplo— o las filas aparecerán brevemente con opacidad completa durante el retardo, antes de que empiece la animación. Es el fallo más habitual de stagger y pasa desapercibido hasta que estableces un retardo largo.

@@ -1,12 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
+import createMiddleware from "next-intl/middleware";
+import { routing } from "@/i18n/routing";
+import { splitLocalePath } from "@/i18n/locales";
 
 // Serves the Markdown version of a concept at `/<slug>.md`, and to any client
 // that asks for `text/markdown` via the Accept header. Both rewrite to the
-// prerendered route handler at `/md/<slug>`.
+// prerendered route handler at `/md/<locale>/<slug>`.
 
 const NON_CONCEPT_PAGES = new Set(["goats", "resources"]);
 
-function prefersMarkdown(accept: string | null) {
+export function prefersMarkdown(accept: string | null) {
   if (!accept) return false;
   let markdown = -1;
   let html = -1;
@@ -24,13 +27,19 @@ function prefersMarkdown(accept: string | null) {
   return markdown > html;
 }
 
+const handleLocale = createMiddleware(routing);
+
 export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { locale, pathname } = splitLocalePath(request.nextUrl.pathname);
 
   const explicit = pathname.match(/^\/([\w-]+)\.md$/);
   if (explicit) {
     const url = request.nextUrl.clone();
-    url.pathname = `/md/${explicit[1]}`;
+    if (request.nextUrl.pathname.startsWith("/en/")) {
+      url.pathname = pathname;
+      return NextResponse.redirect(url, 308);
+    }
+    url.pathname = `/md/${locale}/${explicit[1]}`;
     return NextResponse.rewrite(url);
   }
 
@@ -41,14 +50,17 @@ export function proxy(request: NextRequest) {
     prefersMarkdown(request.headers.get("accept"))
   ) {
     const url = request.nextUrl.clone();
-    url.pathname = `/md/${page[1]}`;
+    url.pathname = `/md/${locale}/${page[1]}`;
     return NextResponse.rewrite(url);
   }
 
-  return NextResponse.next();
+  return handleLocale(request);
 }
 
 export const config = {
-  // Single-segment paths only; everything under `/_next`, `/og`, etc. skips this.
-  matcher: "/:path",
+  matcher: [
+    "/((?!api|_next|_vercel|md(?:/|$)|og(?:/|$)|.*\\..*).*)",
+    "/:slug.md",
+    "/:locale/:slug.md",
+  ],
 };

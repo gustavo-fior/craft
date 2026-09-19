@@ -10,6 +10,7 @@ import { useState } from "react";
 
 import { Compare, CompareItem } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { GuidesToggle } from "@/components/app/guides-toggle";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { Button } from "@/components/ui/button";
@@ -78,6 +79,7 @@ function CenterGuides({ visible }: { visible: boolean }) {
 }
 
 export function OpticalAlignmentDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<Alignment>("geometric");
   const [guides, setGuides] = useState(true);
 
@@ -88,7 +90,7 @@ export function OpticalAlignmentDemo() {
         {ICONS.map(({ label, Icon, weight, shift, color }) => (
           <span
             key={label}
-            aria-label={label}
+            aria-label={t(label)}
             className="flex relative justify-center items-center size-20 rounded-3xl bg-card text-foreground shadow-(--custom-shadow)"
             role="img"
           >
@@ -106,9 +108,12 @@ export function OpticalAlignmentDemo() {
         ))}
       </div>
       <SegmentedControl
-        ariaLabel="Icon alignment"
+        ariaLabel={t("Icon alignment")}
         onChange={setMode}
-        options={ALIGNMENT_OPTIONS}
+        options={ALIGNMENT_OPTIONS.map((option) => ({
+          ...option,
+          label: t(option.label),
+        }))}
         value={mode}
       />
     </Demo>
@@ -127,6 +132,7 @@ function PaddedButton({
   paddingRight: number;
   guides: boolean;
 }) {
+  const t = useDemoText();
   const guide = cn(
     "pointer-events-none absolute inset-y-0 -z-10 bg-sky-900 dark:bg-sky-300",
     GUIDE_DRAW
@@ -154,7 +160,7 @@ function PaddedButton({
           clipPath: guides ? "inset(0 0 0 0)" : "inset(0 0 0 100%)",
         }}
       />
-      Next
+      {t("Next")}
       <ArrowRightIcon aria-hidden="true" weight="bold" />
     </Button>
   );
@@ -192,6 +198,7 @@ const SHAPES = [
 ] as const;
 
 export function OpticalWeightDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<Sizing>("equal");
 
   return (
@@ -226,9 +233,12 @@ export function OpticalWeightDemo() {
         })}
       </div>
       <SegmentedControl
-        ariaLabel="Shape sizing"
+        ariaLabel={t("Shape sizing")}
         onChange={setMode}
-        options={SIZING_OPTIONS}
+        options={SIZING_OPTIONS.map((option) => ({
+          ...option,
+          label: t(option.label),
+        }))}
         value={mode}
       />
     </Demo>
@@ -243,6 +253,7 @@ const OPSZ_OPTIONS = [
 ] as const;
 
 export function OpticalSizingDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<OpticalSize>("text");
 
   return (
@@ -255,7 +266,7 @@ export function OpticalSizingDemo() {
             fontVariationSettings: mode === "text" ? '"opsz" 14' : '"opsz" 32',
           }}
         >
-          Quarterly
+          {t("Quarterly")}
         </span>
         <span
           className="text-[40px] leading-none font-medium tracking-tight text-foreground"
@@ -264,13 +275,16 @@ export function OpticalSizingDemo() {
             fontVariationSettings: mode === "text" ? '"opsz" 14' : '"opsz" 32',
           }}
         >
-          revenue
+          {t("revenue")}
         </span>
       </div>
       <SegmentedControl
-        ariaLabel="Optical size"
+        ariaLabel={t("Optical size")}
         onChange={setMode}
-        options={OPSZ_OPTIONS}
+        options={OPSZ_OPTIONS.map((option) => ({
+          ...option,
+          label: t(option.label),
+        }))}
         value={mode}
       />
     </Demo>
@@ -285,6 +299,7 @@ const HANGING_OPTIONS = [
 ] as const;
 
 export function HangingPunctuationDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<Hanging>("box");
   const [guides, setGuides] = useState(true);
 
@@ -304,14 +319,17 @@ export function HangingPunctuationDemo() {
           className="text-lg leading-snug font-medium text-foreground transition-[text-indent] duration-200 ease-out motion-reduce:transition-none"
           style={{ textIndent: mode === "glyph" ? "-0.42em" : "0" }}
         >
-          “Good design is as little design as possible.”
+          {t("“Good design is as little design as possible.”")}
         </p>
         <p className="mt-2 text-xs text-muted-foreground">Dieter Rams</p>
       </div>
       <SegmentedControl
-        ariaLabel="Quote alignment"
+        ariaLabel={t("Quote alignment")}
         onChange={setMode}
-        options={HANGING_OPTIONS}
+        options={HANGING_OPTIONS.map((option) => ({
+          ...option,
+          label: t(option.label),
+        }))}
         value={mode}
       />
     </Demo>

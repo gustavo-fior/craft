@@ -25,7 +25,7 @@ export function GET() {
   for (const section of SECTIONS) {
     const concepts = allConcepts
       .filter(
-        (c) => c.section === section && isConceptAvailable(c.slug),
+        (c) => c.locale === "en" && c.section === section && isConceptAvailable(c.slug),
       )
       .sort((a, b) => a.order - b.order);
     if (concepts.length === 0) continue;

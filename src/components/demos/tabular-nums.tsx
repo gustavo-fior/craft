@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Demo } from "@/components/app/demo";
+import { useDemoLocale, useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
+import { languageTag } from "@/i18n/locales";
 import { cn } from "@/lib/utils";
 
 export type FigureStyle = "proportional" | "tabular";
@@ -25,11 +27,15 @@ function FigureStyleControl({
   value: FigureStyle;
   onChange: (value: FigureStyle) => void;
 }) {
+  const t = useDemoText();
   return (
     <SegmentedControl
-      ariaLabel="Figure style"
+      ariaLabel={t("Figure style")}
       onChange={onChange}
-      options={FIGURE_STYLES}
+      options={FIGURE_STYLES.map((option) => ({
+        ...option,
+        label: t(option.label),
+      }))}
       value={value}
     />
   );
@@ -71,7 +77,15 @@ export function TabularTimerView({
   elapsed: number;
   onModeChange?: (mode: FigureStyle) => void;
 }) {
-  const seconds = (elapsed / 1000).toFixed(2).padStart(5, "0");
+  const t = useDemoText();
+  const locale = languageTag(useDemoLocale());
+  const numberFormat = useMemo(() => new Intl.NumberFormat(locale, {
+    minimumIntegerDigits: 2,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+    useGrouping: false,
+  }), [locale]);
+  const seconds = numberFormat.format(elapsed / 1000);
 
   return (
     <Demo className="gap-8">
@@ -79,7 +93,7 @@ export function TabularTimerView({
         <span
           className="text-5xl font-medium tracking-tight"
           style={numericStyles[mode]}
-          aria-label={`${seconds} seconds elapsed`}
+          aria-label={t("{seconds} seconds elapsed", { seconds })}
         >
           {seconds}
         </span>
@@ -91,7 +105,7 @@ export function TabularTimerView({
           className="absolute -right-2.5 -bottom-5 text-[9px] text-sky-400 dark:text-sky-500"
           aria-hidden="true"
         >
-          Edge
+          {t("Edge")}
         </span>
       </div>
       <FigureStyleControl value={mode} onChange={onModeChange ?? (() => {})} />
@@ -116,45 +130,56 @@ const activity = [
   {
     label: "Vercel",
     domain: "vercel.com",
-    sessions: "12,441",
-    change: "+8.10%",
+    sessions: 12_441,
+    change: 0.081,
   },
   {
     label: "Raycast",
     domain: "raycast.com",
-    sessions: "21,118",
-    change: "-1.87%",
+    sessions: 21_118,
+    change: -0.0187,
   },
   {
     label: "Notion",
     domain: "notion.so",
-    sessions: "11,874",
-    change: "+7.18%",
+    sessions: 11_874,
+    change: 0.0718,
   },
   {
     label: "Linear",
     domain: "linear.app",
-    sessions: "17,481",
-    change: "-1.11%",
+    sessions: 17_481,
+    change: -0.0111,
   },
 ];
 
 export function TabularTableDemo() {
+  const t = useDemoText();
+  const locale = languageTag(useDemoLocale());
   const [mode, setMode] = useState<FigureStyle>("proportional");
+  const formatters = useMemo(() => ({
+    sessions: new Intl.NumberFormat(locale),
+    change: new Intl.NumberFormat(locale, {
+      style: "percent",
+      signDisplay: "always",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }),
+  }), [locale]);
 
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <div className="w-full overflow-hidden rounded-md bg-card shadow-(--custom-shadow)">
-        <div className="grid grid-cols-[1fr_auto_auto] gap-10 border-b border-[#E7E7E7] dark:border-[#1E1E1E] px-4 py-2.5 text-xs font-medium text-muted-foreground">
-          <span>Project</span>
-          <span>Sessions</span>
-          <span>Change</span>
+        <div className="grid grid-cols-[1fr_auto_auto] gap-2 sm:gap-10 border-b border-[#E7E7E7] dark:border-[#1E1E1E] px-4 py-2.5 text-xs font-medium text-muted-foreground">
+          <span>{t("Project")}</span>
+          <span>{t("Sessions")}</span>
+          <span>{t("Change")}</span>
         </div>
         <div className="divide-y divide-[#E7E7E7] dark:divide-[#1E1E1E]">
           {activity.map((row) => (
             <div
               key={row.label}
-              className="grid grid-cols-[1fr_auto_auto] items-center gap-10 px-4 py-3 text-xs"
+              className="grid grid-cols-[1fr_auto_auto] items-center gap-2 sm:gap-10 px-4 py-3 text-xs"
             >
               <span className="flex min-w-0 items-center gap-2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -172,18 +197,18 @@ export function TabularTableDemo() {
                 className="min-w-14 text-right text-muted-foreground"
                 style={numericStyles[mode]}
               >
-                {row.sessions}
+                {formatters.sessions.format(row.sessions)}
               </span>
               <span
                 className={cn(
                   "min-w-12 text-right",
-                  row.change.startsWith("-")
+                  row.change < 0
                     ? "text-rose-600 dark:text-rose-400"
                     : "text-emerald-600 dark:text-emerald-400"
                 )}
                 style={numericStyles[mode]}
               >
-                {row.change}
+                {formatters.change.format(row.change)}
               </span>
             </div>
           ))}

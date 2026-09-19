@@ -1,5 +1,6 @@
 "use client";
 
+import { useDemoText } from "@/components/app/demo-messages";
 import {
   ArrowCounterClockwiseIcon,
   CopyIcon,
@@ -39,11 +40,12 @@ function MenuCard({
   duration: number;
   onToggle: () => void;
 }) {
+  const t = useDemoText();
   return (
     <div className="relative h-44 w-full overflow-hidden rounded-xl bg-muted p-2 dark:bg-muted/40">
       <Button
         aria-expanded={open}
-        aria-label="Open menu"
+        aria-label={t("Open menu")}
         onClick={onToggle}
         size="icon-sm"
         variant="ghost"
@@ -78,7 +80,7 @@ function MenuCard({
             )}
           >
             <item.Icon aria-hidden="true" className="size-3.5" />
-            {item.label}
+            {t(item.label)}
           </div>
         ))}
       </div>
@@ -87,13 +89,14 @@ function MenuCard({
 }
 
 export function EasingsDemo() {
+  const t = useDemoText();
   const [open, setOpen] = useState(false);
   const toggle = () => setOpen((value) => !value);
 
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
-        <CompareItem verdict="wrong" label="Ease in">
+        <CompareItem verdict="wrong" label={t("Ease in")}>
           <MenuCard
             duration={250}
             easing={EASE_IN}
@@ -101,7 +104,7 @@ export function EasingsDemo() {
             open={open}
           />
         </CompareItem>
-        <CompareItem verdict="right" label="Ease out">
+        <CompareItem verdict="right" label={t("Ease out")}>
           <MenuCard
             duration={250}
             easing={EASE_OUT}
@@ -112,7 +115,7 @@ export function EasingsDemo() {
       </Compare>
 
       <Button onClick={toggle} variant="secondary">
-        {open ? "Close" : "Open"}
+        {open ? t("Close") : t("Open")}
       </Button>
     </Demo>
   );
@@ -150,6 +153,7 @@ const CHART = 160;
 const RUN_MS = 1000;
 
 export function EasingCurveDemo() {
+  const t = useDemoText();
   const [curve, setCurve] = useState<CurveName>("ease-out");
   const reduceMotion = useReducedMotion();
   const xRef = useRef<HTMLDivElement>(null);
@@ -249,12 +253,12 @@ export function EasingCurveDemo() {
 
       <div className="flex flex-wrap items-center justify-center gap-3">
         <SegmentedControl
-          ariaLabel="Easing curve"
+          ariaLabel={t("Easing curve")}
           onChange={setCurve}
-          options={CURVE_OPTIONS}
+          options={CURVE_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
           value={curve}
         />
-        <Button aria-label="Replay" onClick={run} size="icon-sm" variant="secondary">
+        <Button aria-label={t("Replay")} onClick={run} size="icon-sm" variant="secondary">
           <ArrowCounterClockwiseIcon aria-hidden="true" className="size-4" weight="bold" />
         </Button>
       </div>
@@ -263,6 +267,7 @@ export function EasingCurveDemo() {
 }
 
 export function StrongEasingDemo() {
+  const t = useDemoText();
   const [open, setOpen] = useState(false);
   const toggle = () => setOpen((value) => !value);
 
@@ -288,7 +293,7 @@ export function StrongEasingDemo() {
       </Compare>
 
       <Button onClick={toggle} variant="secondary">
-        {open ? "Close" : "Open"}
+        {open ? t("Close") : t("Open")}
       </Button>
     </Demo>
   );

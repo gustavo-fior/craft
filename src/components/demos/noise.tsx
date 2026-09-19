@@ -7,6 +7,7 @@ import { useState } from "react";
 import violet from "@/assets/gradient-violet.jpg";
 import { Compare, CompareItem } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -71,6 +72,7 @@ function Grain({
 }
 
 export function NoiseDemo() {
+  const t = useDemoText();
   const [percent, setPercent] = useState(8);
 
   return (
@@ -88,20 +90,20 @@ export function NoiseDemo() {
       >
         <Grain id="grain-cover" opacity={percent / 100} />
         <div className="flex h-full flex-col justify-end p-5">
-          <span className="text-sm font-medium text-white">Weekly digest</span>
+          <span className="text-sm font-medium text-white">{t("Weekly digest")}</span>
           <span className="mt-0.5 text-xs text-white/60">
-            Your projects, summarized every Friday.
+            {t("Your projects, summarized every Friday.")}
           </span>
         </div>
       </div>
 
       <label className="grid w-full max-w-xs gap-2.5">
         <span className="flex items-center justify-between text-xs text-muted-foreground">
-          Grain opacity
+          {t("Grain opacity")}
           <span className="tabular-nums text-foreground">{percent}%</span>
         </span>
         <Slider
-          aria-label="Grain opacity"
+          aria-label={t("Grain opacity")}
           max={100}
           min={0}
           onValueChange={(value) => setPercent(getSliderValue(value))}
@@ -152,6 +154,7 @@ export function NoiseBandingDemo() {
 }
 
 export function NoiseFrequencyDemo() {
+  const t = useDemoText();
   const [frequency, setFrequency] = useState(0.8);
 
   return (
@@ -181,13 +184,13 @@ export function NoiseFrequencyDemo() {
 
       <label className="grid w-full max-w-xs gap-2.5">
         <span className="flex items-center justify-between text-xs text-muted-foreground">
-          Base frequency
+          {t("Base frequency")}
           <span className="tabular-nums text-foreground">
             {frequency.toFixed(2)}
           </span>
         </span>
         <Slider
-          aria-label="Base frequency"
+          aria-label={t("Base frequency")}
           max={1.5}
           min={0.1}
           onValueChange={(value) => setFrequency(getSliderValue(value))}
@@ -200,6 +203,7 @@ export function NoiseFrequencyDemo() {
 }
 
 export function NoiseSurfaceDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<SurfaceMode>("flat");
   const grain = mode === "grain";
 
@@ -218,30 +222,30 @@ export function NoiseSurfaceDemo() {
             <span className="text-sm font-medium">Pro</span>
             <span className="flex items-center gap-1 rounded-full px-2 bg-muted-foreground/50 py-1 font-medium text-xs text-white">
               <LightningIcon className="size-2.5" weight="fill" />
-              Popular
+              {t("Popular")}
             </span>
           </div>
           <div className="mt-4 flex items-baseline gap-1">
             <span className="text-3xl font-medium tracking-tight tabular-nums">
               $20
             </span>
-            <span className="text-xs text-muted-foreground">per month</span>
+            <span className="text-xs text-muted-foreground">{t("per month")}</span>
           </div>
           <ul className="mt-4 flex flex-col gap-1.5 text-xs text-muted-foreground">
-            <li>Unlimited projects</li>
-            <li>Shared workspaces</li>
-            <li>Priority support</li>
+            <li>{t("Unlimited projects")}</li>
+            <li>{t("Shared workspaces")}</li>
+            <li>{t("Priority support")}</li>
           </ul>
           <span className="mt-8 flex h-8 items-center justify-center rounded-full bg-white text-xs font-medium text-neutral-900">
-            Upgrade
+            {t("Upgrade")}
           </span>
         </div>
       </div>
 
       <SegmentedControl
-        ariaLabel="Card surface"
+        ariaLabel={t("Card surface")}
         onChange={setMode}
-        options={SURFACE_OPTIONS}
+        options={SURFACE_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={mode}
       />
     </Demo>

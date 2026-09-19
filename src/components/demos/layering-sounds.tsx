@@ -1,5 +1,6 @@
 "use client";
 
+import { useDemoText } from "@/components/app/demo-messages";
 import { useState } from "react";
 import { MoonIcon, PlayIcon } from "@phosphor-icons/react";
 import {
@@ -66,6 +67,7 @@ const RELEASE = 0.03;
 const TIMELINE_MS = 400;
 
 export function SoundLayersDemo() {
+  const t = useDemoText();
   const [count, setCount] = useState(1);
   const [spacing, setSpacing] = useState(40);
   const [playId, setPlayId] = useState(0);
@@ -153,15 +155,15 @@ export function SoundLayersDemo() {
       <div className="flex w-full max-w-xs flex-col items-center gap-5">
         <Button variant="secondary" size="sm" onClick={play}>
           <PlayIcon weight="fill" aria-hidden="true" />
-          Play
+          {t("Play")}
         </Button>
         <label className="grid w-full gap-2.5">
           <span className="flex justify-between text-xs text-muted-foreground">
-            Layers
+            {t("Layers")}
             <span className="tabular-nums text-foreground">{count}</span>
           </span>
           <Slider
-            aria-label="Layers"
+            aria-label={t("Layers")}
             min={1}
             max={4}
             step={1}
@@ -171,11 +173,11 @@ export function SoundLayersDemo() {
         </label>
         <label className="grid w-full gap-2.5">
           <span className="flex justify-between text-xs text-muted-foreground">
-            Spacing
+            {t("Spacing")}
             <span className="tabular-nums text-foreground">{spacing} ms</span>
           </span>
           <Slider
-            aria-label="Spacing between layers"
+            aria-label={t("Spacing between layers")}
             min={0}
             max={80}
             step={10}
@@ -198,6 +200,7 @@ const NOTES = [
 ] as const;
 
 export function ArpeggioSpacingDemo() {
+  const t = useDemoText();
   const [spacing, setSpacing] = useState(60);
   const [playId, setPlayId] = useState(0);
   const reduced = useReducedMotion();
@@ -253,15 +256,15 @@ export function ArpeggioSpacingDemo() {
       <div className="flex w-full max-w-xs flex-col items-center gap-5">
         <Button variant="secondary" size="sm" onClick={play}>
           <PlayIcon weight="fill" aria-hidden="true" />
-          Play
+          {t("Play")}
         </Button>
         <label className="grid w-full gap-2.5">
           <span className="flex justify-between text-xs text-muted-foreground">
-            Spacing
+            {t("Spacing")}
             <span className="tabular-nums text-foreground">{spacing} ms</span>
           </span>
           <Slider
-            aria-label="Spacing between notes"
+            aria-label={t("Spacing between notes")}
             min={0}
             max={150}
             step={10}
@@ -307,6 +310,7 @@ const TEXTURE_OPTIONS = [
 ] as const satisfies readonly { value: Texture; label: string }[];
 
 export function TextureLayersDemo() {
+  const t = useDemoText();
   const [texture, setTexture] = useState<Texture>("both");
   const [on, setOn] = useState(false);
 
@@ -325,17 +329,17 @@ export function TextureLayersDemo() {
       <div className="flex w-full max-w-sm items-center justify-between gap-4 rounded-xl bg-card px-4 py-3 text-sm text-foreground shadow-(--custom-shadow)">
         <span className="flex items-center gap-2.5">
           <MoonIcon aria-hidden="true" className="size-4 text-muted-foreground" />
-          Do not disturb
+          {t("Do not disturb")}
         </span>
         <Switch
-          aria-label="Do not disturb"
+          aria-label={t("Do not disturb")}
           checked={on}
           onCheckedChange={(next) => void flip(next)}
         />
       </div>
       <SegmentedControl
-        ariaLabel="Sound texture"
-        options={TEXTURE_OPTIONS}
+        ariaLabel={t("Sound texture")}
+        options={TEXTURE_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={texture}
         onChange={setTexture}
       />

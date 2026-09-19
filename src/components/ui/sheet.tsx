@@ -42,11 +42,13 @@ function SheetContent({
   side = "right",
   variant = "default",
   showCloseButton = true,
+  closeLabel = "Close",
   ...props
 }: SheetPrimitive.Popup.Props & {
   side?: "top" | "right" | "bottom" | "left";
   variant?: "default" | "floating";
   showCloseButton?: boolean;
+  closeLabel?: string;
 }) {
   return (
     <SheetPortal>
@@ -80,7 +82,7 @@ function SheetContent({
             }
           >
             <IconX />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">{closeLabel}</span>
           </SheetPrimitive.Close>
         )}
       </SheetPrimitive.Popup>

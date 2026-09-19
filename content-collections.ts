@@ -1,6 +1,10 @@
 import { defineCollection, defineConfig } from "@content-collections/core";
 import { compileMDX } from "@content-collections/mdx";
 import { z } from "zod";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { sourceRevision } from "./src/i18n/source-revision";
+import { isLocale, locales, defaultLocale } from "./src/i18n/locales";
 
 import { rehypeSyntaxHighlight } from "./src/lib/rehype-syntax-highlight";
 
@@ -106,6 +110,9 @@ const concepts = defineCollection({
   include: "**/*.mdx",
   schema: z.object({
     content: z.string(),
+    locale: z.enum(locales).default(defaultLocale),
+    sourceRevision: z.string().regex(/^[a-f0-9]{64}$/).optional(),
+    translatedAt: z.string().date().optional(),
     title: z.string(),
     description: z.string(),
     section: z.enum([
@@ -130,6 +137,16 @@ const concepts = defineCollection({
       .default([]),
   }),
   transform: async (document, context) => {
+    const filePath = document._meta.filePath;
+    const firstDirectory = filePath.split("/")[0];
+    const pathLocale = isLocale(firstDirectory) ? firstDirectory : defaultLocale;
+    if (pathLocale !== document.locale) {
+      throw new Error(`Content locale does not match its path: ${filePath}`);
+    }
+    if (document.locale !== "en" && (!document.sourceRevision || !document.translatedAt)) {
+      throw new Error(`Translation needs sourceRevision and translatedAt: ${filePath}`);
+    }
+    const source = await readFile(path.join(process.cwd(), "content", filePath), "utf8");
     const mdx = await compileMDX(context, preserveCodeIndentation(document), {
       rehypePlugins: [rehypeSyntaxHighlight],
     });
@@ -150,6 +167,7 @@ const concepts = defineCollection({
       ...document,
       slug,
       sourcePath: document._meta.filePath,
+      sourceHash: sourceRevision(source),
       resources,
       mdx,
     };

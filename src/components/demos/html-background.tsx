@@ -8,6 +8,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +18,7 @@ const EXAMPLES = [
 ] as const;
 
 export function HtmlBackgroundDemo() {
+  const t = useDemoText();
   const [banding, setBanding] = useState(false);
   const bandingTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -62,7 +64,7 @@ export function HtmlBackgroundDemo() {
                   weight="fill"
                 />
               )}
-              {example.label}
+              {t(example.label)}
             </div>
 
             <div className="w-full overflow-hidden rounded-xl bg-card ">
@@ -104,7 +106,7 @@ export function HtmlBackgroundDemo() {
                     banding ? "opacity-100" : "opacity-0"
                   )}
                 >
-                  Document canvas
+                  {t("Document canvas")}
                 </span>
                 <div
                   className="absolute inset-0 bg-[#1c1c1c] p-3 pt-5 transition-transform duration-400 ease-out motion-reduce:transition-none sm:p-4 sm:pt-5"
@@ -128,7 +130,7 @@ export function HtmlBackgroundDemo() {
 
       <Button onClick={rubberBand} variant="secondary">
         <ArrowDownIcon weight="bold" />
-        Scroll
+        {t("Scroll")}
       </Button>
     </Demo>
   );

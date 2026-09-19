@@ -5,6 +5,7 @@ import { CrosshairSimpleIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { playSound } from "@/lib/sounds";
 import { cn } from "@/lib/utils";
+import { useDemoText } from "./demo-messages";
 
 // A designer's tool rather than a settings row: a crosshair pill that takes
 // the guides' own sky tint while they're showing.
@@ -17,6 +18,7 @@ export function GuidesToggle({
   onPressedChange: (pressed: boolean) => void;
   className?: string;
 }) {
+  const t = useDemoText();
   return (
     <Button
       type="button"
@@ -42,7 +44,7 @@ export function GuidesToggle({
         )}
         weight="bold"
       />
-      Guides
+      {t("Guides")}
     </Button>
   );
 }

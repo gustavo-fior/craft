@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import monet from "@/assets/claude-monet-water-lilies.jpg";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +23,7 @@ const ROWS = [
 ] as const;
 
 export function DepthOfFieldDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<Mode>("flat");
   const [open, setOpen] = useState(true);
   const depth = mode === "depth" && open;
@@ -37,7 +39,7 @@ export function DepthOfFieldDemo() {
         >
           <div className="relative aspect-[2/1] w-full">
             <Image
-              alt="Water Lilies by Claude Monet"
+              alt={t("Water Lilies by Claude Monet")}
               className="object-cover"
               fill
               placeholder="blur"
@@ -51,7 +53,7 @@ export function DepthOfFieldDemo() {
                 key={row.title}
                 className="flex h-10 items-center justify-between gap-3 px-2 text-xs"
               >
-                <span className="truncate text-foreground">{row.title}</span>
+                <span className="truncate text-foreground">{t(row.title)}</span>
                 <span className="shrink-0 text-muted-foreground">
                   {row.meta}
                 </span>
@@ -75,14 +77,14 @@ export function DepthOfFieldDemo() {
               ? "scale-100 opacity-100"
               : "pointer-events-none scale-95 opacity-0"
           )}
-          aria-label="Delete collection"
+          aria-label={t("Delete collection")}
           role="dialog"
         >
           <div className="text-sm font-medium text-foreground">
-            Delete collection?
+            {t("Delete collection?")}
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
-            The three paintings inside will stay in your library.
+            {t("The three paintings inside will stay in your library.")}
           </p>
           <div className="mt-4 flex justify-end gap-2">
             <button
@@ -90,14 +92,14 @@ export function DepthOfFieldDemo() {
               onClick={() => setOpen(false)}
               type="button"
             >
-              Cancel
+              {t("Cancel")}
             </button>
             <button
               className="h-7 cursor-pointer rounded-md bg-foreground px-2.5 text-xs font-medium text-background"
               onClick={() => setOpen(false)}
               type="button"
             >
-              Delete
+              {t("Delete")}
             </button>
           </div>
         </div>
@@ -111,15 +113,18 @@ export function DepthOfFieldDemo() {
           type="button"
         >
           <span className="rounded-md bg-card px-2.5 py-1.5 shadow-(--custom-shadow)">
-            Open dialog
+            {t("Open dialog")}
           </span>
         </button>
       </div>
 
       <SegmentedControl
-        ariaLabel="Background treatment"
+        ariaLabel={t("Background treatment")}
         onChange={setMode}
-        options={MODES}
+        options={MODES.map((option) => ({
+          ...option,
+          label: t(option.label),
+        }))}
         value={mode}
       />
     </Demo>

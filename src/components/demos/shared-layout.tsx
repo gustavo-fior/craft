@@ -1,5 +1,6 @@
 "use client";
 
+import { useDemoText } from "@/components/app/demo-messages";
 import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
@@ -30,11 +31,12 @@ function TabRow({
   shared: boolean;
   label: string;
 }) {
+  const t = useDemoText();
   const reduceMotion = useReducedMotion();
 
   return (
     <div
-      aria-label={label}
+      aria-label={t(label)}
       className="flex w-full max-w-60 rounded-lg bg-muted p-1 shadow-(--custom-shadow) dark:bg-muted/60"
       role="tablist"
     >
@@ -66,7 +68,7 @@ function TabRow({
                   className="absolute inset-0 rounded-md bg-card shadow-(--custom-shadow)"
                 />
               ))}
-            <span className="relative">{tab}</span>
+            <span className="relative">{t(tab)}</span>
           </button>
         );
       })}
@@ -75,6 +77,7 @@ function TabRow({
 }
 
 export function SharedLayoutDemo() {
+  const t = useDemoText();
   const [active, setActive] = useState<Tab>("Overview");
 
   return (
@@ -83,7 +86,7 @@ export function SharedLayoutDemo() {
         <CompareItem verdict="wrong">
           <TabRow
             active={active}
-            label="Tabs that swap"
+            label={t("Tabs that swap")}
             onChange={setActive}
             shared={false}
           />
@@ -91,7 +94,7 @@ export function SharedLayoutDemo() {
         <CompareItem verdict="right">
           <TabRow
             active={active}
-            label="Tabs that slide"
+            label={t("Tabs that slide")}
             onChange={setActive}
             shared
           />
@@ -131,6 +134,7 @@ const MODES = [
 type Mode = (typeof MODES)[number]["value"];
 
 export function SharedLayoutDetailDemo() {
+  const t = useDemoText();
   const reduceMotion = useReducedMotion();
   const [mode, setMode] = useState<Mode>("shared");
   const [selected, setSelected] = useState<Project | null>(null);
@@ -169,7 +173,7 @@ export function SharedLayoutDetailDemo() {
                   layoutId={idFor("title", selected.id)}
                   transition={settle}
                 >
-                  {selected.title}
+                  {t(selected.title)}
                 </motion.h3>
                 <motion.div
                   animate={{ opacity: 1 }}
@@ -184,7 +188,7 @@ export function SharedLayoutDetailDemo() {
                 </motion.div>
               </div>
               <button
-                aria-label="Back to projects"
+                aria-label={t("Back to projects")}
                 className="absolute top-3 left-3 inline-flex size-7 items-center justify-center rounded-full bg-card/90 text-foreground shadow-(--custom-shadow) backdrop-blur"
                 onClick={() => setSelected(null)}
                 type="button"
@@ -222,10 +226,10 @@ export function SharedLayoutDetailDemo() {
                         layoutId={idFor("title", project.id)}
                         transition={settle}
                       >
-                        {project.title}
+                        {t(project.title)}
                       </motion.span>
                       <span className="text-xs text-muted-foreground">
-                        {project.meta}
+                        {t(project.meta)}
                       </span>
                     </span>
                   </button>
@@ -237,9 +241,9 @@ export function SharedLayoutDetailDemo() {
       </div>
 
       <SegmentedControl
-        ariaLabel="Detail transition"
+        ariaLabel={t("Detail transition")}
         onChange={setMode}
-        options={MODES}
+        options={MODES.map((option) => ({ ...option, label: t(option.label) }))}
         value={mode}
       />
     </Demo>

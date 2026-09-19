@@ -1,0 +1,128 @@
+---
+title: Optical alignment (alineación óptica)
+description: Centra para el ojo, no para las matemáticas.
+section: Typography
+order: 4
+publishedAt: "2026-07-15"
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: 07b0b07e40e58f9a9e1c224f2dbe9cb20b2588a66329b42b1afb2e0fea510e46
+resources:
+  - url: https://developer.apple.com/design/human-interface-guidelines/icons
+    title: Apple Human Interface Guidelines on icons
+    description: Las reglas de Apple para equilibrar visualmente un icono dentro de la forma que lo contiene.
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: Una lista breve de mejoras, varias de ellas basadas en ajustes ópticos como estos.
+  - url: https://www.w3.org/TR/css-inline-3/#hanging-punctuation-property
+    title: hanging-punctuation
+    description: La especificación CSS que permite sacar las comillas fuera de la caja del texto.
+  - url: https://rsms.me/inter/#features
+    title: Inter features
+    description: Qué cambia realmente el eje de tamaño óptico de Inter.
+---
+
+Alinear los iconos exactamente por sus bordes no siempre da un resultado
+equilibrado. A menudo hace falta desplazarlos un poco porque cada forma tiene
+un peso visual distinto.
+
+**Optical alignment** (alineación óptica) consiste en ajustar la posición hasta
+que se vea bien y conservar ese ajuste.
+
+<OpticalAlignmentDemo />
+
+El icono de reproducción se mueve a la izquierda porque un triángulo que apunta
+a la derecha concentra la mayor parte de su superficie en el lado izquierdo.
+La estrella y el icono de descarga suben un poco. Los desplazamientos son
+mínimos y específicos de cada icono: es una decisión individual, no una regla global.
+
+### Cómo alinear el icono
+
+Una buena prueba consiste en desenfocarlo. Aplica un `filter: blur()` intenso
+desde el inspector, o entrecierra los ojos, y la forma se convertirá en una
+mancha suave de tinta.
+
+La mancha queda donde está el peso visual del icono, no donde está su bounding
+box (caja delimitadora). Si cae fuera del centro del botón, el ajuste necesario
+es la distancia que la devuelve a él. Los bordes nítidos ocultan esto porque
+el ojo interpreta el contorno y se fía de él. El desenfoque elimina el contorno
+y deja solo el peso.
+
+## Botones con iconos
+
+Lo mismo ocurre con el padding (espacio interior). Un icono tiene aire dentro
+de su caja, y ese aire se suma al padding que lo rodea. Un padding idéntico en
+ambos lados termina pareciendo mayor en el lado del icono.
+
+<OpticalButtonDemo />
+
+Reduce unos pocos píxeles el padding del lado que contiene el icono.
+
+## Peso de las formas
+
+Cada forma tiene un peso visual distinto. Por ejemplo, un círculo o un
+triángulo dibujados dentro de la misma caja que un cuadrado parecen más pequeños.
+
+<OpticalWeightDemo />
+
+## Tamaños ópticos
+
+La tipografía tiene el mismo problema al cambiar de tamaño. Unos trazos que
+funcionan bien a 14 px resultan toscos a 40 px. Algunas tipografías incluyen un
+eje **optical size** (tamaño óptico) que redibuja las letras según el tamaño al
+que se muestran.
+
+<OpticalSizingDemo />
+
+Los navegadores lo activan automáticamente mediante `font-optical-sizing: auto`,
+así que normalmente obtienes el diseño adecuado sin hacer nada. La demo fuerza
+el diseño de texto a un tamaño display para que veas lo que te estarías perdiendo.
+
+## Hanging punctuation
+
+Una cita que empieza con comillas parece tener sangría, porque gran parte del
+espacio que ocupa ese signo está vacío. Sacarlo al margen alinea la primera
+letra con el texto que aparece debajo. Es lo que se conoce como hanging
+punctuation (puntuación colgante).
+
+<HangingPunctuationDemo />
+
+Safari admite `hanging-punctuation: first`. En otros navegadores, un pequeño
+`text-indent` negativo consigue el mismo resultado si conoces el carácter inicial.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<button class="grid size-12 place-items-center rounded-full">
+    <PlayIcon class="size-5 translate-x-px" weight="fill" />
+</button>
+
+<blockquote class="indent-[-0.42em]">
+    “Good design is as little design as possible.”
+</blockquote>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.play-icon {
+    transform: translateX(1px);
+}
+
+blockquote {
+hanging-punctuation: first;
+}
+
+@supports not (hanging-punctuation: first) {
+blockquote {
+text-indent: -0.42em;
+}
+}`,
+},
+]}
+/>

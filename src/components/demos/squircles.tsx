@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import { Compare, CompareItem } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
@@ -34,13 +35,13 @@ function useCornerShapeSupport() {
 }
 
 function UnsupportedNote() {
+  const t = useDemoText();
   const supported = useCornerShapeSupport();
   if (supported) return null;
 
   return (
     <p className="max-w-xs text-center text-xs text-pretty text-muted-foreground/70">
-      Your browser does not support <code>corner-shape</code> yet, so every
-      corner here renders as round.
+      {t("Your browser does not support")} <code>corner-shape</code> {t("yet, so every corner here renders as round.")}
     </p>
   );
 }
@@ -94,6 +95,7 @@ export function SquircleCurvatureView({
   curvature: number;
   onCurvatureChange?: (curvature: number) => void;
 }) {
+  const t = useDemoText();
   const name = CURVATURE_NAMES[String(curvature)];
 
   return (
@@ -117,13 +119,13 @@ export function SquircleCurvatureView({
 
       <label className="grid w-full max-w-xs gap-2.5">
         <span className="flex items-center justify-between text-xs text-muted-foreground">
-          Curvature
+          {t("Curvature")}
           <span className="tabular-nums text-foreground">
             {curvature.toFixed(1)}
           </span>
         </span>
         <Slider
-          aria-label="Curvature"
+          aria-label={t("Curvature")}
           max={4}
           min={-1}
           onValueChange={(value) => onCurvatureChange?.(getSliderValue(value))}
@@ -147,6 +149,7 @@ export function SquircleCurvatureDemo() {
 }
 
 export function SquircleExamplesDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<CornerMode>("round");
   const corner = mode === "squircle" ? "corner-squircle" : "corner-round";
 
@@ -171,7 +174,7 @@ export function SquircleExamplesDemo() {
             corner
           )}
         >
-          Continue
+          {t("Continue")}
         </span>
 
         {/* Card with a nested surface: both layers need the same shape and
@@ -192,9 +195,9 @@ export function SquircleExamplesDemo() {
       </div>
 
       <SegmentedControl
-        ariaLabel="Corner shape"
+        ariaLabel={t("Corner shape")}
         onChange={setMode}
-        options={CORNER_OPTIONS}
+        options={CORNER_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={mode}
       />
       <UnsupportedNote />

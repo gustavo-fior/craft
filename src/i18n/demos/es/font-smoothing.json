@@ -1,0 +1,9 @@
+{
+  "Default": "Por defecto",
+  "Antialiased": "Antialiased",
+  "Font smoothing": "Suavizado de fuentes",
+  "Changelog": "Novedades",
+  "Faster cold starts": "Cold starts más rápidos",
+  "Functions now boot in under 100ms. No changes are needed on your side.": "Las funciones ya arrancan en menos de 100 ms. No necesitas cambiar nada.",
+  "The quick brown fox": "El veloz zorro marrón"
+}

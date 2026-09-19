@@ -1,0 +1,78 @@
+---
+title: "Pulsación de botones"
+description: "Reduce la escala al pulsar para que se sienta real."
+section: Motion
+order: 2
+publishedAt: "2026-07-15"
+resources:
+  - url: https://emilkowal.ski/ui/7-practical-animation-tips
+    title: 7 practical animation tips
+    description: "La breve lista de reglas de Emil Kowalski para animar interfaces, incluida la escala al pulsar."
+  - url: https://emilkowal.ski/ui/great-animations
+    title: Great animations
+    description: "Qué distingue una animación que se siente bien de otra que solo se mueve."
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/:active
+    title: The :active pseudo-class
+    description: "Cuándo considera el navegador que un elemento está pulsado, tanto con ratón como con teclado."
+  - url: https://web.dev/articles/animations-guide
+    title: Animations guide
+    description: "Por qué transform y opacity permiten animar con un coste mínimo."
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "afa6a0fae3830f3bf7b21b6327295af3badee7a685b151575bbc1762cb38af7c"
+---
+
+Un botón físico se mueve al pulsarlo. Un botón en pantalla puede reproducir esa sensación con una sola regla: **reduce un poco su escala mientras está pulsado**. Es una de las respuestas visuales más económicas de la web y hace que la interfaz parezca haberte escuchado.
+
+Mantén pulsados los dos botones.
+
+<ButtonPressDemo />
+
+El de la derecha apenas hace nada. Se reduce al 97 % mientras mantienes el dedo apoyado y después recupera su tamaño con un spring. La diferencia se percibe con facilidad, pero apenas se ve: justo lo que buscas en la respuesta a una pulsación.
+
+## Encontrar la medida
+
+Importan dos valores: cuánto se encoge el botón y lo rápido que lo hace. Mueve los controles y sigue pulsando.
+
+<PressAmountDemo />
+
+Alrededor de `0.97`, la pulsación transmite una sensación táctil. Por debajo de `0.92` empieza a parecer un efecto: quien lo usa se fija en la animación en lugar de en el clic. Mantén la duración cerca de `100ms`. Si dura más, el botón se queda atrás respecto al dedo, algo que se siente peor que no tener respuesta visual.
+
+La escala se ejecuta en el compositor, por lo que no añade coste en tiempo de ejecución. Como `scale()` también escala los elementos hijos, el texto y el icono se mueven con el botón sin necesitar otra regla.
+
+## No solo botones
+
+Todo lo que puedas pulsar merece el mismo tratamiento: tarjetas, filas de listas, mosaicos y chips. Activa la respuesta visual y pulsa las tarjetas.
+
+<PressEverywhereDemo />
+
+En superficies grandes puedes reducir menos la escala. Una tarjeta que ocupa todo el ancho se desplaza varios píxeles por los bordes a `0.97`, más que un botón con esa misma escala. Prueba con `0.98` y valora el resultado a simple vista.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<button class="transition-transform duration-100 ease-out active:scale-[0.97]">
+    Save changes
+</button>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.button {
+    transition: transform 100ms ease-out;
+}
+
+.button:active {
+    transform: scale(0.97);
+}`,
+    },
+  ]}
+/>
+
+Aplica la transición solo a `transform`, no a `all`. Un botón suele cambiar también de color en hover, y no interesa que el tiempo de la pulsación afecte a ese cambio.

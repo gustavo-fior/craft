@@ -9,7 +9,7 @@ export type Concept = {
   description: string;
 };
 
-export const CONCEPTS: Concept[] = allConcepts.map(
+export const CONCEPTS: Concept[] = allConcepts.filter((concept) => concept.locale === "en").map(
   ({ title, slug, section, description }) => ({
     title,
     slug,
@@ -20,7 +20,7 @@ export const CONCEPTS: Concept[] = allConcepts.map(
 
 // Everything is shown as launched: this is the launch.
 export const NAV = groupBySection(
-  allConcepts.map(({ title, slug, section, order }) => ({
+  allConcepts.filter((concept) => concept.locale === "en").map(({ title, slug, section, order }) => ({
     title,
     slug,
     section,

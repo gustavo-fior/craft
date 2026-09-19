@@ -1,5 +1,6 @@
 "use client";
 
+import { useDemoText } from "@/components/app/demo-messages";
 import {
   CheckIcon,
   CopyIcon,
@@ -65,6 +66,7 @@ function CopyCard({
   morph: boolean;
   onCopy: () => void;
 }) {
+  const t = useDemoText();
   const icon = copied ? (
     <CheckIcon aria-hidden="true" className="size-5 text-emerald-500" weight="bold" />
   ) : (
@@ -74,7 +76,7 @@ function CopyCard({
   return (
     <div className="grid h-28 w-full place-items-center rounded-xl bg-card shadow-(--custom-shadow)">
       <Button
-        aria-label={copied ? "Copied" : "Copy link"}
+        aria-label={copied ? t("Copied") : t("Copy link")}
         onClick={onCopy}
         size="icon-lg"
         variant="outline"
@@ -90,6 +92,7 @@ function CopyCard({
 }
 
 export function IconMorphDemo() {
+  const t = useDemoText();
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -103,10 +106,10 @@ export function IconMorphDemo() {
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
-        <CompareItem verdict="wrong" label="Swap">
+        <CompareItem verdict="wrong" label={t("Swap")}>
           <CopyCard copied={copied} morph={false} onCopy={copy} />
         </CompareItem>
-        <CompareItem verdict="right" label="Morph">
+        <CompareItem verdict="right" label={t("Morph")}>
           <CopyCard copied={copied} morph onCopy={copy} />
         </CompareItem>
       </Compare>
@@ -115,6 +118,7 @@ export function IconMorphDemo() {
 }
 
 export function IconMorphTuningDemo() {
+  const t = useDemoText();
   const [playing, setPlaying] = useState(false);
   const [blur, setBlur] = useState(4);
   const [scale, setScale] = useState(0.25);
@@ -123,7 +127,7 @@ export function IconMorphTuningDemo() {
     <Demo className="gap-10">
       <div className="grid h-28 w-full max-w-xs place-items-center rounded-xl bg-card shadow-(--custom-shadow)">
         <Button
-          aria-label={playing ? "Pause" : "Play"}
+          aria-label={playing ? t("Pause") : t("Play")}
           onClick={() => setPlaying((value) => !value)}
           size="icon-lg"
           variant="outline"
@@ -141,11 +145,11 @@ export function IconMorphTuningDemo() {
       <div className="grid w-full max-w-xs gap-5">
         <label className="grid gap-2.5">
           <span className="flex items-center justify-between text-xs text-muted-foreground">
-            Blur
+            {t("Blur")}
             <span className="tabular-nums text-foreground">{blur}px</span>
           </span>
           <Slider
-            aria-label="Blur amount"
+            aria-label={t("Blur amount")}
             max={8}
             min={0}
             onValueChange={(value) => setBlur(getSliderValue(value))}
@@ -155,13 +159,13 @@ export function IconMorphTuningDemo() {
         </label>
         <label className="grid gap-2.5">
           <span className="flex items-center justify-between text-xs text-muted-foreground">
-            Start scale
+            {t("Start scale")}
             <span className="tabular-nums text-foreground">
               {scale.toFixed(2)}
             </span>
           </span>
           <Slider
-            aria-label="Start scale"
+            aria-label={t("Start scale")}
             max={1}
             min={0}
             onValueChange={(value) => setScale(getSliderValue(value))}
@@ -183,13 +187,14 @@ function HeaderBar({
   onToggle: () => void;
   children: React.ReactNode;
 }) {
+  const t = useDemoText();
   return (
     <div className="flex h-28 w-full flex-col overflow-hidden rounded-xl bg-card shadow-(--custom-shadow)">
       <div className="flex h-11 items-center justify-between border-b border-[#E7E7E7] px-3 dark:border-[#1E1E1E]">
         <span className="size-4 rounded-full bg-foreground" />
         <Button
           aria-expanded={open}
-          aria-label={open ? "Close menu" : "Open menu"}
+          aria-label={open ? t("Close menu") : t("Open menu")}
           onClick={onToggle}
           size="icon-sm"
           variant="ghost"
@@ -237,13 +242,14 @@ function HamburgerBars({ open }: { open: boolean }) {
 }
 
 export function HamburgerMorphDemo() {
+  const t = useDemoText();
   const [open, setOpen] = useState(false);
   const toggle = () => setOpen((value) => !value);
 
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
-        <CompareItem caption="Swap">
+        <CompareItem caption={t("Swap")}>
           <HeaderBar onToggle={toggle} open={open}>
             {open ? (
               <XIcon aria-hidden="true" className="size-5" weight="bold" />
@@ -252,7 +258,7 @@ export function HamburgerMorphDemo() {
             )}
           </HeaderBar>
         </CompareItem>
-        <CompareItem caption="Morph">
+        <CompareItem caption={t("Morph")}>
           <HeaderBar onToggle={toggle} open={open}>
             <HamburgerBars open={open} />
           </HeaderBar>

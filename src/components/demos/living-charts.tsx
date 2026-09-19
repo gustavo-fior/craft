@@ -1,11 +1,13 @@
 "use client";
 
+import { useDemoLocale, useDemoText } from "@/components/app/demo-messages";
 import { motion, useReducedMotion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Compare, CompareItem, RIGHT_ICON, WRONG_ICON } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
 import { SegmentedControl } from "@/components/app/segmented-control";
+import { languageTag } from "@/i18n/locales";
 import { cn } from "@/lib/utils";
 
 const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -76,6 +78,9 @@ function sparkPath(values: readonly number[]) {
 }
 
 function LiveCard({ values }: { values: readonly number[] }) {
+  const t = useDemoText();
+  const locale = useDemoLocale();
+  const numberFormat = useMemo(() => new Intl.NumberFormat(languageTag(locale)), [locale]);
   const latest = values[values.length - 1];
   const d = sparkPath(values);
   const lastY =
@@ -84,9 +89,9 @@ function LiveCard({ values }: { values: readonly number[] }) {
 
   return (
     <div className="w-full rounded-xl bg-card p-3 shadow-(--custom-shadow)">
-      <p className="text-[11px] text-muted-foreground">Requests per second</p>
+      <p className="text-[11px] text-muted-foreground">{t("Requests per second")}</p>
       <p className="mt-0.5 text-xl font-semibold text-foreground tabular-nums">
-        {Math.round(latest).toLocaleString("en-US")}
+        {numberFormat.format(Math.round(latest))}
       </p>
       <svg
         aria-hidden="true"
@@ -154,6 +159,9 @@ const MODE_OPTIONS = [
 type Mode = (typeof MODE_OPTIONS)[number]["value"];
 
 export function LivingBarsDemo() {
+  const t = useDemoText();
+  const locale = useDemoLocale();
+  const numberFormat = useMemo(() => new Intl.NumberFormat(languageTag(locale)), [locale]);
   const [mode, setMode] = useState<Mode>("animate");
   const reduced = useReducedMotion();
   const [values, setValues] = useState<readonly number[]>(SOURCES.map((s) => s.value));
@@ -174,7 +182,7 @@ export function LivingBarsDemo() {
   return (
     <Demo className="gap-8">
       <div className="w-full max-w-sm rounded-xl bg-card p-3 shadow-(--custom-shadow)">
-        <p className="mb-3 text-[11px] text-muted-foreground">Visits by source</p>
+        <p className="mb-3 text-[11px] text-muted-foreground">{t("Visits by source")}</p>
         <div className="flex flex-col gap-2">
           {order.map((i) => {
             const source = SOURCES[i];
@@ -203,7 +211,7 @@ export function LivingBarsDemo() {
                   />
                 </span>
                 <span className="text-right text-muted-foreground tabular-nums">
-                  {Math.round(shown[i]).toLocaleString("en-US")}
+                  {numberFormat.format(Math.round(shown[i]))}
                 </span>
               </motion.div>
             );
@@ -211,9 +219,9 @@ export function LivingBarsDemo() {
         </div>
       </div>
       <SegmentedControl
-        ariaLabel="Update style"
+        ariaLabel={t("Update style")}
         onChange={setMode}
-        options={MODE_OPTIONS}
+        options={MODE_OPTIONS.map((option) => ({ ...option, label: t(option.label) }))}
         value={mode}
       />
     </Demo>

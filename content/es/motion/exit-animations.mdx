@@ -1,0 +1,105 @@
+---
+title: "Animaciones de salida"
+description: "Sal más rápido y con menos protagonismo del que tenías al entrar."
+section: Motion
+order: 8
+publishedAt: "2026-07-16"
+resources:
+  - url: https://emilkowal.ski/ui/you-dont-need-animations
+    title: You don't need animations
+    description: "Emil Kowalski analiza qué animaciones se ganan su sitio, con las salidas como ejemplo recurrente."
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: "La colección de pequeñas decisiones de animación de Jakub Krehel, incluida la forma en que deben desaparecer los elementos."
+  - url: https://motion.dev/docs/react-animate-presence
+    title: AnimatePresence
+    description: "Cómo animar la salida de un elemento de React después de retirarlo del árbol."
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style
+    title: "@starting-style"
+    description: "La regla CSS que, junto con transition-behavior, permite animar desde y hacia display none."
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "e38b59de6cb5888d04e85b0fe8019df4a3ad2eca6598a68d314eb904d83b3af2"
+---
+
+La salida fácil consiste en reproducir la entrada al revés. Subir y aparecer; después bajar y desvanecerse, con la misma duración y la misma curva. Es simétrico, y ese es el problema. **Un elemento que se va merece menos ceremonia que uno que llega.**
+
+Descarta los toasts y fíjate en cómo desaparece cada uno.
+
+<ExitAnimationsDemo />
+
+Ambos entran igual: en 240 ms y con ease-out. El de la izquierda sale reproduciendo esa animación al revés, así que tienes que esperar otros 240 ms mientras se aleja. El de la derecha se desvanece en la mitad de tiempo, con un toque de blur y sin desplazarse.
+
+La razón es la atención. Una entrada la reclama: ha llegado algo nuevo y el movimiento te indica de dónde viene. Una salida significa que el usuario ha terminado. Todo lo que le obligue a seguir mirando a partir de ese momento estorba.
+
+Una regla práctica: las salidas duran la mitad que las entradas y pueden usar ease-in, porque el elemento acelera al alejarse y nadie necesita verlo asentarse.
+
+## Salidas que mantienen el layout en orden
+
+Quitar un elemento de una lista es la salida que más se suele olvidar. Sin animación, desaparece y todo lo que hay debajo sube de golpe en un solo fotograma. Elimina unas cuantas tareas a cada lado.
+
+<ExitListDemo />
+
+A la derecha, la fila reduce su altura mientras se desvanece. Las filas de debajo suben para ocupar el hueco en lugar de teletransportarse. Sigue siendo rápido, 160 ms, y no llama la atención. Simplemente evita que el layout dé un salto.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { AnimatePresence, motion } from "motion/react";
+
+<AnimatePresence initial={false}>
+    {open && (
+        <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{
+                opacity: 0,
+                filter: "blur(2px)",
+                transition: { duration: 0.12, ease: "easeIn" },
+            }}
+            transition={{ duration: 0.24, ease: [0.23, 1, 0.32, 1] }}
+        >
+            Changes saved
+        </motion.div>
+    )}
+</AnimatePresence>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `.toast {
+    display: block;
+    opacity: 1;
+    translate: 0 0;
+    transition:
+        opacity 240ms var(--ease-out),
+        translate 240ms var(--ease-out),
+        display 240ms allow-discrete;
+}
+
+@starting-style {
+    .toast {
+        opacity: 0;
+        translate: 0 12px;
+    }
+}
+
+.toast[hidden] {
+    display: none;
+    opacity: 0;
+    filter: blur(2px);
+    transition:
+        opacity 120ms ease-in,
+        filter 120ms ease-in,
+        display 120ms allow-discrete;
+}`,
+    },
+  ]}
+/>
+
+En CSS se ejecuta la transición declarada en el estado al que vas. Por eso los tiempos de entrada están en `.toast` y los de salida en `.toast[hidden]`. `allow-discrete` permite que termine el desvanecimiento antes de que `display: none` retire el elemento.

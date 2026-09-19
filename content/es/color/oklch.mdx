@@ -1,0 +1,101 @@
+---
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "65098d61def57c277176aec66cc439ca7f14245ebb57c5dc8843089f357cb7ba"
+title: OKLCH
+description: Valores de luminosidad que se perciben iguales.
+section: Color
+order: 1
+publishedAt: "2026-07-14"
+resources:
+  - url: https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl
+    title: OKLCH in CSS, why we moved from RGB and HSL
+    description: Los argumentos a favor de OKLCH, con paletas comparadas que hacen evidente el problema de HSL.
+  - url: https://oklch.com/
+    title: OKLCH color picker
+    description: Elige colores por lightness, chroma y hue, y comprueba dónde termina exactamente el gamut de sRGB.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch
+    title: oklch()
+    description: Sintaxis, rangos y compatibilidad de la función CSS con los navegadores.
+  - url: https://bottosson.github.io/posts/oklab/
+    title: A perceptual color space for image processing
+    description: El artículo original que presentó Oklab, el espacio de color en el que se basa OKLCH.
+---
+
+En HSL, lightness (luminosidad) es un número que encaja con las matemáticas, pero no con tus ojos. Un amarillo al 50 % de lightness parece brillante. Un azul al 50 % parece oscuro. Mismo número, resultado muy distinto. **OKLCH** lo resuelve definiendo la luminosidad según cómo la percibimos: el mismo valor se ve igual de claro sea cual sea el tono. Las dos filas siguientes usan un único valor de lightness para doce tonos. Mueve el slider.
+
+<OklchDemo />
+
+La fila HSL va dando saltos. El amarillo y el cian brillan; el azul y el morado se apagan. La fila OKLCH se mantiene uniforme. Esa es toda la razón para cambiar, y sus efectos aparecen por todas partes: textos que cumplen el contraste en un tono y no en otro, badges que destacan más en ciertos colores o paletas de modo oscuro que necesitan un ajuste manual de luminosidad para cada tono.
+
+## Los tres números
+
+`oklch(L C H)` significa lightness, chroma y hue. Lightness va de `0` (negro) a `1` (blanco). Chroma indica la intensidad cromática: va de `0` (gris) hasta aproximadamente `0.37` en los colores más saturados que puede mostrar una pantalla. Hue (tono) es un ángulo: `0` es un rojo rosado, `145` es verde, `250` es azul y `360` vuelve al inicio.
+
+> Cambia un número y solo cambia esa cualidad.
+
+Pon chroma a cero y cualquier tono se convierte en un gris neutro con la misma luminosidad. Ajusta hue y el color cambia sin oscurecerse. Esa previsibilidad permite usarlo como un sistema.
+
+## Degradados
+
+Los espacios de color también determinan qué ocurre entre dos colores. Un degradado en sRGB recorre una línea recta entre los valores RGB y, para muchas parejas, esa línea pasa por tonos turbios. Compara los mismos extremos interpolados en cada espacio.
+
+<OklchGradientDemo />
+
+De azul a amarillo, sRGB atraviesa una zona gris apagada en el centro. En OKLCH el color se mantiene vivo durante todo el recorrido, porque conserva chroma y solo rota hue. Basta con una palabra clave: `linear-gradient(in oklch, ...)`.
+
+## Crear una paleta
+
+Como lightness es fiable, una escala tonal es simplemente una lista de valores de luminosidad. Fija la curva de chroma, elige un tono y ya tienes una escala completa. Arrastra hue y observa cómo la escala conserva su forma.
+
+<OklchPaletteDemo />
+
+Cada paso mantiene la misma relación con sus vecinos, sea cual sea el tono elegido. Eso significa que un badge creado con los pasos 200 y 700 tiene el mismo contraste en verde que en morado. No necesitas ajustes por color, y el modo oscuro es la misma escala invertida.
+
+Chroma disminuye hacia los dos extremos de la escala de forma deliberada. Los colores muy claros y muy oscuros no admiten mucha intensidad cromática dentro del gamut (gama de colores) de sRGB. Si pides más, el navegador la recorta y la escala deja de verse uniforme.
+
+## Uso
+
+Tailwind v4 ya genera su paleta en OKLCH, y puedes usar valores arbitrarios en cualquier lugar que admita un color.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<button class="bg-[oklch(0.58_0.17_250)] text-white hover:bg-[oklch(0.52_0.17_250)]">
+  Continue
+</button>
+
+<span class="bg-[oklch(0.93_0.05_145)] text-[oklch(0.42_0.13_145)]">
+  Shipped
+</span>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `:root {
+  --brand-hue: 250;
+  --brand-200: oklch(0.93 0.05 var(--brand-hue));
+  --brand-600: oklch(0.58 0.17 var(--brand-hue));
+  --brand-700: oklch(0.48 0.15 var(--brand-hue));
+}
+
+.button {
+  background: var(--brand-600);
+}
+
+.button:hover {
+  background: var(--brand-700);
+}
+
+.hero {
+  background: linear-gradient(in oklch, oklch(0.55 0.22 262), oklch(0.92 0.19 100));
+}`,
+    },
+  ]}
+/>
+
+Todos los tokens de color de este sitio son valores OKLCH, y los grises se escriben como `oklch(L 0 0)`. Si necesitas comprobar que un color está dentro del gamut de sRGB antes de publicarlo, pégalo en [oklch.com](https://oklch.com/) y comprueba si aparece el aviso.

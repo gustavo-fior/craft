@@ -49,12 +49,12 @@ export function ResourceList({
   );
 }
 
-export function Resources({ resources }: { resources: Resource[] }) {
+export function Resources({ resources, title = "Resources" }: { resources: Resource[]; title?: string }) {
   if (resources.length === 0) return null;
 
   return (
     <section className="mt-14">
-      <h2 className="text-base font-medium">Resources</h2>
+      <h2 className="text-base font-medium">{title}</h2>
       <ResourceList className="mt-3 flex flex-col" resources={resources} />
     </section>
   );

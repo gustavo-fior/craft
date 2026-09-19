@@ -1,5 +1,6 @@
 "use client";
 
+import { useDemoText } from "@/components/app/demo-messages";
 import {
   ArchiveIcon,
   CalendarBlankIcon,
@@ -47,6 +48,7 @@ const TOOLBAR_ACTIONS = [
 ] as const;
 
 export function HoverRestraintDemo() {
+  const t = useDemoText();
   const examples = [
     { label: "Wrong", detail: "300ms fade in", animated: true },
     { label: "Right", detail: "Instant", animated: false },
@@ -79,7 +81,7 @@ export function HoverRestraintDemo() {
                   weight="fill"
                 />
               )}
-              {example.label}
+              {t(example.label)}
             </div>
 
             <div className="w-full rounded-xl bg-card p-1 shadow-(--custom-shadow)">
@@ -96,14 +98,14 @@ export function HoverRestraintDemo() {
                       aria-hidden="true"
                       className="size-3.5 mb-px shrink-0"
                     />
-                    {item.label}
+                    {t(item.label)}
                   </li>
                 ))}
               </ul>
             </div>
 
             <span className="text-xs text-muted-foreground">
-              {example.detail}
+              {t(example.detail)}
             </span>
           </div>
         ))}
@@ -119,12 +121,13 @@ function ToolbarButton({
   label: string;
   Icon: (typeof TOOLBAR_ACTIONS)[number]["Icon"];
 }) {
+  const t = useDemoText();
   return (
     <Tooltip>
       <TooltipTrigger
         render={
           <Button
-            aria-label={label}
+            aria-label={t(label)}
             className="transition-none hover:dark:bg-muted"
             size="icon-sm"
             variant="ghost"
@@ -133,12 +136,13 @@ function ToolbarButton({
           </Button>
         }
       />
-      <TooltipContent>{label}</TooltipContent>
+      <TooltipContent>{t(label)}</TooltipContent>
     </Tooltip>
   );
 }
 
 export function HoverTooltipDemo() {
+  const t = useDemoText();
   return (
     <Demo className="gap-12 px-4 sm:px-8">
       <div className="grid w-full max-w-lg grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-10">
@@ -151,7 +155,7 @@ export function HoverTooltipDemo() {
             ))}
           </div>
           <span className="text-xs text-muted-foreground">
-            Every tooltip waits
+            {t("Every tooltip waits")}
           </span>
         </div>
 
@@ -168,7 +172,7 @@ export function HoverTooltipDemo() {
             </div>
           </TooltipProvider>
           <span className="text-xs text-muted-foreground">
-            Only the first waits
+            {t("Only the first waits")}
           </span>
         </div>
       </div>
@@ -183,6 +187,7 @@ function SidebarWindow({
   open: boolean;
   animated: boolean;
 }) {
+  const t = useDemoText();
   return (
     <div className="flex w-full h-44 overflow-hidden rounded-lg bg-card shadow-(--custom-shadow)">
       <div
@@ -205,7 +210,7 @@ function SidebarWindow({
               )}
             >
               <item.Icon aria-hidden="true" className="size-3 shrink-0" />
-              {item.label}
+              {t(item.label)}
             </li>
           ))}
         </ul>
@@ -223,6 +228,7 @@ function SidebarWindow({
 }
 
 export function KeyboardActionDemo() {
+  const t = useDemoText();
   const [open, setOpen] = useState(true);
 
   useEffect(() => {
@@ -245,16 +251,16 @@ export function KeyboardActionDemo() {
   return (
     <Demo className="gap-12 px-0">
       <Compare className="max-w-full">
-        <CompareItem verdict="wrong" label="Animated">
+        <CompareItem verdict="wrong" label={t("Animated")}>
           <SidebarWindow animated open={open} />
         </CompareItem>
-        <CompareItem verdict="right" label="Instant">
+        <CompareItem verdict="right" label={t("Instant")}>
           <SidebarWindow animated={false} open={open} />
         </CompareItem>
       </Compare>
 
       <Button onClick={() => setOpen((value) => !value)} variant="secondary">
-        Toggle sidebar
+        {t("Toggle sidebar")}
         <Kbd className="shadow-none bg-transparent dark:border-none dark:bg-transparent text-muted-foreground">
           ⌘B
         </Kbd>

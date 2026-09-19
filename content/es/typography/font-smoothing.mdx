@@ -1,0 +1,90 @@
+---
+title: Font smoothing (suavizado de fuentes)
+description: El texto claro sobre fondo oscuro parece más grueso.
+section: Typography
+order: 6
+publishedAt: "2026-07-16"
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: 241e1bc6276d338cdfea2090979a9c5d16d5b59cbae7c3ae202331a8451cc4c3
+resources:
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth
+    title: font-smooth
+    description: MDN explica las propiedades de suavizado no estándar y su compatibilidad con navegadores.
+  - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
+    title: Details that make interfaces feel better
+    description: Una colección práctica de pequeñas mejoras de interfaz, incluida esta.
+  - url: https://www.zachleat.com/web/font-smooth/
+    title: Laissez-faire font smoothing and anti-aliasing
+    description: Zach Leatherman explica qué hace la propiedad y por qué no conviene aplicarla a ciegas.
+  - url: https://tailwindcss.com/docs/font-smoothing
+    title: Font smoothing in Tailwind
+    description: Las utilidades antialiased y subpixel-antialiased.
+---
+
+Coloca texto blanco sobre una superficie oscura y obsérvalo de cerca. En un
+Mac se ve un poco más grueso y un poco más difuso que el mismo texto sobre
+blanco. El CSS no ha cambiado. El rasterizador, sí.
+
+Por defecto, WebKit y Blink renderizan el texto con **subpixel antialiasing**
+(suavizado por subpíxeles), que engrosa los bordes de los glifos para que parezcan
+más nítidos. Sobre fondos oscuros, ese grosor adicional se percibe como un halo.
+Cambia el modo de la demo para ver cómo el texto recupera el peso que habías elegido.
+
+<FontSmoothingDemo />
+
+La propiedad es `-webkit-font-smoothing: antialiased`. Indica al navegador que
+use **grayscale antialiasing** (suavizado en escala de grises), que representa
+el glifo con su peso real. Firefox en macOS tiene su propia versión:
+`-moz-osx-font-smoothing: grayscale`.
+
+## Dónde se nota
+
+La diferencia se aprecia fácilmente sobre fondos oscuros y cuesta verla sobre
+fondos claros. Prueba el mismo texto en ambos.
+
+<FontSmoothingContrastDemo />
+
+Por eso, este tema suele aparecer cuando un producto incorpora un modo oscuro.
+Todo se ve bien en el modo claro, pero llega el tema oscuro y cada titular
+parece tener medio peso más que en el archivo de diseño.
+
+## Pesos finos
+
+El renderizado en escala de grises tiene dos caras. Los pesos que se apoyaban
+en ese halo pueden quedar demasiado tenues cuando desaparece. Fíjate en las
+filas de menor peso.
+
+<FontSmoothingWeightsDemo />
+
+Si usas un peso de 300 o inferior para el texto de párrafo sobre superficies
+oscuras, pruébalo en una pantalla que no sea Retina antes de activar esta
+propiedad de forma global. La mayoría de los productos solo usan pesos de
+400 en adelante, donde supone una mejora clara.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<body class="antialiased">`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}`,
+    },
+  ]}
+/>
+
+Ambas propiedades son no estándar y solo tienen efecto en macOS. Windows usa
+ClearType y las ignora, lo cual está bien, porque el halo es un problema de
+macOS. Este sitio las aplica en el `body`, como hacen muchos productos en los
+que el diseño tiene un papel central.

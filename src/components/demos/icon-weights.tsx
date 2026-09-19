@@ -18,6 +18,7 @@ import { useState } from "react";
 
 import { Compare, CompareItem } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { cn } from "@/lib/utils";
 
@@ -39,6 +40,7 @@ const WEIGHT_OPTIONS = [
 type WeightOption = (typeof WEIGHT_OPTIONS)[number]["value"];
 
 export function IconWeightsDemo() {
+  const t = useDemoText();
   const [weight, setWeight] = useState<WeightOption>("thin");
 
   return (
@@ -60,7 +62,7 @@ export function IconWeightsDemo() {
                 className="mb-px size-4 shrink-0"
                 weight={weight}
               />
-              <span className="flex-1">{item.label}</span>
+              <span className="flex-1">{t(item.label)}</span>
               {"count" in item ? (
                 <span className="text-[10px] tabular-nums text-muted-foreground/70">
                   {item.count}
@@ -71,9 +73,12 @@ export function IconWeightsDemo() {
         </ul>
       </div>
       <SegmentedControl
-        ariaLabel="Icon weight"
+        ariaLabel={t("Icon weight")}
         onChange={setWeight}
-        options={WEIGHT_OPTIONS}
+        options={WEIGHT_OPTIONS.map((option) => ({
+          ...option,
+          label: t(option.label),
+        }))}
         value={weight}
       />
     </Demo>
@@ -99,51 +104,52 @@ function ToolbarButton({
 }
 
 export function IconMixDemo() {
+  const t = useDemoText();
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
         <CompareItem verdict="wrong">
           <div className="flex items-center gap-0.5 rounded-full bg-card p-0.5 shadow-(--custom-shadow)">
-            <ToolbarButton label="Bold">
+            <ToolbarButton label={t("Bold")}>
               <TextBIcon aria-hidden="true" className="size-4" weight="bold" />
             </ToolbarButton>
-            <ToolbarButton label="Italic">
+            <ToolbarButton label={t("Italic")}>
               <IconItalic aria-hidden="true" className="size-5" stroke={2} />
             </ToolbarButton>
-            <ToolbarButton label="Underline">
+            <ToolbarButton label={t("Underline")}>
               <TextUnderlineIcon
                 aria-hidden="true"
                 className="size-4"
                 weight="thin"
               />
             </ToolbarButton>
-            <ToolbarButton label="Strikethrough">
+            <ToolbarButton label={t("Strikethrough")}>
               <IconStrikethrough
                 aria-hidden="true"
                 className="size-4"
                 stroke={1.25}
               />
             </ToolbarButton>
-            <ToolbarButton label="Link">
+            <ToolbarButton label={t("Link")}>
               <IconLink aria-hidden="true" className="size-[18px]" stroke={2} />
             </ToolbarButton>
           </div>
         </CompareItem>
         <CompareItem verdict="right">
           <div className="flex items-center gap-0.5 rounded-full bg-card p-0.5 shadow-(--custom-shadow)">
-            <ToolbarButton label="Bold">
+            <ToolbarButton label={t("Bold")}>
               <TextBIcon aria-hidden="true" className="size-4" />
             </ToolbarButton>
-            <ToolbarButton label="Italic">
+            <ToolbarButton label={t("Italic")}>
               <TextItalicIcon aria-hidden="true" className="size-4" />
             </ToolbarButton>
-            <ToolbarButton label="Underline">
+            <ToolbarButton label={t("Underline")}>
               <TextUnderlineIcon aria-hidden="true" className="size-4" />
             </ToolbarButton>
-            <ToolbarButton label="Strikethrough">
+            <ToolbarButton label={t("Strikethrough")}>
               <TextStrikethroughIcon aria-hidden="true" className="size-4" />
             </ToolbarButton>
-            <ToolbarButton label="Link">
+            <ToolbarButton label={t("Link")}>
               <LinkSimpleIcon aria-hidden="true" className="size-4" />
             </ToolbarButton>
           </div>
@@ -161,6 +167,7 @@ const SCALE_OPTIONS = [
 ] as const;
 
 export function IconTextSizeDemo() {
+  const t = useDemoText();
   const [scale, setScale] = useState<IconScale>("same");
   const larger = scale === "larger";
 
@@ -186,15 +193,18 @@ export function IconTextSizeDemo() {
                 )}
                 weight="duotone"
               />
-              {item.label}
+              {t(item.label)}
             </li>
           ))}
         </ul>
       </div>
       <SegmentedControl
-        ariaLabel="Icon size relative to text"
+        ariaLabel={t("Icon size relative to text")}
         onChange={setScale}
-        options={SCALE_OPTIONS}
+        options={SCALE_OPTIONS.map((option) => ({
+          ...option,
+          label: t(option.label),
+        }))}
         value={scale}
       />
     </Demo>

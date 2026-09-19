@@ -1,0 +1,118 @@
+---
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "3bc210e9c438e26b28560b3e6f9410919dfb1f298b33468767d5d09e9c81c810"
+title: Scroll fades
+description: Atenúa el borde por el que queda contenido por desplazar.
+section: Layout
+order: 5
+publishedAt: "2026-07-16"
+resources:
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/mask-image
+    title: mask-image en MDN
+    description: La propiedad que produce el desvanecimiento y las formas de degradado e imagen que admite.
+  - url: https://rauno.me/craft/nextjs
+    title: Building the Next.js website
+    description: Rauno Freiberg sobre los pequeños detalles de layout de un sitio real, incluidos los bordes atenuados al hacer scroll.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/@property
+    title: "@property en MDN"
+    description: Cómo registrar una custom property para animar sus valores con una transición, tal como hace la demo que detecta los extremos.
+  - url: https://developer.mozilla.org/en-US/docs/Web/API/CSS/registerProperty_static
+    title: CSS.registerProperty()
+    description: La versión JavaScript de @property, útil cuando el CSS vive dentro de un componente.
+---
+
+Un contenedor con scroll y un corte brusco parece una lista que termina ahí. Un **scroll fade** suaviza ese borde: la última fila visible se desvanece en el fondo y quien lee entiende que hay más contenido debajo sin que se lo indique una barra de desplazamiento.
+
+Las dos listas siguientes comparten la posición de scroll. A la izquierda, las filas se cortan en seco. A la derecha, una máscara las desvanece en los últimos píxeles. Desplaza cualquiera de las dos.
+
+<ScrollFadesDemo />
+
+El efecto se consigue con `mask-image` y un degradado lineal. Donde el degradado es transparente, el contenido se oculta; donde es negro, se muestra. Como es una máscara y no un overlay, funciona sobre cualquier fondo, incluidas imágenes y degradados, y nunca bloquea los clics.
+
+## Atenúa solo el lado por el que queda contenido
+
+Una máscara estática tiene un defecto: desvanece la primera fila incluso cuando estás al principio y la última incluso cuando has llegado al final. Al final de la lista, esto resulta engañoso. El último elemento parece medio oculto, como si todavía hubiera algo debajo.
+
+Desplaza las dos listas hasta el final.
+
+<ScrollFadesEdgeDemo />
+
+La lista de la derecha mide su posición de scroll y activa cada desvanecimiento solo cuando hay contenido en esa dirección. El tamaño de cada zona atenuada se guarda en dos custom properties registradas con `@property`, de modo que el cambio se anima durante `200ms` en lugar de aparecer de golpe.
+
+## Filas horizontales
+
+La misma idea sirve en horizontal. Una fila de chips o pestañas que desborda su contenedor debería atenuarse en el borde por el que aún puede desplazarse. El efecto también sugiere el gesto.
+
+<ScrollFadesHorizontalDemo />
+
+Oculta la barra de desplazamiento en filas como esta. El desvanecimiento ya cumple su función, y una barra horizontal debajo de una fila de chips añade ruido visual.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<!-- Vertical, static fade of 2.5rem on both ends -->
+<div
+  class="h-44 overflow-y-auto [mask-image:linear-gradient(to_bottom,transparent,black_2.5rem,black_calc(100%-2.5rem),transparent)]"
+>
+  ...
+</div>
+
+<!-- Horizontal, and hide the scrollbar -->
+<div
+  class="flex overflow-x-auto [scrollbar-width:none] [mask-image:linear-gradient(to_right,transparent,black_2rem,black_calc(100%-2rem),transparent)]"
+>
+  ...
+</div>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `/* Static fade */
+.list {
+  overflow-y: auto;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 2.5rem,
+    black calc(100% - 2.5rem),
+    transparent
+  );
+}
+
+/* Edge aware fade. Update the two properties from a scroll listener. */
+@property --fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.list {
+  --fade-start: 0px;
+  --fade-end: 2.5rem;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black var(--fade-start),
+    black calc(100% - var(--fade-end)),
+    transparent
+  );
+  transition: --fade-start 200ms ease-out, --fade-end 200ms ease-out;
+}`,
+    },
+  ]}
+/>
+
+Este sitio incluye la utilidad `fade-mask-y` en la hoja de estilos global. Añade algunas paradas de color para que la atenuación entre de forma gradual en vez de lineal, lo que se percibe algo más natural. Para la versión que detecta los extremos, escucha `scroll` y compara `scrollTop + clientHeight` con `scrollHeight`. Deja un píxel de tolerancia, porque esos valores se redondean de forma distinta en páginas con zoom.

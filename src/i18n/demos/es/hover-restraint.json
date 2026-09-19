@@ -1,0 +1,20 @@
+{
+  "Inbox": "Bandeja de entrada",
+  "Today": "Hoy",
+  "Upcoming": "Próximamente",
+  "Projects": "Proyectos",
+  "Archive": "Archivo",
+  "Bold": "Negrita",
+  "Italic": "Cursiva",
+  "Underline": "Subrayado",
+  "Strikethrough": "Tachado",
+  "Link": "Enlace",
+  "Wrong": "Incorrecto",
+  "300ms fade in": "Fade-in de 300 ms",
+  "Right": "Correcto",
+  "Instant": "Instantáneo",
+  "Animated": "Animado",
+  "Every tooltip waits": "Todos los tooltips esperan",
+  "Only the first waits": "Solo espera el primero",
+  "Toggle sidebar": "Alternar barra lateral"
+}

@@ -1,0 +1,90 @@
+---
+title: "Gráficos vivos"
+description: "Gráficos que fluyen en lugar de dar saltos."
+section: Data
+order: 1
+publishedAt: "2026-07-15"
+resources:
+  - url: https://benji.org/liveline
+    title: Liveline
+    description: "Benji Taylor explica cómo construir un gráfico de líneas en tiempo real que se mueva de forma continua y qué detalles lo hacen funcionar."
+  - url: https://shud.in/thoughts/adaptive-polynomial-curve-fitting
+    title: Adaptive Polynomial Curve Fitting
+    description: "Cómo suavizar valores recibidos en streaming sin quedarse atrás."
+  - url: https://motion.dev/docs/react-layout-animations
+    title: Layout animations in Motion
+    description: "La prop layout de la segunda demo, que anima los elementos cuando cambian de posición en el DOM."
+  - url: https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame
+    title: requestAnimationFrame on MDN
+    description: "El bucle que utiliza la primera demo para mover los números un poco en cada fotograma."
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: "c31ddb77bdd5d7914fca5028027a5174470129df5c09a4a80b76704e3342e5ea"
+---
+
+Los datos en tiempo real llegan por pasos. Un servidor envía un número cada segundo, aproximadamente, y el gráfico debe mostrarlo. Si renderizas cada valor en cuanto llega, el gráfico da saltos. Si avanzas hacia él durante unos cientos de milisegundos, parece respirar. Un **gráfico vivo** nunca se teletransporta.
+
+Las dos tarjetas reciben el mismo valor al mismo tiempo, cada segundo y medio. La izquierda lo dibuja de inmediato. La derecha utiliza un tween para pasar del valor anterior al nuevo.
+
+<LivingChartsDemo />
+
+Los datos no han cambiado. La tarjeta derecha simplemente reparte cada cambio a lo largo de `900ms` con una curva ease-out. Así, la mayor parte del movimiento ocurre al principio y el número se asienta suavemente. Si el tween termina antes de que llegue la siguiente actualización, el gráfico sigue siendo fiel a los datos: en cada actualización, ambas tarjetas coinciden.
+
+## El número forma parte del gráfico
+
+Fíjate en el contador sobre la sparkline. Un número que salta de 620 a 790 se interpreta como dos datos. Un número que aumenta progresivamente se interpreta como un cambio, que es lo que representa. Usa `tabular-nums` para que los dígitos no se desplacen lateralmente mientras cambian.
+
+## Listas ordenadas por valor
+
+Cuando los valores en tiempo real cambian de orden, lo interesante es la reordenación. En una lista sin transición, las filas intercambian posiciones entre fotogramas y el lector pierde la pista de cuál es cuál.
+
+<LivingBarsDemo />
+
+Con la animación activada, cada fila se desliza hasta su nueva posición y su barra crece o se encoge en el mismo sitio. El ojo puede seguir cómo GitHub adelanta a X sin volver a leer las etiquetas.
+
+## Uso
+
+El tween es un hook breve. Guarda los últimos valores mostrados en una ref y, con cada nuevo destino, avanza desde ellos hasta los nuevos valores mediante `requestAnimationFrame` y una curva de easing.
+
+<CodeBlock
+  tabs={[
+    {
+      label: "React",
+      language: "tsx",
+      code: `import { useEffect, useRef, useState } from "react";
+
+export function useTweened(target: number[], duration = 900) {
+  const [display, setDisplay] = useState(target);
+  const current = useRef(target);
+
+  useEffect(() => {
+    const from = current.current;
+    const start = performance.now();
+    let frame = 0;
+
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const next = target.map((value, i) => {
+        const origin = from[i] ?? value;
+        return origin + (value - origin) * eased;
+      });
+      current.current = next;
+      setDisplay(next);
+      if (t < 1) frame = requestAnimationFrame(step);
+    };
+
+    frame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frame);
+  }, [target, duration]);
+
+  return display;
+}
+
+// const smooth = useTweened(series);
+// <path d={toPath(smooth)} />`,
+    },
+  ]}
+/>
+
+Comprueba dos cosas. Mantén el eje Y fijo en un intervalo conocido mientras llegan datos; si no, todo el gráfico cambiará de escala con cada actualización y deshará la calma que acabas de añadir. Y respeta `prefers-reduced-motion`: cuando esté activado, omite el tween y muestra el valor de destino directamente.

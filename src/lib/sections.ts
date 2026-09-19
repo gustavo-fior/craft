@@ -1,3 +1,5 @@
+import type { Locale } from "@/i18n/locales";
+
 export const SECTIONS = [
   "Craft",
   "Typography",
@@ -15,6 +17,8 @@ export type NavConcept = {
   slug: string;
   section: Section;
   order: number;
+  contentLocale?: Locale;
+  untranslated?: boolean;
 };
 
 export type NavSection = {

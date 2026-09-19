@@ -12,6 +12,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import waterLiliesImage from "@/assets/claude-monet-water-lilies.jpg";
 import { Compare, CompareItem } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -20,15 +21,16 @@ const EASE_OUT = "cubic-bezier(0.23, 1, 0.32, 1)";
 /* Reveal: animating width reflows the content, clipping does not. */
 
 function DeployCard() {
+  const t = useDemoText();
   return (
     <div className="flex w-full items-start gap-2.5 rounded-xl bg-card p-3 shadow-(--custom-shadow)">
       <span className="grid size-7 shrink-0 place-items-center rounded-full bg-muted text-foreground">
         <RocketLaunchIcon aria-hidden="true" className="size-3.5" weight="duotone" />
       </span>
       <div className="min-w-0">
-        <p className="text-xs font-medium text-foreground">Deploy finished</p>
+        <p className="text-xs font-medium text-foreground">{t("Deploy finished")}</p>
         <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">
-          Production is live at acme.com
+          {t("Production is live at acme.com")}
         </p>
       </div>
     </div>
@@ -36,6 +38,7 @@ function DeployCard() {
 }
 
 export function ClipPathRevealDemo() {
+  const t = useDemoText();
   const [shown, setShown] = useState(true);
 
   return (
@@ -70,7 +73,7 @@ export function ClipPathRevealDemo() {
       </Compare>
 
       <Button onClick={() => setShown((value) => !value)} variant="secondary">
-        {shown ? "Hide" : "Reveal"}
+        {t(shown ? "Hide" : "Reveal")}
       </Button>
     </Demo>
   );
@@ -89,6 +92,7 @@ function TabButtons({
   onChange: (index: number) => void;
   className?: string;
 }) {
+  const t = useDemoText();
   return (
     <div className={cn("grid grid-cols-3", className)}>
       {TABS.map((tab, index) => (
@@ -99,7 +103,7 @@ function TabButtons({
           onClick={() => onChange(index)}
           type="button"
         >
-          {tab}
+          {t(tab)}
         </button>
       ))}
     </div>
@@ -107,6 +111,7 @@ function TabButtons({
 }
 
 export function ClipPathTabsDemo() {
+  const t = useDemoText();
   const [active, setActive] = useState(0);
 
   const pillWidth = "calc((100% - 4px) / 3)";
@@ -139,7 +144,7 @@ export function ClipPathTabsDemo() {
                   onClick={() => setActive(index)}
                   type="button"
                 >
-                  {tab}
+                  {t(tab)}
                 </button>
               ))}
             </div>
@@ -163,7 +168,7 @@ export function ClipPathTabsDemo() {
                     key={tab}
                     className="flex h-8 items-center justify-center truncate px-2 text-xs font-medium text-background"
                   >
-                    {tab}
+                    {t(tab)}
                   </span>
                 ))}
               </div>
@@ -180,6 +185,7 @@ export function ClipPathTabsDemo() {
 const HOLD_MS = 1500;
 
 export function ClipPathHoldDemo() {
+  const t = useDemoText();
   const [holding, setHolding] = useState(false);
   const [done, setDone] = useState(false);
   const holdTimer = useRef<number | undefined>(undefined);
@@ -215,7 +221,7 @@ export function ClipPathHoldDemo() {
   return (
     <Demo className="gap-8">
       <button
-        aria-label="Hold to delete"
+        aria-label={t("Hold to delete")}
         className="relative h-9 cursor-pointer touch-none overflow-hidden rounded-full bg-destructive/10 px-4 text-sm font-medium text-destructive shadow-(--custom-shadow-destructive) outline-none transition-transform duration-150 select-none focus-visible:ring-[1.5px] focus-visible:ring-destructive/40 active:scale-[0.97] dark:bg-destructive/20"
         onContextMenu={(event) => event.preventDefault()}
         onKeyDown={(event) => {
@@ -235,7 +241,7 @@ export function ClipPathHoldDemo() {
       >
         <span className="flex items-center gap-1.5">
           <TrashIcon aria-hidden="true" className="size-4" weight="duotone" />
-          Hold to delete
+          {t("Hold to delete")}
         </span>
         <span
           aria-hidden="true"
@@ -250,12 +256,12 @@ export function ClipPathHoldDemo() {
           {done ? (
             <>
               <CheckIcon aria-hidden="true" className="size-4" weight="bold" />
-              Deleted
+              {t("Deleted")}
             </>
           ) : (
             <>
               <TrashIcon aria-hidden="true" className="size-4" weight="duotone" />
-              Hold to delete
+              {t("Hold to delete")}
             </>
           )}
         </span>
@@ -267,6 +273,7 @@ export function ClipPathHoldDemo() {
 /* Comparison slider: two full-size layers, the top one clipped. */
 
 export function ClipPathCompareDemo() {
+  const t = useDemoText();
   const [position, setPosition] = useState(55);
   const frameRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
@@ -300,7 +307,7 @@ export function ClipPathCompareDemo() {
         }}
       >
         <Image
-          alt="Water Lilies by Claude Monet, in grayscale"
+          alt={t("Water Lilies by Claude Monet, in grayscale")}
           className="object-cover grayscale"
           draggable={false}
           fill
@@ -313,7 +320,7 @@ export function ClipPathCompareDemo() {
           style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
         >
           <Image
-            alt="Water Lilies by Claude Monet, in color"
+            alt={t("Water Lilies by Claude Monet, in color")}
             className="object-cover"
             draggable={false}
             fill
@@ -328,7 +335,7 @@ export function ClipPathCompareDemo() {
           style={{ left: `${position}%` }}
         />
         <button
-          aria-label="Comparison position"
+          aria-label={t("Comparison position")}
           aria-valuemax={100}
           aria-valuemin={0}
           aria-valuenow={Math.round(position)}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useDemoText } from "@/components/app/demo-messages";
 import {
   ArrowsLeftRightIcon,
   CheckCircleIcon,
@@ -34,6 +35,7 @@ function Sheet({
   className?: string;
   style?: React.CSSProperties;
 }) {
+  const t = useDemoText();
   return (
     <div
       aria-hidden="true"
@@ -44,7 +46,7 @@ function Sheet({
       style={style}
     >
       <div className="mx-auto mb-2.5 h-1 w-8 rounded-full bg-foreground/15" />
-      <p className="mb-1.5 px-1 text-xs font-medium text-foreground">Share</p>
+      <p className="mb-1.5 px-1 text-xs font-medium text-foreground">{t("Share")}</p>
       <ul className="flex flex-col">
         {SHEET_ACTIONS.map((action) => (
           <li
@@ -56,7 +58,7 @@ function Sheet({
               className="size-3.5 shrink-0"
               weight="duotone"
             />
-            {action.label}
+            {t(action.label)}
           </li>
         ))}
       </ul>
@@ -78,6 +80,7 @@ function Screen({ children }: { children: React.ReactNode }) {
 }
 
 export function InterruptibilityDemo() {
+  const t = useDemoText();
   const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [runs, setRuns] = useState(0);
@@ -97,7 +100,7 @@ export function InterruptibilityDemo() {
       `}</style>
 
       <Compare>
-        <CompareItem verdict="wrong" caption="Keyframes">
+        <CompareItem verdict="wrong" caption={t("Keyframes")}>
           <Screen>
             <Sheet
               style={{
@@ -111,7 +114,7 @@ export function InterruptibilityDemo() {
           </Screen>
         </CompareItem>
 
-        <CompareItem verdict="right" caption="Transition">
+        <CompareItem verdict="right" caption={t("Transition")}>
           <Screen>
             <Sheet
               style={{
@@ -130,7 +133,7 @@ export function InterruptibilityDemo() {
         }}
         variant="secondary"
       >
-        {open ? "Close" : "Open"}
+        {open ? t("Close") : t("Open")}
       </Button>
     </Demo>
   );
@@ -150,6 +153,7 @@ const TRACKS = [
 ];
 
 export function SpringVelocityDemo() {
+  const t = useDemoText();
   const reduceMotion = useReducedMotion();
   const [on, setOn] = useState(false);
 
@@ -159,7 +163,7 @@ export function SpringVelocityDemo() {
         {TRACKS.map((track) => (
           <div key={track.label} className="flex items-center gap-3">
             <span className="w-11 text-right text-[10px] text-muted-foreground">
-              {track.label}
+              {t(track.label)}
             </span>
             <div className="h-11 w-56 rounded-full bg-muted p-1 shadow-(--custom-shadow) dark:bg-muted/60">
               <motion.div
@@ -175,7 +179,7 @@ export function SpringVelocityDemo() {
 
       <Button onClick={() => setOn((value) => !value)} variant="secondary">
         <ArrowsLeftRightIcon weight="bold" />
-        Toggle
+        {t("Toggle")}
       </Button>
     </Demo>
   );
@@ -192,6 +196,7 @@ const TOAST_MESSAGES = [
 type Toast = { id: number; message: string };
 
 export function ToastStackDemo() {
+  const t = useDemoText();
   const [toasts, setToasts] = useState<Toast[]>([]);
   const nextId = useRef(0);
   const timers = useRef<number[]>([]);
@@ -238,7 +243,7 @@ export function ToastStackDemo() {
                   className="size-3.5 shrink-0 text-emerald-500"
                   weight="fill"
                 />
-                {toast.message}
+                {t(toast.message)}
               </motion.li>
             ))}
           </AnimatePresence>
@@ -247,7 +252,7 @@ export function ToastStackDemo() {
 
       <Button onClick={addToast} variant="secondary">
         <PlusIcon weight="bold" />
-        Add toast
+        {t("Add toast")}
       </Button>
     </Demo>
   );

@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Compare, CompareItem } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -55,6 +56,7 @@ function Spinner({
 }
 
 function Rows({ visible }: { visible: boolean }) {
+  const t = useDemoText();
   return (
     <ul
       className={cn(
@@ -67,9 +69,9 @@ function Rows({ visible }: { visible: boolean }) {
           key={row.title}
           className="flex h-10 items-center justify-between gap-3 px-3"
         >
-          <span className="truncate text-xs text-foreground">{row.title}</span>
+          <span className="truncate text-xs text-foreground">{t(row.title)}</span>
           <span className="shrink-0 text-[10px] text-muted-foreground">
-            {row.meta}
+            {t(row.meta)}
           </span>
         </li>
       ))}
@@ -78,6 +80,7 @@ function Rows({ visible }: { visible: boolean }) {
 }
 
 function Skeleton({ visible }: { visible: boolean }) {
+  const t = useDemoText();
   return (
     <ul
       aria-hidden="true"
@@ -130,28 +133,30 @@ function LoadButton({
   onClick: () => void;
   disabled: boolean;
 }) {
+  const t = useDemoText();
   return (
     <Button disabled={disabled} onClick={onClick} variant="secondary">
       <ArrowsClockwiseIcon weight="bold" />
-      Load
+      {t("Load")}
     </Button>
   );
 }
 
 export function PerceivedPerformanceDemo() {
+  const t = useDemoText();
   const { state, load } = useLoad(1_200);
   const loading = state === "loading";
 
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
-        <CompareItem caption="Spinner">
+        <CompareItem caption={t("Spinner")}>
           <ListCard>
             <Rows visible={!loading} />
             <CenteredSpinner visible={loading} />
           </ListCard>
         </CompareItem>
-        <CompareItem caption="Skeleton">
+        <CompareItem caption={t("Skeleton")}>
           <ListCard>
             <Rows visible={!loading} />
             <Skeleton visible={loading} />
@@ -164,19 +169,20 @@ export function PerceivedPerformanceDemo() {
 }
 
 export function LoadingFlashDemo() {
+  const t = useDemoText();
   const { state, load } = useLoad(300);
   const loading = state === "loading";
 
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
-        <CompareItem verdict="wrong" caption="Skeleton for 300ms">
+        <CompareItem verdict="wrong" caption={t("Skeleton for 300ms")}>
           <ListCard>
             <Rows visible={!loading} />
             <Skeleton visible={loading} />
           </ListCard>
         </CompareItem>
-        <CompareItem verdict="right" caption="Nothing, then fade in">
+        <CompareItem verdict="right" caption={t("Nothing, then fade in")}>
           <ListCard>
             <Rows visible={!loading} />
           </ListCard>
@@ -196,6 +202,7 @@ const TASKS = [
 const REQUEST_TIME = 700;
 
 function TaskList({ optimistic }: { optimistic: boolean }) {
+  const t = useDemoText();
   const [done, setDone] = useState<boolean[]>(() => TASKS.map(() => false));
   const [pending, setPending] = useState<boolean[]>(() =>
     TASKS.map(() => false)
@@ -260,7 +267,7 @@ function TaskList({ optimistic }: { optimistic: boolean }) {
                     : "text-foreground"
                 )}
               >
-                {task}
+                {t(task)}
               </span>
             </button>
           </li>
@@ -271,13 +278,14 @@ function TaskList({ optimistic }: { optimistic: boolean }) {
 }
 
 export function OptimisticDemo() {
+  const t = useDemoText();
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
-        <CompareItem verdict="wrong" caption="Waits for the server">
+        <CompareItem verdict="wrong" caption={t("Waits for the server")}>
           <TaskList optimistic={false} />
         </CompareItem>
-        <CompareItem verdict="right" caption="Updates right away">
+        <CompareItem verdict="right" caption={t("Updates right away")}>
           <TaskList optimistic />
         </CompareItem>
       </Compare>
@@ -317,16 +325,17 @@ function SpinnerCard({
 }
 
 export function SpinnerSpeedDemo() {
+  const t = useDemoText();
   const { state, load } = useLoad(1_500);
   const loading = state === "loading";
 
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
-        <CompareItem caption="1.6s per turn">
+        <CompareItem caption={t("1.6s per turn")}>
           <SpinnerCard duration={1.6} loading={loading} />
         </CompareItem>
-        <CompareItem caption="0.5s per turn">
+        <CompareItem caption={t("0.5s per turn")}>
           <SpinnerCard duration={0.5} loading={loading} />
         </CompareItem>
       </Compare>

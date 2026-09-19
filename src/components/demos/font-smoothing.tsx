@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { cn } from "@/lib/utils";
 
@@ -28,17 +29,22 @@ function SmoothingControl({
   value: Smoothing;
   onChange: (value: Smoothing) => void;
 }) {
+  const t = useDemoText();
   return (
     <SegmentedControl
-      ariaLabel="Font smoothing"
+      ariaLabel={t("Font smoothing")}
       onChange={onChange}
-      options={SMOOTHING_OPTIONS}
+      options={SMOOTHING_OPTIONS.map((option) => ({
+          ...option,
+          label: t(option.label),
+        }))}
       value={value}
     />
   );
 }
 
 function ReleaseNote({ tone }: { tone: "dark" | "light" }) {
+  const t = useDemoText();
   const dark = tone === "dark";
 
   return (
@@ -49,7 +55,7 @@ function ReleaseNote({ tone }: { tone: "dark" | "light" }) {
           dark ? "text-white/45" : "text-black/40"
         )}
       >
-        Changelog
+        {t("Changelog")}
       </span>
       <span
         className={cn(
@@ -57,7 +63,7 @@ function ReleaseNote({ tone }: { tone: "dark" | "light" }) {
           dark ? "text-white" : "text-neutral-900"
         )}
       >
-        Faster cold starts
+        {t("Faster cold starts")}
       </span>
       <span
         className={cn(
@@ -65,7 +71,7 @@ function ReleaseNote({ tone }: { tone: "dark" | "light" }) {
           dark ? "text-white/70" : "text-neutral-600"
         )}
       >
-        Functions now boot in under 100ms. No changes are needed on your side.
+        {t("Functions now boot in under 100ms. No changes are needed on your side.")}
       </span>
     </div>
   );
@@ -111,6 +117,7 @@ export function FontSmoothingContrastDemo() {
 const WEIGHTS = [300, 400, 500, 600, 700] as const;
 
 export function FontSmoothingWeightsDemo() {
+  const t = useDemoText();
   const [mode, setMode] = useState<Smoothing>("auto");
 
   return (
@@ -128,7 +135,7 @@ export function FontSmoothingWeightsDemo() {
               className="text-base text-white"
               style={{ fontWeight: weight }}
             >
-              The quick brown fox
+              {t("The quick brown fox")}
             </span>
             <span className="text-[10px] tabular-nums text-white/40">
               {weight}

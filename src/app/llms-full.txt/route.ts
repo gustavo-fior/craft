@@ -19,7 +19,7 @@ export function GET() {
 
   for (const section of SECTIONS) {
     const concepts = allConcepts
-      .filter((c) => c.section === section && isConceptAvailable(c.slug))
+      .filter((c) => c.locale === "en" && c.section === section && isConceptAvailable(c.slug))
       .sort((a, b) => a.order - b.order);
     for (const concept of concepts) {
       parts.push("---", "", conceptMarkdown(concept));

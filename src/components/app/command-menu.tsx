@@ -15,9 +15,12 @@ import {
 import type { NavSection } from "@/lib/sections";
 import { playSound } from "@/lib/sounds";
 import { isConceptAvailable } from "@/lib/concepts";
+import { localizedPath, languageTag } from "@/i18n/locales";
+import { useUiLanguage } from "./ui-language";
 
 export function CommandMenu({ sections }: { sections: NavSection[] }) {
   const router = useRouter();
+  const { locale, messages } = useUiLanguage();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -34,37 +37,38 @@ export function CommandMenu({ sections }: { sections: NavSection[] }) {
   const go = (href: string) => {
     setOpen(false);
     playSound("tick");
-    router.push(href);
+    router.push(localizedPath(locale, href));
   };
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen} title="Search concepts">
+    <CommandDialog open={open} onOpenChange={setOpen} title={messages.searchTitle} description={messages.searchTitle}>
       <CommandInput
-        placeholder="Search..."
+        placeholder={messages.search}
         className="border-b pb-3 border-border/50"
       />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Pages">
-          <CommandItem onSelect={() => go("/")}>Index</CommandItem>
-          <CommandItem onSelect={() => go("/goats")}>GOATs</CommandItem>
-          <CommandItem onSelect={() => go("/resources")}>Resources</CommandItem>
+        <CommandEmpty>{messages.noResults}</CommandEmpty>
+        <CommandGroup heading={messages.pages}>
+          <CommandItem onSelect={() => go("/")}>{messages.index}</CommandItem>
+          <CommandItem onSelect={() => go("/goats")}>{messages.goats}</CommandItem>
+          <CommandItem onSelect={() => go("/resources")}>{messages.resources}</CommandItem>
         </CommandGroup>
         {sections.map(({ section, concepts }) => (
-          <CommandGroup key={section} heading={section}>
+          <CommandGroup key={section} heading={messages.sections[section]}>
             {concepts.map((concept) => {
               const available = isConceptAvailable(concept.slug);
               return (
                 <CommandItem
                   key={concept.slug}
                   disabled={!available}
-                  title={available ? undefined : "Coming soon"}
+                  title={available ? undefined : messages.comingSoon}
                   onSelect={
                     available ? () => go(`/${concept.slug}`) : undefined
                   }
                 >
                   <SectionIcon section={section} className="size-3.5" />
-                  {concept.title}
+                  <span lang={languageTag(concept.contentLocale ?? locale)}>{concept.title}</span>
+                  {concept.untranslated && <span className="text-xs text-muted-foreground">({messages.inEnglish})</span>}
                 </CommandItem>
               );
             })}

@@ -1,0 +1,103 @@
+---
+title: Letter spacing (espaciado entre letras)
+description: Reduce el espaciado en textos grandes y amplíalo en los pequeños.
+section: Typography
+order: 1
+publishedAt: "2026-07-14"
+locale: es
+translatedAt: "2026-09-19"
+sourceRevision: 89d7ff0732e4a3003f1f015640c21b9aee7362d307907fc392fb9eafb8eabbe8
+resources:
+  - url: https://rsms.me/inter/dynmetrics/
+    title: Inter dynamic metrics
+    description: La fórmula de Rasmus Andersson para calcular el tracking ideal de Inter a cualquier tamaño.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/letter-spacing
+    title: letter-spacing
+    description: La referencia de la propiedad, incluida la razón para utilizar unidades em.
+  - url: https://tailwindcss.com/docs/letter-spacing
+    title: Letter spacing in Tailwind
+    description: Las utilidades de tracking y cómo añadir tus propios valores.
+  - url: https://fonts.google.com/knowledge/using_type/optical_sizes
+    title: Optical sizes
+    description: Google Fonts Knowledge explica por qué las formas de las letras deben cambiar según el tamaño.
+---
+
+Una tipografía se dibuja una vez, normalmente a un tamaño cercano al del texto
+de párrafo. Sus letras se espacian para que el párrafo se lea bien. Al ampliar
+ese mismo dibujo hasta el tamaño de un titular, también crecen los espacios
+entre letras, y el resultado tiene más aire del que necesita. Al reducirlo
+para un pie de foto, las letras empiezan a tocarse.
+
+La solución es el **letter spacing** (espaciado entre letras), también llamado
+tracking. Arrastra el control de tamaño y compara la palabra sin ajustar con
+la que reduce su espaciado al crecer.
+
+<LetterSpacingDemo />
+
+La segunda línea sigue la fórmula que Rasmus Andersson publicó para Inter,
+la tipografía de este sitio. Cerca del tamaño de párrafo apenas cambia. Por
+encima de 24 px se estabiliza en torno a `-0.02em`. Parece una cifra diminuta,
+y lo es, pero el titular se percibe como una palabra en vez de como una fila
+de letras.
+
+## A lo largo de la escala
+
+La regla se aplica a cada nivel de la escala tipográfica, no solo al titular.
+Cambia el modo de la tarjeta para ver cómo se ajustan los cuatro tamaños a la vez.
+
+<TrackingScaleDemo />
+
+El texto display reduce su espaciado, el párrafo se queda como está y el texto
+pequeño gana un poco de aire. Si solo recuerdas una cosa: reduce el espaciado
+al aumentar el tamaño, amplíalo al reducirlo y deja el texto de párrafo como está.
+
+## Mayúsculas
+
+Las mayúsculas se diseñaron para convivir con minúsculas. Al escribir una
+palabra entera en mayúsculas, desaparecen los espacios laterales regulares de
+las minúsculas y la palabra parece apretada, sobre todo a tamaños pequeños.
+
+<UppercaseTrackingDemo />
+
+Las etiquetas pequeñas en mayúsculas, como los encabezados de sección y las
+etiquetas de estado, necesitan más espacio: entre `0.05em` y `0.1em`,
+aproximadamente. Lo mismo ocurre con los botones y las pestañas escritos
+completamente en mayúsculas, si los usas.
+
+## Uso
+
+<CodeBlock
+  tabs={[
+    {
+      label: "Tailwind",
+      language: "html",
+      icon: "tailwind",
+      code: `<h1 class="text-5xl font-semibold tracking-tight">Launch week</h1>
+
+<p class="text-base">Every day this week we release one thing.</p>
+
+<span class="text-[10px] font-semibold uppercase tracking-wider">
+    Pinned
+</span>`,
+    },
+    {
+      label: "CSS",
+      language: "css",
+      icon: "css",
+      code: `h1 {
+    font-size: 3rem;
+    letter-spacing: -0.02em;
+}
+
+.label {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}`,
+    },
+  ]}
+/>
+
+Expresa siempre el tracking en `em`. Es una unidad relativa al tamaño de la
+fuente, así que el mismo valor sigue funcionando cuando el texto cambia de
+tamaño y se adapta mucho mejor a un cambio de tipografía que un valor en píxeles.

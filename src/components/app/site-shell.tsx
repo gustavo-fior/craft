@@ -25,6 +25,9 @@ import {
 import { TooltipProvider } from "@/components/ui/tooltip";
 import type { NavSection } from "@/lib/sections";
 import { githubSourceUrl } from "@/lib/site";
+import { localizedPath, splitLocalePath } from "@/i18n/locales";
+import { useUiLanguage } from "./ui-language";
+import { LanguageSwitcher } from "./language-switcher";
 
 export function SiteShell({
   sections,
@@ -37,7 +40,8 @@ export function SiteShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const slug = pathname.slice(1);
+  const { locale, messages } = useUiLanguage();
+  const slug = splitLocalePath(pathname).pathname.slice(1);
   const isConcept = slug in sourcePaths;
   const repoUrl = githubSourceUrl(sourcePaths[slug]);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -54,7 +58,7 @@ export function SiteShell({
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  aria-label="Open navigation"
+                  aria-label={messages.openNavigation}
                   className="lg:hidden"
                 >
                   <ListIcon className="size-4 mb-0.75" />
@@ -62,12 +66,13 @@ export function SiteShell({
               }
             />
             <SheetContent
+              closeLabel={messages.close}
               variant="floating"
               side="left"
               className="w-64 px-6 rounded-md"
             >
               <SheetHeader className="sr-only">
-                <SheetTitle>Navigation</SheetTitle>
+                <SheetTitle>{messages.navigation}</SheetTitle>
               </SheetHeader>
               <SidebarNav sections={sections} className="h-full" />
             </SheetContent>
@@ -78,7 +83,8 @@ export function SiteShell({
             and animation - only the first one animates in. */}
         <TooltipProvider timeout={500}>
           <div className="flex items-center gap-1">
-            {isConcept && <CopyMarkdownButton href={`/${slug}.md`} />}
+            <LanguageSwitcher pathname={pathname} />
+            {isConcept && <CopyMarkdownButton href={localizedPath(locale, `/${slug}.md`)} />}
             <CopyLinkButton />
             <ViewInRepoButton href={repoUrl} />
             <ThemeSwitcher />

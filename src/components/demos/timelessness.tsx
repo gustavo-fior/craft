@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { Demo } from "@/components/app/demo";
+import { useDemoText } from "@/components/app/demo-messages";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { cn } from "@/lib/utils";
 
@@ -33,6 +34,7 @@ const BUTTON: Record<Era, string> = {
 };
 
 export function SurfaceErasDemo() {
+  const t = useDemoText();
   const [era, setEra] = useState<Era>("now");
 
   return (
@@ -50,13 +52,16 @@ export function SurfaceErasDemo() {
           )}
           type="button"
         >
-          Continue
+          {t("Continue")}
         </button>
       </div>
       <SegmentedControl
-        ariaLabel="Era"
+        ariaLabel={t("Era")}
         onChange={setEra}
-        options={ERAS}
+        options={ERAS.map((option) => ({
+          ...option,
+          label: t(option.label),
+        }))}
         value={era}
       />
     </Demo>
