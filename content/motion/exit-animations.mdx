@@ -86,30 +86,30 @@ from jumping.
       language: "css",
       icon: "css",
       code: `.toast {
-    display: block;
-    opacity: 1;
-    translate: 0 0;
-    transition:
-        opacity 240ms var(--ease-out),
-        translate 240ms var(--ease-out),
-        display 240ms allow-discrete;
+  display: block;
+  opacity: 1;
+  translate: 0 0;
+  transition:
+    opacity 240ms var(--ease-out),
+    translate 240ms var(--ease-out),
+    display 240ms allow-discrete;
 }
 
 @starting-style {
-    .toast {
-        opacity: 0;
-        translate: 0 12px;
-    }
+  .toast {
+    opacity: 0;
+    translate: 0 12px;
+  }
 }
 
 .toast[hidden] {
-    display: none;
-    opacity: 0;
-    filter: blur(2px);
-    transition:
-        opacity 120ms ease-in,
-        filter 120ms ease-in,
-        display 120ms allow-discrete;
+  display: none;
+  opacity: 0;
+  filter: blur(2px);
+  transition:
+    opacity 120ms ease-in,
+    filter 120ms ease-in,
+    display 120ms allow-discrete;
 }`,
     },
   ]}

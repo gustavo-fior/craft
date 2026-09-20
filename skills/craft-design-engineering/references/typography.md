@@ -55,7 +55,7 @@ edge.
 
 ```css
 .numeric-column {
-    font-variant-numeric: tabular-nums;
+  font-variant-numeric: tabular-nums;
 }
 ```
 
@@ -161,17 +161,17 @@ Safari supports `hanging-punctuation: first`. Elsewhere a small negative
 
 ```css
 .play-icon {
-    transform: translateX(1px);
+  transform: translateX(1px);
 }
 
 blockquote {
-hanging-punctuation: first;
+  hanging-punctuation: first;
 }
 
 @supports not (hanging-punctuation: first) {
-blockquote {
-text-indent: -0.42em;
-}
+  blockquote {
+    text-indent: -0.42em;
+  }
 }
 ```
 

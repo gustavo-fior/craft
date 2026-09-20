@@ -51,13 +51,13 @@ Put the filter in one SVG anywhere on the page, then reference it from an overla
 }
 
 .surface::after {
-content: "";
-position: absolute;
-inset: 0;
-filter: url(#grain);
-opacity: 0.08;
-mix-blend-mode: overlay;
-pointer-events: none;
+  content: "";
+  position: absolute;
+  inset: 0;
+  filter: url(#grain);
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  pointer-events: none;
 }
 ```
 
@@ -194,7 +194,7 @@ img {
 }
 
 .dark img {
-outline-color: rgb(255 255 255 / 0.1);
+  outline-color: rgb(255 255 255 / 0.1);
 }
 ```
 

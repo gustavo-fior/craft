@@ -114,7 +114,7 @@ not rely on that behavior.
 
 ```css
 html {
-    background-color: var(--background);
+  background-color: var(--background);
 }
 ```
 
