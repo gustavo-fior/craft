@@ -6,6 +6,7 @@ import {
   ListIcon,
   PauseIcon,
   PlayIcon,
+  PlusIcon,
   XIcon,
 } from "@phosphor-icons/react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -25,11 +26,16 @@ function MorphIcon({
   id,
   blur = 4,
   scale = 0.25,
+  duration = 0.3,
+  bounce = 0,
   children,
 }: {
   id: string;
   blur?: number;
   scale?: number;
+  /** Spring settle time, in seconds. */
+  duration?: number;
+  bounce?: number;
   children: React.ReactNode;
 }) {
   const reduceMotion = useReducedMotion();
@@ -46,7 +52,7 @@ function MorphIcon({
           transition={
             reduceMotion
               ? { duration: 0 }
-              : { type: "spring", duration: 0.3, bounce: 0 }
+              : { type: "spring", duration, bounce }
           }
         >
           {children}
@@ -118,6 +124,10 @@ export function IconMorphTuningDemo() {
   const [playing, setPlaying] = useState(false);
   const [blur, setBlur] = useState(4);
   const [scale, setScale] = useState(0.25);
+  // Held in ms to match the other duration sliders on the site; Motion's
+  // spring `duration` is in seconds.
+  const [durationMs, setDurationMs] = useState(300);
+  const [bounce, setBounce] = useState(0);
 
   return (
     <Demo className="gap-10">
@@ -128,7 +138,13 @@ export function IconMorphTuningDemo() {
           size="icon-lg"
           variant="outline"
         >
-          <MorphIcon blur={blur} id={playing ? "pause" : "play"} scale={scale}>
+          <MorphIcon
+            blur={blur}
+            bounce={bounce}
+            duration={durationMs / 1000}
+            id={playing ? "pause" : "play"}
+            scale={scale}
+          >
             {playing ? (
               <PauseIcon aria-hidden="true" className="size-5" weight="fill" />
             ) : (
@@ -167,6 +183,36 @@ export function IconMorphTuningDemo() {
             onValueChange={(value) => setScale(getSliderValue(value))}
             step={0.05}
             value={[scale]}
+          />
+        </label>
+        <label className="grid gap-2.5">
+          <span className="flex items-center justify-between text-xs text-muted-foreground">
+            Duration
+            <span className="tabular-nums text-foreground">{durationMs}ms</span>
+          </span>
+          <Slider
+            aria-label="Spring duration"
+            max={800}
+            min={100}
+            onValueChange={(value) => setDurationMs(getSliderValue(value))}
+            step={50}
+            value={[durationMs]}
+          />
+        </label>
+        <label className="grid gap-2.5">
+          <span className="flex items-center justify-between text-xs text-muted-foreground">
+            Bounce
+            <span className="tabular-nums text-foreground">
+              {bounce.toFixed(2)}
+            </span>
+          </span>
+          <Slider
+            aria-label="Spring bounce"
+            max={0.6}
+            min={0}
+            onValueChange={(value) => setBounce(getSliderValue(value))}
+            step={0.05}
+            value={[bounce]}
           />
         </label>
       </div>
@@ -243,7 +289,7 @@ export function HamburgerMorphDemo() {
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
-        <CompareItem caption="Swap">
+        <CompareItem label="Swap" verdict="wrong">
           <HeaderBar onToggle={toggle} open={open}>
             {open ? (
               <XIcon aria-hidden="true" className="size-5" weight="bold" />
@@ -252,10 +298,73 @@ export function HamburgerMorphDemo() {
             )}
           </HeaderBar>
         </CompareItem>
-        <CompareItem caption="Morph">
+        <CompareItem label="Morph" verdict="right">
           <HeaderBar onToggle={toggle} open={open}>
             <HamburgerBars open={open} />
           </HeaderBar>
+        </CompareItem>
+      </Compare>
+    </Demo>
+  );
+}
+
+function RotationCard({
+  open,
+  onToggle,
+  children,
+}: {
+  open: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="grid h-28 w-full place-items-center rounded-xl bg-card shadow-(--custom-shadow)">
+      <Button
+        aria-label={open ? "Cancel" : "Add item"}
+        aria-pressed={open}
+        onClick={onToggle}
+        size="icon-lg"
+        variant="outline"
+      >
+        {children}
+      </Button>
+    </div>
+  );
+}
+
+export function RotationMorphDemo() {
+  const [open, setOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const toggle = () => setOpen((value) => !value);
+
+  return (
+    <Demo className="gap-7 px-4 sm:px-8">
+      <Compare>
+        <CompareItem caption="Crossfade">
+          <RotationCard onToggle={toggle} open={open}>
+            <MorphIcon id={open ? "close" : "add"}>
+              {open ? (
+                <XIcon aria-hidden="true" className="size-5" weight="bold" />
+              ) : (
+                <PlusIcon aria-hidden="true" className="size-5" weight="bold" />
+              )}
+            </MorphIcon>
+          </RotationCard>
+        </CompareItem>
+        <CompareItem caption="Rotate">
+          <RotationCard onToggle={toggle} open={open}>
+            <motion.span
+              animate={{ rotate: open ? 45 : 0 }}
+              className="inline-flex"
+              transition={
+                reduceMotion
+                  ? { duration: 0 }
+                  : { type: "spring", duration: 0.3, bounce: 0 }
+              }
+            >
+              <PlusIcon aria-hidden="true" className="size-5" weight="bold" />
+            </motion.span>
+          </RotationCard>
         </CompareItem>
       </Compare>
     </Demo>

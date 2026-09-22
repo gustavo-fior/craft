@@ -9,6 +9,7 @@ import {
   ButtonPressDemo,
   PressAmountDemo,
   PressEverywhereDemo,
+  PressReleaseDemo,
 } from "@/components/demos/button-press";
 import {
   ClipPathCompareDemo,
@@ -32,6 +33,7 @@ import {
 import {
   FontSmoothingContrastDemo,
   FontSmoothingDemo,
+  FontSmoothingValuesDemo,
   FontSmoothingWeightsDemo,
 } from "@/components/demos/font-smoothing";
 import {
@@ -49,6 +51,7 @@ import {
   HamburgerMorphDemo,
   IconMorphDemo,
   IconMorphTuningDemo,
+  RotationMorphDemo,
 } from "@/components/demos/icon-morph";
 import {
   IconMixDemo,
@@ -256,6 +259,7 @@ const components: MDXComponents = {
   ExitListDemo,
   FontSmoothingContrastDemo,
   FontSmoothingDemo,
+  FontSmoothingValuesDemo,
   FontSmoothingWeightsDemo,
   HamburgerMorphDemo,
   HangingPunctuationDemo,
@@ -299,7 +303,9 @@ const components: MDXComponents = {
   PerceivedPerformanceDemo,
   PressAmountDemo,
   PressEverywhereDemo,
+  PressReleaseDemo,
   RadiusCalculatorDemo,
+  RotationMorphDemo,
   ScaleEntrancesDemo,
   ScrollFadesDemo,
   ScrollFadesEdgeDemo,

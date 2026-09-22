@@ -8,12 +8,15 @@ resources:
   - url: https://emilkowal.ski/ui/7-practical-animation-tips
     title: 7 practical animation tips
     description: Emil Kowalski's short list of rules for interface motion, including the press scale.
-  - url: https://emilkowal.ski/ui/great-animations
-    title: Great animations
-    description: What separates motion that feels right from motion that just moves.
   - url: https://developer.mozilla.org/en-US/docs/Web/CSS/:active
     title: The :active pseudo-class
     description: When the browser considers an element pressed, on mouse and on keyboard.
+  - url: https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/HandlingEvents/HandlingEvents.html
+    title: Handling events on iOS
+    description: Apple on why a tap may never paint the active state, and why a non-clickable element gets no mouse events at all.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-tap-highlight-color
+    title: -webkit-tap-highlight-color
+    description: The grey box iOS paints over anything you tap, and the one line that removes it.
   - url: https://web.dev/articles/animations-guide
     title: Animations guide
     description: Why transform and opacity are the properties you can animate for free.
@@ -43,20 +46,78 @@ an effect, and the reader notices the animation instead of the click. Keep the
 duration around `100ms`. Longer than that and the button lags behind your
 finger, which feels worse than no feedback at all.
 
-Scale runs on the compositor, so this costs nothing at runtime. Because
-`scale()` also scales the children, the label and icon move with the button
-and nothing needs a second rule.
+Scale runs on the compositor, so it skips layout and paint entirely. Not
+free, exactly. The element gets promoted to its own layer and text may be
+re-rasterized at the new size, which is why you scale a button and not a
+page. But it is as close to free as interface motion gets. Because `scale()`
+also scales the children, the label and icon move with the button and nothing
+needs a second rule.
+
+`ease-out` is doing quiet work here too. The button should leave immediately
+and settle at the end, never the reverse. [Easings](/easings) is the longer
+version of why.
+
+## Down fast, up soft
+
+The two numbers above are really one number used twice, for two events that
+are not the same event. Pressing is something the user does. Releasing is
+something the interface does afterwards.
+
+So let them have different clocks. Press down in `0ms` and the button is
+already small by the time you register having clicked, which is as
+responsive as it is possible to feel. Release on the full curve and it eases
+back instead of snapping. Hold each one down for a second.
+
+<PressReleaseDemo />
+
+The left button is honest and slightly rubbery. The right one feels
+mechanical, in the good sense, like something with a spring under it. It is
+one extra declaration: keep the transition on the element and zero its
+duration in `:active`, so the instant timing applies going in and the eased
+timing applies coming out.
 
 ## Not just buttons
 
 Anything you can press deserves the same treatment: cards, list rows, tiles,
-chips. Toggle the feedback on and press the tiles.
+chips. Switch between the two amounts and press the rows.
 
 <PressEverywhereDemo />
 
-Larger surfaces can take a smaller amount. A full-width card at `0.97` moves
-several pixels at the edges, which is more than a button does at the same
-scale. Try `0.98` and judge by eye.
+Larger surfaces should shrink less. Scale is a percentage, so the wider the
+surface the further its edges travel for the same number. A full-width row at
+`0.97` moves several pixels at each end, well past what a button covers, and
+it reads as the row flinching rather than accepting the press. `0.98` on the
+same row is about the same amount of motion a button gets at `0.97`. That is
+the thing to match, not the number.
+
+One rule while you are spreading this around: never nest one pressable inside
+another. A card at `0.97` containing a button at `0.97` composes to `0.94`
+when you press the button, and the whole card lurches under your finger for
+a click that was never about the card. If the card is pressable, whatever
+sits inside it is not.
+
+## Touch and keyboard
+
+`:active` is not only a mouse state, and that is most of its value.
+
+On a keyboard, a focused button is `:active` for as long as Space or Enter is
+held down. The same rule you wrote for the pointer fires there for free, so
+keyboard users get the same confirmation that the interface heard them. Nothing
+to add.
+
+Touch needs two things. The first is `-webkit-tap-highlight-color: transparent`,
+or iOS paints its own grey box over the element on tap and buries the scale you
+just tuned. The second matters if you followed the section above and made a card
+or a row pressable: iOS only applies `:active` reliably to real buttons and
+links. Tap something iOS does not consider clickable and it sends no mouse
+events at all, and even on something it does, the emulated events can arrive
+fast enough that the pressed state never paints. Either way the feedback
+silently disappears on exactly the surfaces that needed it most. Use a
+`<button>`, which you wanted anyway for focus and screen readers.
+
+One more, everywhere: `user-select: none`. Press and hold a button with a text
+label and the label gets selected, so a deliberate press ends with half a word
+highlighted.
 
 ## Usage
 
@@ -66,8 +127,10 @@ scale. Try `0.98` and judge by eye.
       label: "Tailwind",
       language: "html",
       icon: "tailwind",
-      code: `<button class="transition-transform duration-100 ease-out active:scale-[0.97]">
-    Save changes
+      code: `<button
+  class="transition-[transform,background-color] duration-100 ease-out select-none [-webkit-tap-highlight-color:transparent] hover:bg-neutral-700 active:scale-[0.97] active:duration-0"
+>
+  Save changes
 </button>`,
     },
     {
@@ -75,15 +138,30 @@ scale. Try `0.98` and judge by eye.
       language: "css",
       icon: "css",
       code: `.button {
-  transition: transform 100ms ease-out;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 100ms ease-out,
+    background-color 150ms ease-out;
 }
 
 .button:active {
+  /* Down instantly. On release this rule stops matching, so the
+     durations above take over and the button eases back up. */
+  transition-duration: 0ms;
   transform: scale(0.97);
 }`,
     },
   ]}
 />
 
-Transition `transform` only, not `all`. A button usually also changes color on
-hover, and you do not want the press timing to leak into that.
+Name the properties you are transitioning, never `all`. The usual advice stops
+at `transition-transform`, and that trades one bug for another: a button almost
+always changes color on hover too, and dropping to `transform` alone does not
+untangle the two timings, it makes the color snap instantly. List both. In CSS
+you can give each its own duration, so the press stays at `100ms` while the
+hover fade takes the `150ms` it wants.
+
+One last thing, and it is upstream of everything here: press feedback only
+lands if the press does. A target too small to hit confidently makes all of
+this moot, which is what [hit areas](/hit-areas) is about.

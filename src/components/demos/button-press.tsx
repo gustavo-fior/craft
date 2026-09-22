@@ -2,12 +2,13 @@
 
 import {
   CalendarBlankIcon,
+  CaretRightIcon,
   ImageIcon,
   NotePencilIcon,
 } from "@phosphor-icons/react";
 import { useState } from "react";
 
-import { Compare, CompareItem, RIGHT_ICON, WRONG_ICON } from "@/components/app/compare";
+import { Compare, CompareItem, WRONG_ICON } from "@/components/app/compare";
 import { Demo } from "@/components/app/demo";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { Button } from "@/components/ui/button";
@@ -31,7 +32,7 @@ export function ButtonPressDemo() {
         </CompareItem>
         <CompareItem verdict="right">
           <div className="grid h-28 w-full place-items-center rounded-xl bg-card shadow-(--custom-shadow)">
-            <Button className="transition-transform duration-100 ease-out hover:duration-100 active:scale-[0.97]">
+            <Button className="transition-transform duration-100 ease-out hover:duration-100 active:scale-[0.97] motion-reduce:transition-none">
               Save changes
             </Button>
           </div>
@@ -131,48 +132,55 @@ export function PressAmountDemo() {
   );
 }
 
-type PressMode = "none" | "scale";
+type PressScale = "none" | "0.97" | "0.98";
 
 const PRESS_OPTIONS = [
   { value: "none", label: "No feedback", icon: WRONG_ICON },
-  { value: "scale", label: "Scale", icon: RIGHT_ICON },
+  { value: "0.97", label: "0.97" },
+  { value: "0.98", label: "0.98" },
 ] as const;
 
-const TILES = [
+const ROWS = [
   { label: "Notes", detail: "12 items", Icon: NotePencilIcon },
   { label: "Calendar", detail: "3 today", Icon: CalendarBlankIcon },
   { label: "Photos", detail: "148 items", Icon: ImageIcon },
 ] as const;
 
 export function PressEverywhereDemo() {
-  const [mode, setMode] = useState<PressMode>("none");
+  const [mode, setMode] = useState<PressScale>("none");
 
   return (
     <Demo className="gap-8 px-4 sm:px-8">
-      <div className="grid w-full max-w-md grid-cols-3 gap-2 sm:gap-3">
-        {TILES.map((tile) => (
+      <div className="w-full max-w-md overflow-hidden rounded-xl bg-card shadow-(--custom-shadow)">
+        {ROWS.map((row) => (
           <button
-            key={tile.label}
+            key={row.label}
             type="button"
             className={cn(
-              "flex cursor-pointer flex-col items-start gap-3 rounded-xl bg-card p-3 text-left shadow-(--custom-shadow) outline-none select-none hover:bg-muted/60 focus-visible:ring-[1.5px] focus-visible:ring-ring/50 sm:p-4",
-              mode === "scale" &&
-                "transition-transform duration-100 ease-out active:scale-[0.97] motion-reduce:transition-none"
+              "flex w-full cursor-pointer items-center gap-3 border-b border-[#E7E7E7] px-4 py-3 text-left outline-none select-none last:border-b-0 hover:bg-muted/60 focus-visible:ring-[1.5px] focus-visible:ring-ring/50 dark:border-[#1E1E1E]",
+              mode !== "none" &&
+                "transition-transform duration-100 ease-out motion-reduce:transition-none",
+              mode === "0.97" && "active:scale-[0.97]",
+              mode === "0.98" && "active:scale-[0.98]"
             )}
           >
-            <tile.Icon
+            <row.Icon
               aria-hidden="true"
-              className="size-5 text-foreground"
+              className="size-5 shrink-0 text-foreground"
               weight="duotone"
             />
             <span className="flex min-w-0 flex-col">
               <span className="truncate text-xs font-medium text-foreground">
-                {tile.label}
+                {row.label}
               </span>
               <span className="truncate text-[10px] text-muted-foreground">
-                {tile.detail}
+                {row.detail}
               </span>
             </span>
+            <CaretRightIcon
+              aria-hidden="true"
+              className="ml-auto size-3.5 shrink-0 text-muted-foreground"
+            />
           </button>
         ))}
       </div>
@@ -183,6 +191,34 @@ export function PressEverywhereDemo() {
         options={PRESS_OPTIONS}
         value={mode}
       />
+    </Demo>
+  );
+}
+
+/**
+ * Press down instantly, release on the eased curve. `active:duration-0` has to
+ * beat the base button's `hover:duration-150`, which it does because Tailwind
+ * emits the active variant after the hover one.
+ */
+export function PressReleaseDemo() {
+  return (
+    <Demo className="gap-7 px-4 sm:px-8">
+      <Compare>
+        <CompareItem caption="Same both ways">
+          <div className="grid h-28 w-full place-items-center rounded-xl bg-card shadow-(--custom-shadow)">
+            <Button className="transition-transform duration-150 ease-out hover:duration-150 active:scale-[0.97] motion-reduce:transition-none">
+              Save changes
+            </Button>
+          </div>
+        </CompareItem>
+        <CompareItem caption="Instant down, eased up">
+          <div className="grid h-28 w-full place-items-center rounded-xl bg-card shadow-(--custom-shadow)">
+            <Button className="transition-transform duration-150 ease-out hover:duration-150 active:scale-[0.97] active:duration-0 motion-reduce:transition-none">
+              Save changes
+            </Button>
+          </div>
+        </CompareItem>
+      </Compare>
     </Demo>
   );
 }

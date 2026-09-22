@@ -11,6 +11,9 @@ resources:
   - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
     title: Details that make interfaces feel better
     description: A practical collection of small interface improvements, including this one.
+  - url: https://dbushell.com/2024/11/05/webkit-font-smoothing/
+    title: What's the deal with WebKit Font Smoothing?
+    description: The current picture, including why browsers still do subpixel antialiasing after macOS stopped, and Firefox 128 adopting the property.
   - url: https://www.zachleat.com/web/font-smooth/
     title: Laissez-faire font smoothing and anti-aliasing
     description: Zach Leatherman on what the property does and the case against using it blindly.
@@ -24,16 +27,25 @@ little bolder and a little fuzzier than the same text on white. The CSS did not
 change. The rasterizer did.
 
 By default, WebKit and Blink render text with **subpixel antialiasing**, which
-thickens the edges of glyphs to make them look sharper. On dark backgrounds
-that extra thickness reads as bloom. Toggle the demo to see the text drop back
-to the weight you actually chose.
+borrows the red, green and blue stripes inside each pixel to place glyph edges
+more precisely. On macOS that comes with extra weight, and on dark backgrounds
+the extra weight reads as bloom.
+
+Every demo on this page only changes on a Mac. Windows renders with ClearType
+and ignores the property, Linux never had it, and iOS Safari does not do
+subpixel antialiasing at all. If you are reading this anywhere but macOS,
+nothing below will look any different.
+
+Here is the same card twice, one per rendering, so you can read them against
+each other instead of against memory.
 
 <FontSmoothingDemo />
 
 The property is `-webkit-font-smoothing: antialiased`. It tells the browser to
 use plain **grayscale antialiasing** instead, which renders the glyph at its
-honest weight. Firefox on macOS has its own version,
-`-moz-osx-font-smoothing: grayscale`.
+honest weight. Firefox 128 and up accept the same property, aliased to their
+own `-moz-osx-font-smoothing: grayscale`. Write both lines and older Firefox
+is covered too.
 
 ## Where it shows
 
@@ -57,6 +69,23 @@ If you use 300 or below for body text on dark surfaces, test it on a
 non-Retina screen before turning this on globally. Most products only use 400
 and up, where it is a clear improvement.
 
+## The other two values
+
+The property takes four values, and the two nobody reaches for are worth
+knowing. Step through them on the dark card.
+
+<FontSmoothingValuesDemo />
+
+`none` turns antialiasing off entirely. Edges go hard and stepped, the way
+type looked before any of this existed. There is no real use for it in a
+product, but it is the fastest way to see how much work antialiasing is doing.
+
+`subpixel-antialiased` is the one you will actually want one day. It forces
+the default back on, which matters because the recommendation below is a
+global rule on `body`. Once that is in place you have no way to exempt a
+region without this value. A dark app with one light-on-white panel is the
+usual case: the panel wanted the browser default all along.
+
 ## Usage
 
 <CodeBlock
@@ -65,7 +94,10 @@ and up, where it is a clear improvement.
       label: "Tailwind",
       language: "html",
       icon: "tailwind",
-      code: `<body class="antialiased">`,
+      code: `<body class="antialiased">
+  <!-- ...and one region that wants the default back -->
+  <div class="subpixel-antialiased">...</div>
+</body>`,
     },
     {
       label: "CSS",
@@ -74,12 +106,30 @@ and up, where it is a clear improvement.
       code: `body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Opt a region back into the browser default. */
+.light-panel {
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: auto;
 }`,
     },
   ]}
 />
 
-Both properties are non-standard and only do anything on macOS. Windows uses
-ClearType and ignores them, which is fine, because the bloom is a macOS
-problem. This site applies it on the `body`, and so do most design-led
-products.
+Both properties are non-standard, and as above, only macOS does anything with
+them. That is fine, because the bloom is a macOS problem. This site applies it
+on the `body`, and so do most design-led products.
+
+One honest caveat before you do the same. Thinner strokes mean less ink, and
+less ink against a background means less contrast. The bloom you are removing
+was also doing a small amount of legibility work, and the people it was doing
+the most work for are the ones with the least vision to spare. None of that
+makes the global rule wrong, and the type you drew is the type you should get.
+It does mean the decision belongs to headings and large type more comfortably
+than it belongs to a 13px paragraph, and that your body text wants a real
+contrast check after you turn it on, not just a glance.
+
+Type is only half of getting text to sit right. [Letter
+spacing](/letter-spacing) is the other half, and it is the one you can see on
+every platform.
