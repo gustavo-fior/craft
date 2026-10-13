@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { LocalOnlyIcon } from "@/components/app/local-only-icon";
 import { SectionIcon } from "@/components/app/section-icon";
 import {
   CommandDialog,
@@ -65,6 +66,7 @@ export function CommandMenu({ sections }: { sections: NavSection[] }) {
                 >
                   <SectionIcon section={section} className="size-3.5" />
                   {concept.title}
+                  <LocalOnlyIcon slug={concept.slug} />
                 </CommandItem>
               );
             })}

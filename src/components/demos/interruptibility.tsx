@@ -2,6 +2,7 @@
 
 import {
   ArrowsLeftRightIcon,
+  CaretDownIcon,
   CheckCircleIcon,
   EnvelopeSimpleIcon,
   LinkSimpleIcon,
@@ -16,9 +17,13 @@ import { Demo } from "@/components/app/demo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+/* ------------------------------------------------------------------------ */
+/* Shared bits                                                              */
+/* ------------------------------------------------------------------------ */
+
 // Slowed down on purpose so there is time to change your mind mid-flight.
 const SHEET_DURATION = 600;
-const SHEET_EASE = "cubic-bezier(0.65, 0, 0.35, 1)";
+const SHEET_EASE = "cubic-bezier(0.33, 1, 0.68, 1)";
 const SHEET_HIDDEN = "translateY(calc(100% + 8px))";
 
 const SHEET_ACTIONS = [
@@ -27,20 +32,35 @@ const SHEET_ACTIONS = [
   { label: "Invite people", Icon: UsersIcon },
 ] as const;
 
-function Sheet({
+function Screen({
+  children,
   className,
-  style,
 }: {
+  children: React.ReactNode;
   className?: string;
-  style?: React.CSSProperties;
 }) {
   return (
     <div
-      aria-hidden="true"
       className={cn(
-        "absolute inset-x-1.5 bottom-1.5 rounded-lg bg-card p-2.5 shadow-(--custom-shadow)",
+        "relative h-44 w-full overflow-hidden rounded-xl bg-muted shadow-(--custom-shadow) dark:bg-muted/40",
         className
       )}
+    >
+      <div aria-hidden="true" className="p-3">
+        <div className="h-1.5 w-1/2 rounded-full bg-foreground/15" />
+        <div className="mt-2 h-1.5 w-4/5 rounded-full bg-foreground/10" />
+        <div className="mt-2 h-1.5 w-2/3 rounded-full bg-foreground/10" />
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function Sheet({ style }: { style?: React.CSSProperties }) {
+  return (
+    <div
+      aria-hidden="true"
+      className="absolute inset-x-1.5 bottom-1.5 rounded-md bg-card p-2.5 shadow-(--custom-shadow) dark:bg-muted"
       style={style}
     >
       <div className="mx-auto mb-2.5 h-1 w-8 rounded-full bg-foreground/15" />
@@ -64,20 +84,11 @@ function Sheet({
   );
 }
 
-function Screen({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="relative h-44 w-full overflow-hidden rounded-xl bg-muted shadow-(--custom-shadow) dark:bg-muted/40">
-      <div aria-hidden="true" className="p-3">
-        <div className="h-1.5 w-1/2 rounded-full bg-foreground/15" />
-        <div className="mt-2 h-1.5 w-4/5 rounded-full bg-foreground/10" />
-        <div className="mt-2 h-1.5 w-2/3 rounded-full bg-foreground/10" />
-      </div>
-      {children}
-    </div>
-  );
-}
+/* ------------------------------------------------------------------------ */
+/* 1. Keyframes restart, transitions retarget                               */
+/* ------------------------------------------------------------------------ */
 
-export function InterruptibilityDemo() {
+export function InterruptSheetDemo() {
   const reduceMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [runs, setRuns] = useState(0);
@@ -86,11 +97,11 @@ export function InterruptibilityDemo() {
   return (
     <Demo className="gap-7 px-4 sm:px-8">
       <style>{`
-        @keyframes craft-sheet-in {
+        @keyframes craft-v2-sheet-in {
           from { transform: ${SHEET_HIDDEN}; }
           to { transform: translateY(0); }
         }
-        @keyframes craft-sheet-out {
+        @keyframes craft-v2-sheet-out {
           from { transform: translateY(0); }
           to { transform: ${SHEET_HIDDEN}; }
         }
@@ -105,7 +116,7 @@ export function InterruptibilityDemo() {
                 animation:
                   runs === 0
                     ? "none"
-                    : `${open ? "craft-sheet-in" : "craft-sheet-out"} ${duration}ms ${SHEET_EASE} both`,
+                    : `${open ? "craft-v2-sheet-in" : "craft-v2-sheet-out"} ${duration}ms ${SHEET_EASE} both`,
               }}
             />
           </Screen>
@@ -136,12 +147,121 @@ export function InterruptibilityDemo() {
   );
 }
 
+/* ------------------------------------------------------------------------ */
+/* 2. Locking input while the animation runs                                */
+/* ------------------------------------------------------------------------ */
+
+const MENU_DURATION = 350;
+const MENU_ITEMS = ["Newest first", "Oldest first", "Most viewed"] as const;
+
+function Menu({ locked }: { locked: boolean }) {
+  const reduceMotion = useReducedMotion();
+  const [open, setOpen] = useState(false);
+  const [animating, setAnimating] = useState(false);
+  const [ignored, setIgnored] = useState(0);
+  const timer = useRef<number | null>(null);
+  const duration = reduceMotion ? 0 : MENU_DURATION;
+
+  useEffect(
+    () => () => {
+      if (timer.current !== null) window.clearTimeout(timer.current);
+    },
+    []
+  );
+
+  function toggle() {
+    // The common mistake: an `isAnimating` guard that drops input until the
+    // current animation is done.
+    if (locked && animating) {
+      setIgnored((count) => count + 1);
+      return;
+    }
+    setOpen((value) => !value);
+    setAnimating(true);
+    if (timer.current !== null) window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setAnimating(false), duration);
+  }
+
+  return (
+    <div className="flex w-full flex-col items-center gap-4">
+      <Screen className="h-40">
+        <div className="absolute top-3 right-3">
+          <button
+            type="button"
+            aria-expanded={open}
+            onClick={toggle}
+            className="flex h-7 cursor-pointer items-center gap-1 rounded-md bg-card px-2 text-[11px] font-medium text-foreground shadow-(--custom-shadow) outline-none select-none focus-visible:ring-[1.5px] focus-visible:ring-ring/50 dark:bg-muted"
+          >
+            Sort
+            <CaretDownIcon
+              aria-hidden="true"
+              className="size-3 text-muted-foreground transition-transform motion-reduce:transition-none"
+              style={{
+                transform: open ? "rotate(180deg)" : "rotate(0deg)",
+                transitionDuration: `${duration}ms`,
+              }}
+              weight="bold"
+            />
+          </button>
+          <ul
+            aria-hidden="true"
+            className="absolute top-9 right-0 w-32 origin-top-right rounded-md bg-card p-1 shadow-(--custom-shadow) dark:bg-muted"
+            style={{
+              opacity: open ? 1 : 0,
+              transform: open ? "scale(1) translateY(0)" : "scale(0.9) translateY(-4px)",
+              transition: `opacity ${duration}ms ${SHEET_EASE}, transform ${duration}ms ${SHEET_EASE}`,
+            }}
+          >
+            {MENU_ITEMS.map((item, index) => (
+              <li
+                key={item}
+                className={cn(
+                  "rounded-sm px-2 py-1 text-[11px]",
+                  index === 0
+                    ? "bg-muted text-foreground dark:bg-input/50"
+                    : "text-muted-foreground"
+                )}
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </Screen>
+      <span className="text-xs tabular-nums text-muted-foreground">
+        {locked
+          ? `${ignored} ${ignored === 1 ? "tap" : "taps"} ignored`
+          : "Every tap goes through"}
+      </span>
+    </div>
+  );
+}
+
+export function InterruptLockDemo() {
+  return (
+    <Demo className="gap-7 px-4 sm:px-8">
+      <Compare>
+        <CompareItem verdict="wrong" label="Locked">
+          <Menu locked />
+        </CompareItem>
+        <CompareItem verdict="right" label="Listening">
+          <Menu locked={false} />
+        </CompareItem>
+      </Compare>
+    </Demo>
+  );
+}
+
+/* ------------------------------------------------------------------------ */
+/* 3. Momentum                                                              */
+/* ------------------------------------------------------------------------ */
+
 const TRAVEL = 180;
 
 const TRACKS = [
   {
-    label: "Tween",
-    transition: { duration: 0.7, ease: [0.65, 0, 0.35, 1] as const },
+    label: "Transition",
+    transition: { duration: 0.7, ease: [0.33, 1, 0.68, 1] as const },
   },
   {
     label: "Spring",
@@ -149,7 +269,7 @@ const TRACKS = [
   },
 ];
 
-export function SpringVelocityDemo() {
+export function InterruptMomentumDemo() {
   const reduceMotion = useReducedMotion();
   const [on, setOn] = useState(false);
 
@@ -158,7 +278,7 @@ export function SpringVelocityDemo() {
       <div className="flex flex-col gap-4">
         {TRACKS.map((track) => (
           <div key={track.label} className="flex items-center gap-3">
-            <span className="w-11 text-right text-[10px] text-muted-foreground">
+            <span className="w-16 text-right text-[10px] text-muted-foreground">
               {track.label}
             </span>
             <div className="h-11 w-56 rounded-full bg-muted p-1 shadow-(--custom-shadow) dark:bg-muted/60">
@@ -181,6 +301,10 @@ export function SpringVelocityDemo() {
   );
 }
 
+/* ------------------------------------------------------------------------ */
+/* 4. New elements arriving mid-animation                                   */
+/* ------------------------------------------------------------------------ */
+
 const TOAST_MESSAGES = [
   "Changes saved",
   "Link copied",
@@ -191,7 +315,7 @@ const TOAST_MESSAGES = [
 
 type Toast = { id: number; message: string };
 
-export function ToastStackDemo() {
+export function InterruptStackDemo() {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const nextId = useRef(0);
   const timers = useRef<number[]>([]);

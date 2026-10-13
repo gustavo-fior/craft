@@ -11,6 +11,9 @@ resources:
   - url: https://jakub.kr/writing/details-that-make-interfaces-feel-better
     title: Details that make interfaces feel better
     description: A practical collection of small interface improvements, including this one.
+  - url: https://dbushell.com/2024/11/05/webkit-font-smoothing/
+    title: What is -webkit-font-smoothing?
+    description: David Bushell on what the property changes, where it has no effect, and why the Firefox prefix is no longer needed.
   - url: https://www.zachleat.com/web/font-smooth/
     title: Laissez-faire font smoothing and anti-aliasing
     description: Zach Leatherman on what the property does and the case against using it blindly.
@@ -20,25 +23,24 @@ resources:
 ---
 
 Put white text on a dark surface and look closely. On a Mac, it comes out a
-little bolder and a little fuzzier than the same text on white. The CSS did not
-change. The rasterizer did.
+little bolder and a little fuzzier than the same text on white.
 
-By default, WebKit and Blink render text with **subpixel antialiasing**, which
-thickens the edges of glyphs to make them look sharper. On dark backgrounds
-that extra thickness reads as bloom. Toggle the demo to see the text drop back
-to the weight you actually chose.
+<FontSmoothingCompareDemo />
+
+MacOS smooths text in browsers by **thickening the edges of every glyph**, a
+leftover from the days of subpixel rendering on low resolution screens. On
+dark backgrounds that extra thickness reads as bloom.
 
 <FontSmoothingDemo />
 
 The property is `-webkit-font-smoothing: antialiased`. It tells the browser to
-use plain **grayscale antialiasing** instead, which renders the glyph at its
-honest weight. Firefox on macOS has its own version,
-`-moz-osx-font-smoothing: grayscale`.
+skip the thickening and use plain **grayscale antialiasing**, which renders the
+glyph at its true weight.
 
 ## Where it shows
 
-The difference is easy to see on dark backgrounds and hard to see on light
-ones. Toggle the same text on both.
+The difference is easy to see on dark backgrounds and a bit harder to see on light
+ones.
 
 <FontSmoothingContrastDemo />
 
@@ -48,14 +50,19 @@ half a weight heavier than the design file.
 
 ## Thin weights
 
-Grayscale rendering cuts both ways. Weights that were leaning on the bloom can
-turn wispy once it is gone. Check the lighter rows below.
+The thickening the default rendering adds is the same for every weight, but it
+is not felt the same way. A bold heading barely needs it, while a light weight often
+relies on it: sometimes 300 only looks readable on a dark background because the
+renderer has been quietly fattening it.
 
 <FontSmoothingWeightsDemo />
 
-If you use 300 or below for body text on dark surfaces, test it on a
-non-Retina screen before turning this on globally. Most products only use 400
-and up, where it is a clear improvement.
+From 400 up, the antialiased side just looks cleaner. At 300 the text comes
+out lighter than you meant, and at 200 the strokes start to fall apart. Thin
+text gets even thinner on a non-Retina screen, where a stroke can be less than
+a pixel wide. So if you set body text at 300 or below on dark surfaces, give
+it a look on a 1x display before turning this on everywhere. If you stick to
+400 and up, like most products do, you are fine.
 
 ## Usage
 
@@ -79,7 +86,8 @@ and up, where it is a clear improvement.
   ]}
 />
 
-Both properties are non-standard and only do anything on macOS. Windows uses
-ClearType and ignores them, which is fine, because the bloom is a macOS
-problem. This site applies it on the `body`, and so do most design-led
-products.
+Both properties are non-standard and only do anything on macOS. Windows,
+Linux, iOS and Android ignore them, which is fine, because the bloom is a
+macOS problem. Since Firefox 128, Firefox on macOS treats the WebKit property
+as its own, so the `-moz-osx-font-smoothing` line is only there for older
+versions.

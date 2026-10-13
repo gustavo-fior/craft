@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { playSound, progressionDetune } from "@/lib/sounds";
 import type { NavSection } from "@/lib/sections";
 import { isConceptAvailable, isConceptLaunched } from "@/lib/concepts";
+import { LocalOnlyIcon } from "@/components/app/local-only-icon";
 import {
   SectionIcon,
   dotColorFrom,
@@ -120,8 +121,25 @@ export function SidebarNav({
   sections: NavSection[];
   className?: string;
 }) {
-  const pathname = usePathname();
-  // The nav renders twice (sidebar + mobile sheet) - keep the dot's
+  const routePathname = usePathname();
+  // The route only updates once Next has fetched/rendered the target page. On a
+  // cold or expired client cache (e.g. after the tab sat idle for >5 min) that
+  // lags the click by a network round-trip, so the dot would start late and
+  // out of step with the click sound. Treat the clicked link as current right
+  // away and drop it as soon as the real route changes.
+  const [pending, setPending] = useState<{ from: string; to: string } | null>(
+    null
+  );
+  if (pending && pending.from !== routePathname) setPending(null);
+  const pathname = pending ? pending.to : routePathname;
+  const goTo = (e: React.MouseEvent, href: string) => {
+    playSound("tick");
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) {
+      return;
+    }
+    if (href !== routePathname) setPending({ from: routePathname, to: href });
+  };
+  // The nav renders twice (sidebar + mobile menu) - keep the dot's
   // shared-layout animation scoped to each instance.
   const dotId = useId();
 
@@ -170,9 +188,13 @@ export function SidebarNav({
   // Flat position of each concept in the nav, so hover pitch rises gently
   // as you move down the list ("Index" is step 0).
   let step = 0;
+  // Row order for the mobile menu's staggered entrance (see .nav-reveal).
+  let reveal = PAGES.length;
+  const revealStyle = (i: number) =>
+    ({ "--reveal-i": i }) as React.CSSProperties;
 
   const linkClass =
-    "inline-block rounded-[3px] py-1 outline-none transition-colors duration-200 focus-visible:ring-[1.5px] focus-visible:ring-inset focus-visible:ring-ring/60";
+    "-mx-1.5 inline-block rounded-[4px] px-1.5 py-1 outline-none transition-colors duration-200 focus-visible:ring-[1.5px] focus-visible:ring-inset focus-visible:ring-ring/60";
 
   return (
     <nav
@@ -195,14 +217,19 @@ export function SidebarNav({
       }
     >
       <ul className="flex flex-col gap-1 text-xs">
-        {PAGES.map((page) => {
+        {PAGES.map((page, i) => {
           const active = pathname === page.href;
           return (
-            <li key={page.href} className="relative">
+            <li
+              key={page.href}
+              data-reveal
+              style={revealStyle(i)}
+              className="relative"
+            >
               {active && renderDot("foreground")}
               <Link
                 href={page.href}
-                onClick={() => playSound("tick")}
+                onClick={(e) => goTo(e, page.href)}
                 onMouseEnter={() => playSound("hover", { detune: 0 })}
                 className={cn(
                   linkClass,
@@ -225,7 +252,11 @@ export function SidebarNav({
         })}
         {sections.map(({ section, concepts }) => (
           <li key={section} className="mt-5">
-            <div className="flex items-center gap-1.5 py-1 text-foreground">
+            <div
+              data-reveal
+              style={revealStyle(reveal++)}
+              className="flex items-center gap-1.5 py-1 text-foreground"
+            >
               <SectionIcon section={section} size={13} className="mb-px" />
               <span>{section}</span>
             </div>
@@ -236,12 +267,17 @@ export function SidebarNav({
                 step += 1;
                 const detune = progressionDetune(step);
                 return (
-                  <li key={concept.slug} className="relative">
+                  <li
+                    key={concept.slug}
+                    data-reveal
+                    style={revealStyle(reveal++)}
+                    className="relative"
+                  >
                     {active && renderDot(section)}
                     {available ? (
                       <Link
                         href={`/${concept.slug}`}
-                        onClick={() => playSound("tick")}
+                        onClick={(e) => goTo(e, `/${concept.slug}`)}
                         onMouseEnter={() => playSound("hover", { detune })}
                         className={cn(
                           linkClass,
@@ -266,6 +302,7 @@ export function SidebarNav({
                           >
                             {concept.title}
                           </span>
+                          <LocalOnlyIcon slug={concept.slug} />
                           {/* "New" badge hidden; flip SHOW_NEW_BADGE to
                               restore it next to launched concepts. */}
                           {SHOW_NEW_BADGE &&

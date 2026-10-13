@@ -21,16 +21,15 @@ export type HighlightedCodeTab = {
 
 // The header shows a made-up filename for the active tab, so the snippet
 // reads as "where this goes" rather than a bare code dump.
-const FILE_BY_LANGUAGE: Record<
-  string,
-  { name: string; kind: "css" | "react" }
-> = {
+type FileKind = "css" | "js" | "react";
+
+const FILE_BY_LANGUAGE: Record<string, { name: string; kind: FileKind }> = {
   css: { name: "styles.css", kind: "css" },
   html: { name: "app.tsx", kind: "react" },
   tsx: { name: "app.tsx", kind: "react" },
   jsx: { name: "app.jsx", kind: "react" },
   ts: { name: "app.ts", kind: "react" },
-  js: { name: "app.js", kind: "react" },
+  js: { name: "app.js", kind: "js" },
 };
 
 function getFile(tab: HighlightedCodeTab) {
@@ -40,13 +39,13 @@ function getFile(tab: HighlightedCodeTab) {
   return { name, kind };
 }
 
-function FileIcon({ kind }: { kind: "css" | "react" }) {
-  if (kind === "css") {
+function FileIcon({ kind }: { kind: FileKind }) {
+  if (kind === "css" || kind === "js") {
     return (
       <Image
         aria-hidden="true"
         alt=""
-        src="/logos/css.svg"
+        src={`/logos/${kind}.svg`}
         width={14}
         height={14}
         className="size-3 shrink-0 rounded-[3px] mb-px"
@@ -244,6 +243,10 @@ export function CodeBlockClient({
             line (1rem padding + half a 19.5px line, minus half the 32px
             button). The backdrop keeps it readable when a long line scrolls
             underneath. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute top-0 right-0 z-[5] h-16 w-28 bg-linear-to-r from-transparent to-card mask-b-from-30%"
+        />
         <Button
           type="button"
           size="icon-sm"

@@ -373,6 +373,47 @@
     transparent;
 }
 
+/* Fade the right edge of a code block that scrolls sideways, driven by the
+   scroll position so it only shows while there is more code to the right.
+   Without overflow the timeline is inactive and nothing is masked. */
+@property --code-fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes code-fade-end {
+  from {
+    --code-fade-end: 4rem;
+  }
+  to {
+    --code-fade-end: 0px;
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .code-block-panel .shiki {
+    mask-image: linear-gradient(
+      to right,
+      black calc(100% - var(--code-fade-end)),
+      transparent
+    );
+    animation: code-fade-end 1ms linear both;
+    animation-timeline: scroll(self x);
+    animation-range: calc(100% - 3rem) 100%;
+  }
+}
+
+/* Trailing padding on a scroller is dropped in the inline direction, so put
+   the breathing room on the code itself. */
+.code-block-panel .shiki code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  padding-right: 3rem;
+  box-sizing: border-box;
+}
+
 /* Safari ignores `scrollbar-width`; size the WebKit scrollbar directly. */
 .code-block-panel .shiki::-webkit-scrollbar {
   height: 4px;
@@ -381,4 +422,83 @@
 .code-block-panel .shiki::-webkit-scrollbar-thumb {
   border-radius: 9999px;
   background: color-mix(in oklch, var(--muted-foreground) 30%, transparent);
+}
+
+/* Experimental mobile menu (site-shell.tsx). Instead of a sheet, the page
+   blurs progressively - strongest under the links on the left, fading out to
+   the right - and the rows drift in from the left, unblurring as they land.
+   Base UI flags the first/last frame with data-starting/ending-style. */
+@layer components {
+  .nav-blur-layer {
+    position: absolute;
+    inset: 0;
+    /* Each layer starts at --start (measured from the right edge) and stays
+       solid leftwards, so the blurs stack up towards the links. */
+    mask-image: linear-gradient(
+      to left,
+      transparent var(--start),
+      black var(--end)
+    );
+    backdrop-filter: blur(var(--blur));
+    transition: backdrop-filter 400ms var(--ease-out-quart, ease-out);
+  }
+
+  .nav-tint {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      color-mix(in oklab, var(--background) 85%, transparent),
+      color-mix(in oklab, var(--background) 50%, transparent) 45%,
+      transparent
+    );
+    transition: opacity 400ms ease-out;
+  }
+
+  .nav-backdrop[data-starting-style] .nav-blur-layer,
+  .nav-backdrop[data-ending-style] .nav-blur-layer {
+    backdrop-filter: blur(0);
+  }
+  .nav-backdrop[data-starting-style] .nav-tint,
+  .nav-backdrop[data-ending-style] .nav-tint {
+    opacity: 0;
+  }
+  .nav-backdrop[data-ending-style] .nav-blur-layer,
+  .nav-backdrop[data-ending-style] .nav-tint {
+    transition-duration: 250ms;
+  }
+
+  /* Rows: staggered top to bottom, capped so long lists don't drag. */
+  .nav-reveal [data-reveal] {
+    transition-property: opacity, translate, filter;
+    transition-duration: 450ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: calc(min(var(--reveal-i, 0), 18) * 18ms + 60ms);
+  }
+  .nav-reveal[data-starting-style] [data-reveal] {
+    opacity: 0;
+    translate: -24px 0;
+    filter: blur(6px);
+  }
+
+  /* Leaving: the whole list goes at once, quicker than it came in. */
+  .nav-reveal {
+    transition-property: opacity, translate, filter;
+    transition-duration: 250ms;
+    transition-timing-function: ease-in;
+  }
+  .nav-reveal[data-ending-style] {
+    opacity: 0;
+    translate: -12px 0;
+    filter: blur(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-reveal [data-reveal],
+  .nav-reveal {
+    translate: none !important;
+    filter: none !important;
+    transition-delay: 0ms !important;
+  }
 }

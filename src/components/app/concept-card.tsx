@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { LocalOnlyIcon } from "@/components/app/local-only-icon";
 import { ConceptThumbnail } from "@/components/thumbnails";
 import { isConceptAvailable } from "@/lib/concepts";
 import type { Section } from "@/lib/sections";
@@ -29,8 +30,9 @@ export function ConceptCardBody({
       </div>
       <div className="p-4">
         <div className="flex items-center justify-between gap-3">
-          <h3 className="truncate text-[13px] font-medium text-foreground">
-            {title}
+          <h3 className="flex min-w-0 items-center gap-1.5 text-[13px] font-medium text-foreground">
+            <span className="truncate">{title}</span>
+            <LocalOnlyIcon slug={slug} />
           </h3>
           {!available && (
             <span className="shrink-0 rounded-full border border-dashed border-sky-300 bg-sky-500/10 px-1.5 py-px text-[10px] leading-4 font-medium text-sky-600 dark:border-sky-900 dark:bg-sky-400/10 dark:text-sky-400">

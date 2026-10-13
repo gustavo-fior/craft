@@ -1,55 +1,134 @@
 ---
 title: Interruptibility
-description: Animation that can change its mind.
+description: Let people change their mind mid-motion.
 section: Motion
 order: 5
 publishedAt: "2026-07-15"
 resources:
-  - url: https://emilkowal.ski/ui/building-a-toast-component
-    title: Building a Toast Component
-    description: Emil Kowalski on Sonner, where every toast has to stay interruptible while others arrive.
   - url: https://rauno.me/craft/interaction-design
     title: Invisible Details of Interaction Design
-    description: Rauno Freiberg on why interfaces should never lock the user out while something moves.
+    description: Rauno Freiberg on why an interface should never lock the user out while something moves.
+  - url: https://emilkowal.ski/ui/building-a-toast-component
+    title: Building a Toast Component
+    description: Emil Kowalski on Sonner, and why he chose CSS transitions over keyframes so toasts keep moving while others arrive.
+  - url: https://developer.apple.com/videos/play/wwdc2023/10158/
+    title: Animate with springs
+    description: Apple on why springs suit interruptible motion, because they carry velocity into a new target.
   - url: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_transitions/Using_CSS_transitions
     title: Using CSS transitions
     description: The MDN reference, including how a transition behaves when its target changes mid-flight.
-  - url: https://motion.dev/docs/react-transitions
-    title: Transitions in Motion
-    description: How Motion springs keep velocity when an animation is retargeted before it finishes.
+  - url: https://developer.mozilla.org/en-US/docs/Web/CSS/@starting-style
+    title: "@starting-style"
+    description: How to transition an element in from display none without reaching for keyframes.
+  - url: https://motion.dev/docs/react-layout-animations
+    title: Layout animations in Motion
+    description: How Motion retargets layout animations that are already running when the layout changes again.
 ---
 
-Users change their mind. They open a sheet and close it before it lands. They hover, leave, and hover again. **Interruptibility** is what happens to your animation in that moment: does it pick up from where it is, or does it start over?
+Open a sheet, then close it before it finishes arriving. What should happen?
 
-Click Open, then click Close before the sheet arrives. Do it a few times in a row. The travel here is slowed down on purpose so you can catch it mid-flight.
+The obvious answer is that it should turn around. It is somewhere in the
+middle, so it should head back from there. That is **interruptibility**: an
+animation that can change its mind. It sounds too simple to be worth a name,
+which is exactly why it is so jarring when an interface gets it wrong.
 
-<InterruptibilityDemo />
+<InterruptSheetDemo />
 
-The left sheet runs on CSS keyframes. A keyframe animation has a fixed start and end, so each click restarts it from the first frame. The sheet teleports to the bottom and climbs again. The right sheet runs on a CSS transition. A transition animates from the current value to the new target, wherever the element happens to be. Nothing jumps.
+Tap the button twice, quickly. The left sheet jumps to fully open and then
+slides down, as if closing had to start from the beginning. The right one
+turns around wherever it happens to be.
 
-This is the whole rule. Keyframes describe a fixed clip. Transitions describe a destination. Anything a user can toggle wants a destination.
+Both look identical if you wait. The difference only shows when you do not
+wait, and people do not wait.
 
-## Springs keep their momentum
+## A recording and a destination
 
-A transition fixes the jump, but a tween still stops dead and restarts its easing curve when you change the target. It goes from full speed to a fresh ease-in. A spring carries its velocity into the new target, so the reversal reads as one motion instead of two.
+The left sheet runs on CSS keyframes, one clip for opening and one for
+closing. A keyframe animation is a recording. It has a first frame and a
+last frame, and when you play it, it plays from the first frame no matter
+where the element currently is. Closing mid-flight means jumping to the
+start of the closing clip, which is fully open, and sliding down from there.
 
-Toggle twice quickly and watch how each dot turns around.
+The right sheet runs on a CSS transition. A transition is not a recording,
+it is a destination. You tell the browser where the element should be, and
+it animates from wherever the element is right now. If the destination
+changes halfway, it simply aims at the new one and keeps going.
 
-<SpringVelocityDemo />
+That is most of the idea. **Describe where things should end up, not the
+trip to get there.** Transitions, Motion's `animate`, and springs all work
+this way. Keyframes do not.
 
-The difference is subtle at slow speeds and large at fast ones. For anything a user can flick back and forth, a switch, a sidebar, a drag handle, a spring is the safer default.
+## Never lock the door
 
-## Layout that keeps moving
+There is a second way to get this wrong, and it is more common than the
+jump. The animation is fine, but the interface stops listening while it
+runs. An `isAnimating` flag drops clicks, or `pointer-events: none` stays on
+until the motion is done.
 
-Interruptibility is not only about reversing. When new elements arrive while others are still animating, every element in flight needs a new target. A toast stack is the classic case: hit the button quickly and each toast slides up to make room while the previous one is still settling.
+<InterruptLockDemo />
 
-<ToastStackDemo />
+Open and close the left menu as fast as you can. Some of your taps vanish.
+The interface decided its animation mattered more than your input and made
+you wait. It is only a few hundred milliseconds, but it is long enough to
+feel ignored, so people tap again, which drops another tap, which makes it
+worse.
 
-Motion's `layout` prop retargets each toast as siblings enter and leave, so a click that lands mid-animation joins the motion instead of resetting it.
+The right menu listens the whole time. Every tap lands, and the animation
+retargets. Input is never wrong and never early. If someone taps, something
+should move.
+
+## Keep the momentum
+
+A transition fixes the jump, but look closely and there is still a small
+lie in it. Reverse a transition halfway and the element stops, then starts
+again from a standstill in the other direction. It remembers where it is,
+but it forgets how fast it was going.
+
+A spring remembers both. It is simulated physics: at every frame it knows
+its position and its speed, and when the target changes it bends that speed
+toward the new target instead of throwing it away. The turn becomes one
+movement instead of two.
+
+<InterruptMomentumDemo />
+
+Toggle twice, quickly. At slow speeds you will barely notice. At fast speeds
+the top dot looks like an animation and the bottom one looks like an object.
+
+So should everything be a spring? No. Sonner and Vaul, two of the
+best-feeling components on the web, both run on plain CSS transitions and
+never feel broken. A good ease-out transition is enough for most sheets,
+menus and sidebars. Reach for a spring when the motion comes from a gesture,
+like a flicked card that should keep your finger's speed, or when something
+gets flipped back and forth fast enough that the restart shows.
+
+One thing to know: a spring-shaped `linear()` easing in CSS does not give
+you this. It is still a fixed curve, so it stops dead like any other
+transition. Momentum needs an animation that knows its velocity, which means
+JavaScript.
+
+## When others join in
+
+Interrupting is not only about reversing. Sometimes the animation is still
+running and something new arrives: a second toast while the first is still
+settling, a row inserted while the list is still sliding open. Everything
+already in motion needs a new destination.
+
+<InterruptStackDemo />
+
+Press the button a few times, fast. Each toast slides up to make room while
+the previous one is still landing, and none of them flinch. This is a Motion
+`layout` animation. Whenever a sibling appears or leaves, Motion measures the
+new positions and retargets anything still in flight. Emil built Sonner on
+CSS transitions for the same reason: with keyframes, every new toast would
+restart the ones already on screen.
 
 ## Usage
 
-A transition is enough for most toggles. Reach for keyframes only when the animation is a one-shot that nothing can interrupt, like a loading spinner.
+Use a transition for anything a person can toggle. Keep keyframes for
+one-shots nothing can interrupt, like a spinner. If you reached for keyframes
+because the element starts at `display: none`, `@starting-style` lets a
+transition handle the entrance too. And never gate input on an animation: no
+`isAnimating` guards, no `pointer-events: none` while things move.
 
 <CodeBlock
   tabs={[
@@ -59,7 +138,7 @@ A transition is enough for most toggles. Reach for keyframes only when the anima
       icon: "css",
       code: `.sheet {
   transform: translateY(100%);
-  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
+  transition: transform 300ms cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 .sheet[data-open] {
@@ -77,7 +156,7 @@ A transition is enough for most toggles. Reach for keyframes only when the anima
 }
 
 .sheet[data-open] {
-  animation: slide-up 300ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  animation: slide-up 300ms cubic-bezier(0.33, 1, 0.68, 1) both;
 }`,
     },
     {
@@ -93,4 +172,6 @@ A transition is enough for most toggles. Reach for keyframes only when the anima
   ]}
 />
 
-A quick test for any component you ship: open it and close it as fast as you can, ten times. If anything flashes, jumps, or finishes the old animation before starting the new one, it is not interruptible yet.
+A quick test for every component you ship: open it and close it as fast as
+you can, ten times. If anything jumps, flashes, ignores you, or finishes the
+old animation before starting the new one, it is not interruptible yet.

@@ -30,6 +30,7 @@ import {
   ExitListDemo,
 } from "@/components/demos/exit-animations";
 import {
+  FontSmoothingCompareDemo,
   FontSmoothingContrastDemo,
   FontSmoothingDemo,
   FontSmoothingWeightsDemo,
@@ -66,9 +67,10 @@ import {
   SoundLevelDemo,
 } from "@/components/demos/interface-sfx";
 import {
-  InterruptibilityDemo,
-  SpringVelocityDemo,
-  ToastStackDemo,
+  InterruptLockDemo,
+  InterruptMomentumDemo,
+  InterruptSheetDemo,
+  InterruptStackDemo,
 } from "@/components/demos/interruptibility";
 import {
   ArpeggioSpacingDemo,
@@ -254,6 +256,7 @@ const components: MDXComponents = {
   EasingsDemo,
   ExitAnimationsDemo,
   ExitListDemo,
+  FontSmoothingCompareDemo,
   FontSmoothingContrastDemo,
   FontSmoothingDemo,
   FontSmoothingWeightsDemo,
@@ -274,7 +277,10 @@ const components: MDXComponents = {
   ImageOutlineAvatarDemo,
   ImageOutlineDemo,
   ImageOutlineStrengthDemo,
-  InterruptibilityDemo,
+  InterruptLockDemo,
+  InterruptMomentumDemo,
+  InterruptSheetDemo,
+  InterruptStackDemo,
   KeyboardActionDemo,
   LetterSpacingDemo,
   LivingBarsDemo,
@@ -315,7 +321,6 @@ const components: MDXComponents = {
   SoundLevelDemo,
   SpinnerSpeedDemo,
   SpotTheDifferenceDemo,
-  SpringVelocityDemo,
   SquircleCompareDemo,
   SquircleCurvatureDemo,
   SquircleExamplesDemo,
@@ -332,7 +337,6 @@ const components: MDXComponents = {
   TextPrettyDemo,
   TextWrapToastDemo,
   TextureLayersDemo,
-  ToastStackDemo,
   TrackingScaleDemo,
   TransformOriginDemo,
   UppercaseTrackingDemo,

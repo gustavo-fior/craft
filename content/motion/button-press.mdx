@@ -11,52 +11,50 @@ resources:
   - url: https://emilkowal.ski/ui/great-animations
     title: Great animations
     description: What separates motion that feels right from motion that just moves.
+  - url: https://rauno.me/craft/interaction-design
+    title: Invisible Details of Interaction Design
+    description: Rauno Freiberg on feedback that should apply the moment you touch something.
   - url: https://developer.mozilla.org/en-US/docs/Web/CSS/:active
     title: The :active pseudo-class
     description: When the browser considers an element pressed, on mouse and on keyboard.
   - url: https://web.dev/articles/animations-guide
     title: Animations guide
-    description: Why transform and opacity are the properties you can animate for free.
+    description: Why transform and opacity are the properties you can animate cheaply.
 ---
 
 A real button moves when you push it. A button on screen can borrow that with
 one rule: **scale it down a little while it is pressed**. It is the cheapest
-feedback the web has, and it makes an interface feel like it heard you.
-
-Press and hold both buttons below.
+feedback the web has, and it makes the button feel like it heard you.
 
 <ButtonPressDemo />
 
 The one on the right is not doing much. It shrinks to 97% for as long as your
-finger is down, then springs back to full size. The difference is easy to feel
-and hard to see, which is exactly what you want from press feedback.
+finger is down, then eases back to full size.
+
+The goal with press feedback is to make it invisible. Nobody should think
+"oh, the button scales". If they do, the animation is too much.
 
 ## Finding the amount
 
 Two numbers matter: how far the button shrinks and how quickly it gets there.
-Drag the sliders and keep pressing.
 
 <PressAmountDemo />
 
-Around `0.97` the press reads as tactile. Past `0.92` it starts to look like
-an effect, and the reader notices the animation instead of the click. Keep the
-duration around `100ms`. Longer than that and the button lags behind your
-finger, which feels worse than no feedback at all.
-
-Scale runs on the compositor, so this costs nothing at runtime. Because
-`scale()` also scales the children, the label and icon move with the button
-and nothing needs a second rule.
+I like `0.98` or `0.97` for the scale. Below `0.95` it starts to look like an
+effect, and people notice the animation instead of the click. For the
+duration, I usually go somewhere between `100ms` and `150ms`. Longer than that
+and the button lags behind your finger, which feels worse than no feedback at
+all.
 
 ## Not just buttons
 
-Anything you can press deserves the same treatment: cards, list rows, tiles,
-chips. Toggle the feedback on and press the tiles.
+This works on other clickable things too: cards, tiles, chips.
+Just be careful not to overdo it.
 
 <PressEverywhereDemo />
 
-Larger surfaces can take a smaller amount. A full-width card at `0.97` moves
-several pixels at the edges, which is more than a button does at the same
-scale. Try `0.98` and judge by eye.
+Larger surfaces should shrink less. A full-width card at `0.97` moves several
+pixels at the edges, which is a lot more than a button does at the same scale.
 
 ## Usage
 
@@ -66,8 +64,10 @@ scale. Try `0.98` and judge by eye.
       label: "Tailwind",
       language: "html",
       icon: "tailwind",
-      code: `<button class="transition-transform duration-100 ease-out active:scale-[0.97]">
-    Save changes
+      code: `<button
+  class="transition-transform duration-100 ease-out active:scale-[0.97] disabled:active:scale-100 motion-reduce:transition-none [-webkit-tap-highlight-color:transparent]"
+>
+  Save changes
 </button>`,
     },
     {
@@ -76,14 +76,36 @@ scale. Try `0.98` and judge by eye.
       icon: "css",
       code: `.button {
   transition: transform 100ms ease-out;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.button:active {
+.button:active:not(:disabled) {
   transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
 }`,
     },
   ]}
 />
 
-Transition `transform` only, not `all`. A button usually also changes color on
-hover, and you do not want the press timing to leak into that.
+Transition `transform` only, not `all`, so the press timing does not leak into
+hover colors. A disabled button should not press, and on iOS it is worth
+clearing the grey tap highlight so it does not flash over the scale.
+
+iOS Safari also only applies `:active` while something on the page listens for
+touches. Frameworks like React already do, but on a plain page add an empty
+listener, or the press never shows:
+
+<CodeBlock
+  tabs={[
+    {
+      label: "JavaScript",
+      language: "js",
+      code: `button.addEventListener("touchstart", () => {}, { passive: true });`,
+    },
+  ]}
+/>

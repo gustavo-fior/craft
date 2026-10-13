@@ -1,6 +1,7 @@
 "use client";
 
-import { ListIcon } from "@phosphor-icons/react";
+import { Dialog } from "@base-ui/react/dialog";
+import { ListIcon, XIcon } from "@phosphor-icons/react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -15,13 +16,6 @@ import {
 import { SidebarNav } from "@/components/app/sidebar-nav";
 import { Wordmark } from "@/components/app/wordmark";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import type { NavSection } from "@/lib/sections";
 import { githubSourceUrl } from "@/lib/site";
@@ -48,8 +42,10 @@ export function SiteShell({
     <div className="min-h-dvh">
       <header className="fixed inset-x-0 top-0 z-40 flex items-center justify-between bg-background/80 sm:bg-transparent p-5 backdrop-blur-sm sm:backdrop-blur-none sm:px-8 sm:py-6.5">
         <div className="flex items-center gap-1">
-          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetTrigger
+          {/* Experimental mobile menu: no sheet - the page blurs progressively
+              towards the left and the links drift in over it. */}
+          <Dialog.Root open={mobileOpen} onOpenChange={setMobileOpen}>
+            <Dialog.Trigger
               render={
                 <Button
                   variant="ghost"
@@ -61,17 +57,49 @@ export function SiteShell({
                 </Button>
               }
             />
-            <SheetContent
-              variant="floating"
-              side="left"
-              className="w-64 px-6 rounded-md"
-            >
-              <SheetHeader className="sr-only">
-                <SheetTitle>Navigation</SheetTitle>
-              </SheetHeader>
-              <SidebarNav sections={sections} className="h-full" />
-            </SheetContent>
-          </Sheet>
+            <Dialog.Portal>
+              <Dialog.Backdrop className="nav-backdrop fixed inset-0 z-50 lg:hidden">
+                {[1, 2, 4, 8, 16].map((blur, i) => (
+                  <div
+                    key={blur}
+                    className="nav-blur-layer"
+                    style={
+                      {
+                        "--blur": `${blur}px`,
+                        "--start": `${i * 16}%`,
+                        "--end": `${i * 16 + 20}%`,
+                      } as React.CSSProperties
+                    }
+                  />
+                ))}
+                <div className="nav-tint" />
+              </Dialog.Backdrop>
+              <Dialog.Popup className="nav-reveal fixed inset-y-0 left-0 z-50 flex w-72 max-w-full flex-col outline-none lg:hidden">
+                <Dialog.Title className="sr-only">Navigation</Dialog.Title>
+                {/* Sits exactly where the menu button was, so it reads as the
+                    same control flipping to close. */}
+                <div className="p-5">
+                  <Dialog.Close
+                    data-reveal
+                    style={{ "--reveal-i": 0 } as React.CSSProperties}
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        aria-label="Close navigation"
+                      />
+                    }
+                  >
+                    <XIcon className="size-4" />
+                  </Dialog.Close>
+                </div>
+                <SidebarNav
+                  sections={sections}
+                  className="-mt-8 min-h-0 flex-1 pl-17"
+                />
+              </Dialog.Popup>
+            </Dialog.Portal>
+          </Dialog.Root>
           <Wordmark />
         </div>
         {/* Grouped so moving between adjacent tooltips skips the open delay
