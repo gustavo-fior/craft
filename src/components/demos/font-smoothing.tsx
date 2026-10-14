@@ -39,26 +39,47 @@ function SmoothingControl({
   );
 }
 
-function ReleaseNote({ tone }: { tone: "dark" | "light" }) {
+type Note = { eyebrow?: string; title: string; body: string };
+
+const RELEASE_NOTE: Note = {
+  eyebrow: "Changelog",
+  title: "Faster cold starts",
+  body: "Functions now boot in under 100ms. No changes are needed on your side.",
+};
+
+const APPEARANCE_NOTE: Note = {
+  title: "Appearance",
+  body: "Pick a theme, or follow your system and switch to dark at sunset.",
+};
+
+function ReleaseNote({
+  tone,
+  note = RELEASE_NOTE,
+}: {
+  tone: "dark" | "light";
+  note?: Note;
+}) {
   const dark = tone === "dark";
 
   return (
     <div className="flex flex-col gap-1.5">
-      <span
-        className={cn(
-          "text-[10px] font-medium uppercase tracking-wide",
-          dark ? "text-white/45" : "text-black/40"
-        )}
-      >
-        Changelog
-      </span>
+      {note.eyebrow && (
+        <span
+          className={cn(
+            "text-[10px] font-medium uppercase tracking-wide",
+            dark ? "text-white/45" : "text-black/40"
+          )}
+        >
+          {note.eyebrow}
+        </span>
+      )}
       <span
         className={cn(
           "text-lg font-semibold leading-tight tracking-tight",
           dark ? "text-white" : "text-neutral-900"
         )}
       >
-        Faster cold starts
+        {note.title}
       </span>
       <span
         className={cn(
@@ -66,7 +87,7 @@ function ReleaseNote({ tone }: { tone: "dark" | "light" }) {
           dark ? "text-white/70" : "text-neutral-600"
         )}
       >
-        Functions now boot in under 100ms. No changes are needed on your side.
+        {note.body}
       </span>
     </div>
   );
@@ -107,7 +128,7 @@ function CompareSlider({
       <div
         ref={frameRef}
         className={cn(
-          "relative w-full cursor-ew-resize touch-none rounded-xl shadow-(--custom-shadow) select-none",
+          "relative w-full cursor-ew-resize touch-none rounded-xl select-none",
           className
         )}
         onPointerDown={(event) => {
@@ -145,6 +166,12 @@ function CompareSlider({
         >
           {children}
         </div>
+        {/* The shadow sits on its own layer above the opaque halves; on the
+            frame itself they would paint over its inset highlights. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 rounded-xl shadow-(--custom-shadow)"
+        />
 
         <div
           className="pointer-events-none absolute inset-y-0 w-px -translate-x-1/2 bg-muted-foreground"
@@ -231,10 +258,10 @@ export function FontSmoothingContrastDemo() {
         style={smoothingStyles[mode]}
       >
         <div className="rounded-xl bg-neutral-100 p-5 shadow-(--custom-shadow) dark:bg-neutral-200">
-          <ReleaseNote tone="light" />
+          <ReleaseNote tone="light" note={APPEARANCE_NOTE} />
         </div>
         <div className="rounded-xl bg-neutral-800 p-5 shadow-(--custom-shadow) dark:bg-neutral-900">
-          <ReleaseNote tone="dark" />
+          <ReleaseNote tone="dark" note={APPEARANCE_NOTE} />
         </div>
       </div>
       <SmoothingControl value={mode} onChange={setMode} />

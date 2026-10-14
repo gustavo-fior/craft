@@ -207,19 +207,27 @@
 }
 
 @utility fade-mask-y {
-  /* Eased (smoothstep-like) fade over 3rem - matches the nav's py-12 so
-     resting content stays fully opaque. */
+  /* Smootherstep fade over 4rem, sampled at 8 stops so it has no visible
+     kinks - matches the nav's py-16 so resting content stays fully opaque. */
   mask-image: linear-gradient(
     to bottom,
     transparent,
-    rgb(0 0 0 / 0.1) 0.75rem,
-    rgb(0 0 0 / 0.35) 1.5rem,
-    rgb(0 0 0 / 0.7) 2.25rem,
-    black 3rem,
-    black calc(100% - 3rem),
-    rgb(0 0 0 / 0.7) calc(100% - 2.25rem),
-    rgb(0 0 0 / 0.35) calc(100% - 1.5rem),
-    rgb(0 0 0 / 0.1) calc(100% - 0.75rem),
+    rgb(0 0 0 / 0.016) 0.5rem,
+    rgb(0 0 0 / 0.104) 1rem,
+    rgb(0 0 0 / 0.275) 1.5rem,
+    rgb(0 0 0 / 0.5) 2rem,
+    rgb(0 0 0 / 0.725) 2.5rem,
+    rgb(0 0 0 / 0.896) 3rem,
+    rgb(0 0 0 / 0.984) 3.5rem,
+    black 4rem,
+    black calc(100% - 4rem),
+    rgb(0 0 0 / 0.984) calc(100% - 3.5rem),
+    rgb(0 0 0 / 0.896) calc(100% - 3rem),
+    rgb(0 0 0 / 0.725) calc(100% - 2.5rem),
+    rgb(0 0 0 / 0.5) calc(100% - 2rem),
+    rgb(0 0 0 / 0.275) calc(100% - 1.5rem),
+    rgb(0 0 0 / 0.104) calc(100% - 1rem),
+    rgb(0 0 0 / 0.016) calc(100% - 0.5rem),
     transparent
   );
 }
@@ -432,15 +440,44 @@
   .nav-blur-layer {
     position: absolute;
     inset: 0;
-    /* Each layer starts at --start (measured from the right edge) and stays
-       solid leftwards, so the blurs stack up towards the links. */
+    /* Each layer owns a 12.5% band starting at --band (measured from the
+       right edge) and ramps in/out over its neighbours' bands, so the blur
+       steps up smoothly towards the links. The first and last layers ramp
+       off-screen, so they stay solid out to the edges. */
     mask-image: linear-gradient(
       to left,
+      transparent calc(var(--band) - 12.5%),
+      black var(--band),
+      black calc(var(--band) + 12.5%),
+      transparent calc(var(--band) + 25%)
+    );
+    backdrop-filter: blur(var(--blur));
+    transition: backdrop-filter 400ms var(--ease-out-quart, ease-out);
+  }
+
+  /* Mobile header (site-shell.tsx): same stacked-blur idea, vertical. Each
+     layer starts at --start (measured from the bottom) and stays solid
+     upwards, so the blur builds towards the top and fades out below. */
+  .header-blur-layer {
+    position: absolute;
+    inset: 0;
+    mask-image: linear-gradient(
+      to top,
       transparent var(--start),
       black var(--end)
     );
     backdrop-filter: blur(var(--blur));
-    transition: backdrop-filter 400ms var(--ease-out-quart, ease-out);
+  }
+
+  .header-tint {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--background) 85%, transparent),
+      color-mix(in oklab, var(--background) 50%, transparent) 55%,
+      transparent
+    );
   }
 
   .nav-tint {
@@ -473,7 +510,7 @@
     transition-property: opacity, translate, filter;
     transition-duration: 450ms;
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-    transition-delay: calc(min(var(--reveal-i, 0), 18) * 18ms + 60ms);
+    transition-delay: calc(min(var(--reveal-i, 0), 18) * 12ms + 60ms);
   }
   .nav-reveal[data-starting-style] [data-reveal] {
     opacity: 0;

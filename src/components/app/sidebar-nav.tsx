@@ -199,12 +199,12 @@ export function SidebarNav({
   return (
     <nav
       aria-label="Concepts"
-      // py-12 matches the 3rem fade-mask-y stops, so at rest the list sits
+      // py-16 matches the 4rem fade-mask-y stops, so at rest the list sits
       // fully inside the opaque zone and only overflow fades at the edges.
       // overflow-y also clips horizontally, so pl-10/-ml-10 give the active dot
       // room for its widest arc without shifting anything visually.
       className={cn(
-        "fade-mask-y scrollbar-hidden -ml-10 overflow-y-auto py-12 pl-10",
+        "fade-mask-y scrollbar-hidden -ml-10 overflow-y-auto py-16 pl-10",
         className
       )}
       // Shared with the CSS keyframes (dot-crossfade, name-hit) so every part

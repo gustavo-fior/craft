@@ -6,7 +6,7 @@ export type CodeTab = {
   label: string;
   language: BundledLanguage;
   code: string;
-  icon?: "css" | "tailwind";
+  icon?: "css" | "tailwind" | "react";
   /** Header filename; derived from the language when omitted. */
   filename?: string;
 };

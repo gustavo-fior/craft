@@ -15,7 +15,7 @@ export type HighlightedCodeTab = {
   language: string;
   code: string;
   html: string;
-  icon?: "css" | "tailwind";
+  icon?: "css" | "tailwind" | "react";
   filename?: string;
 };
 
@@ -82,9 +82,18 @@ const TAB_MORPH = {
   duration: 0.25,
   ease: [0.25, 0.1, 0.25, 1],
 } as const;
-const TAB_ICONS = {
+const TAB_ICONS: Record<
+  NonNullable<HighlightedCodeTab["icon"]>,
+  { src: string; darkSrc?: string; width: number; height: number }
+> = {
   css: { src: "/logos/css.svg", width: 14, height: 14 },
   tailwind: { src: "/logos/tailwindcss.svg", width: 18, height: 11 },
+  react: {
+    src: "/logos/react-light.svg",
+    darkSrc: "/logos/react-dark.svg",
+    width: 16,
+    height: 14,
+  },
 };
 
 export function CodeBlockClient({
@@ -173,7 +182,9 @@ export function CodeBlockClient({
               );
             })}
           </div>
-          <div className="flex shrink-0 items-center gap-1">
+          {/* Holds the tab bar's height even without tabs, so every
+              header is the same size. */}
+          <div className="flex min-h-8 shrink-0 items-center gap-1">
             {tabs.length > 1 && (
               <div
                 role="tablist"
@@ -218,7 +229,21 @@ export function CodeBlockClient({
                             src={tabIcon.src}
                             width={tabIcon.width}
                             height={tabIcon.height}
-                            className="shrink-0 size-3 mb-px"
+                            className={cn(
+                              "shrink-0 size-3 mb-px",
+                              tabIcon.darkSrc && "dark:hidden"
+                            )}
+                            unoptimized
+                          />
+                        )}
+                        {tabIcon?.darkSrc && (
+                          <Image
+                            aria-hidden="true"
+                            alt=""
+                            src={tabIcon.darkSrc}
+                            width={tabIcon.width}
+                            height={tabIcon.height}
+                            className="hidden shrink-0 size-3 mb-px dark:block"
                             unoptimized
                           />
                         )}

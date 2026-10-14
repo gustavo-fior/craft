@@ -29,28 +29,28 @@ Open a sheet, then close it before it finishes arriving. What should happen?
 
 The obvious answer is that it should turn around. It is somewhere in the
 middle, so it should head back from there. That is **interruptibility**: an
-animation that can change its mind. It sounds too simple to be worth a name,
+animation that can _change its mind_. It sounds too simple to be worth a name,
 which is exactly why it is so jarring when an interface gets it wrong.
 
 <InterruptSheetDemo />
 
-Tap the button twice, quickly. The left sheet jumps to fully open and then
+Tap the button twice, quickly. The left sheet will jump to fully open and then
 slides down, as if closing had to start from the beginning. The right one
 turns around wherever it happens to be.
 
 Both look identical if you wait. The difference only shows when you do not
-wait, and people do not wait.
+wait, and trust me, most people do not wait.
 
 ## A recording and a destination
 
 The left sheet runs on CSS keyframes, one clip for opening and one for
-closing. A keyframe animation is a recording. It has a first frame and a
+closing. A keyframe animation is a _"recording"_. It has a first frame and a
 last frame, and when you play it, it plays from the first frame no matter
 where the element currently is. Closing mid-flight means jumping to the
 start of the closing clip, which is fully open, and sliding down from there.
 
 The right sheet runs on a CSS transition. A transition is not a recording,
-it is a destination. You tell the browser where the element should be, and
+it is a _"destination"_. You tell the browser where the element should be, and
 it animates from wherever the element is right now. If the destination
 changes halfway, it simply aims at the new one and keeps going.
 
@@ -60,22 +60,20 @@ this way. Keyframes do not.
 
 ## Never lock the door
 
-There is a second way to get this wrong, and it is more common than the
-jump. The animation is fine, but the interface stops listening while it
+Another way to get it wrong is to _"lock the door"_. The animation is fine, but the interface stops listening while it
 runs. An `isAnimating` flag drops clicks, or `pointer-events: none` stays on
 until the motion is done.
 
 <InterruptLockDemo />
 
-Open and close the left menu as fast as you can. Some of your taps vanish.
+If you click too fast, you'll notice some of your taps vanish.
 The interface decided its animation mattered more than your input and made
 you wait. It is only a few hundred milliseconds, but it is long enough to
 feel ignored, so people tap again, which drops another tap, which makes it
 worse.
 
-The right menu listens the whole time. Every tap lands, and the animation
-retargets. Input is never wrong and never early. If someone taps, something
-should move.
+The right menu stays listening the whole time. If you tap at any point, the menu will hear you.
+You shouldn't be obligated to wait for the full animation to finish.
 
 ## Keep the momentum
 
@@ -91,20 +89,12 @@ movement instead of two.
 
 <InterruptMomentumDemo />
 
-Toggle twice, quickly. At slow speeds you will barely notice. At fast speeds
-the top dot looks like an animation and the bottom one looks like an object.
-
-So should everything be a spring? No. Sonner and Vaul, two of the
+So should everything be a spring? No. [Sonner](https://sonner.emilkowal.ski/) and [Vaul](https://vaul.emilkowal.ski/), two of the
 best-feeling components on the web, both run on plain CSS transitions and
 never feel broken. A good ease-out transition is enough for most sheets,
 menus and sidebars. Reach for a spring when the motion comes from a gesture,
 like a flicked card that should keep your finger's speed, or when something
 gets flipped back and forth fast enough that the restart shows.
-
-One thing to know: a spring-shaped `linear()` easing in CSS does not give
-you this. It is still a fixed curve, so it stops dead like any other
-transition. Momentum needs an animation that knows its velocity, which means
-JavaScript.
 
 ## When others join in
 
@@ -118,16 +108,12 @@ already in motion needs a new destination.
 Press the button a few times, fast. Each toast slides up to make room while
 the previous one is still landing, and none of them flinch. This is a Motion
 `layout` animation. Whenever a sibling appears or leaves, Motion measures the
-new positions and retargets anything still in flight. Emil built Sonner on
-CSS transitions for the same reason: with keyframes, every new toast would
-restart the ones already on screen.
+new positions and retargets anything still in flight.
 
 ## Usage
 
 Use a transition for anything a person can toggle. Keep keyframes for
-one-shots nothing can interrupt, like a spinner. If you reached for keyframes
-because the element starts at `display: none`, `@starting-style` lets a
-transition handle the entrance too. And never gate input on an animation: no
+one-shots nothing can interrupt, like a spinner. And never gate input on an animation: no
 `isAnimating` guards, no `pointer-events: none` while things move.
 
 <CodeBlock
@@ -142,26 +128,27 @@ transition handle the entrance too. And never gate input on an animation: no
 }
 
 .sheet[data-open] {
-  transform: translateY(0);
+transform: translateY(0);
 }`,
     },
     {
       label: "Keyframes",
       language: "css",
       icon: "css",
-      code: `/* Restarts from the first frame every time it is applied. */
+      code: `/_ Restarts from the first frame every time it is applied. _/
 @keyframes slide-up {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+from { transform: translateY(100%); }
+to { transform: translateY(0); }
 }
 
 .sheet[data-open] {
-  animation: slide-up 300ms cubic-bezier(0.33, 1, 0.68, 1) both;
+animation: slide-up 300ms cubic-bezier(0.33, 1, 0.68, 1) both;
 }`,
     },
     {
       label: "Spring",
       language: "tsx",
+      icon: "react",
       code: `import { motion } from "motion/react";
 
 <motion.div
@@ -171,7 +158,3 @@ transition handle the entrance too. And never gate input on an animation: no
     },
   ]}
 />
-
-A quick test for every component you ship: open it and close it as fast as
-you can, ten times. If anything jumps, flashes, ignores you, or finishes the
-old animation before starting the new one, it is not interruptible yet.

@@ -4,6 +4,7 @@ import {
   CalendarBlankIcon,
   ImageIcon,
   NotePencilIcon,
+  PaperPlaneTiltIcon,
 } from "@phosphor-icons/react";
 import { useState } from "react";
 
@@ -31,14 +32,16 @@ export function ButtonPressDemo() {
         <CompareItem verdict="wrong">
           <div className="grid h-28 w-full place-items-center rounded-xl bg-card shadow-(--custom-shadow)">
             <Button className="transition-none active:scale-100">
-              Save changes
+              <PaperPlaneTiltIcon aria-hidden="true" weight="fill" />
+              Send message
             </Button>
           </div>
         </CompareItem>
         <CompareItem verdict="right">
           <div className="grid h-28 w-full place-items-center rounded-xl bg-card shadow-(--custom-shadow)">
             <Button className="transition-transform duration-100 ease-out hover:duration-100 active:scale-[0.97] motion-reduce:transition-none">
-              Save changes
+              <PaperPlaneTiltIcon aria-hidden="true" weight="fill" />
+              Send message
             </Button>
           </div>
         </CompareItem>
@@ -92,7 +95,7 @@ export function PressAmountView({
               } as React.CSSProperties
             }
           >
-            Save changes
+            Continue
           </Button>
           {/* Sits outside the button so it keeps the resting size while the
               button scales inside it. Clip-path opens from the center so the

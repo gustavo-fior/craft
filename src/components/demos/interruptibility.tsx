@@ -33,9 +33,11 @@ const SHEET_ACTIONS = [
 ] as const;
 
 function Screen({
+  backdrop,
   children,
   className,
 }: {
+  backdrop: React.ReactNode;
   children: React.ReactNode;
   className?: string;
 }) {
@@ -46,12 +48,62 @@ function Screen({
         className
       )}
     >
-      <div aria-hidden="true" className="p-3">
-        <div className="h-1.5 w-1/2 rounded-full bg-foreground/15" />
-        <div className="mt-2 h-1.5 w-4/5 rounded-full bg-foreground/10" />
-        <div className="mt-2 h-1.5 w-2/3 rounded-full bg-foreground/10" />
-      </div>
+      <div aria-hidden="true">{backdrop}</div>
       {children}
+    </div>
+  );
+}
+
+// Each demo gets its own placeholder screen so they don't read as the same
+// mock three times: a photo being shared, a list being sorted, a grid of files.
+
+function PhotoBackdrop() {
+  return (
+    <div className="p-3">
+      <div className="h-20 rounded-lg bg-linear-to-br from-foreground/15 to-foreground/5" />
+      <div className="mt-2.5 h-1.5 w-2/5 rounded-full bg-foreground/15" />
+      <div className="mt-2 h-1.5 w-3/5 rounded-full bg-foreground/10" />
+    </div>
+  );
+}
+
+function ListBackdrop() {
+  return (
+    <div className="p-3">
+      <div className="flex h-7 items-center">
+        <div className="h-1.5 w-12 rounded-full bg-foreground/15" />
+      </div>
+      <div className="mt-2.5 flex flex-col gap-2.5">
+        {["w-3/5", "w-2/5", "w-1/2"].map((width) => (
+          <div key={width} className="flex items-center gap-2">
+            <div className="size-5 shrink-0 rounded-full bg-foreground/10" />
+            <div className="flex flex-1 flex-col gap-1.5">
+              <div className={cn("h-1.5 rounded-full bg-foreground/15", width)} />
+              <div className="h-1 w-4/5 rounded-full bg-foreground/[0.07]" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GridBackdrop() {
+  return (
+    <div className="p-4">
+      <div className="flex items-center gap-2">
+        <div className="size-4 rounded-full bg-foreground/15" />
+        <div className="h-1.5 w-16 rounded-full bg-foreground/15" />
+        <div className="ml-auto h-4 w-10 rounded-full bg-foreground/10" />
+      </div>
+      <div className="mt-4 grid grid-cols-3 gap-2">
+        {Array.from({ length: 6 }, (_, index) => (
+          <div
+            key={index}
+            className="h-12 rounded-md bg-foreground/[0.07]"
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -109,7 +161,7 @@ export function InterruptSheetDemo() {
 
       <Compare>
         <CompareItem verdict="wrong" caption="Keyframes">
-          <Screen>
+          <Screen backdrop={<PhotoBackdrop />}>
             <Sheet
               style={{
                 transform: SHEET_HIDDEN,
@@ -123,7 +175,7 @@ export function InterruptSheetDemo() {
         </CompareItem>
 
         <CompareItem verdict="right" caption="Transition">
-          <Screen>
+          <Screen backdrop={<PhotoBackdrop />}>
             <Sheet
               style={{
                 transform: open ? "translateY(0)" : SHEET_HIDDEN,
@@ -184,7 +236,7 @@ function Menu({ locked }: { locked: boolean }) {
 
   return (
     <div className="flex w-full flex-col items-center gap-4">
-      <Screen className="h-40">
+      <Screen backdrop={<ListBackdrop />} className="h-40">
         <div className="absolute top-3 right-3">
           <button
             type="button"
@@ -341,9 +393,8 @@ export function InterruptStackDemo() {
   return (
     <Demo className="gap-8">
       <div className="relative h-48 w-full max-w-sm overflow-hidden rounded-xl bg-muted shadow-(--custom-shadow) dark:bg-muted/40">
-        <div aria-hidden="true" className="p-4">
-          <div className="h-1.5 w-1/3 rounded-full bg-foreground/15" />
-          <div className="mt-2.5 h-1.5 w-3/5 rounded-full bg-foreground/10" />
+        <div aria-hidden="true">
+          <GridBackdrop />
         </div>
         <ul className="absolute inset-x-3 bottom-3 flex flex-col items-end gap-2">
           <AnimatePresence initial={false} mode="popLayout">

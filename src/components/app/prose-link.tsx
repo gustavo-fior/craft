@@ -10,9 +10,10 @@ function getFaviconUrl(href?: string) {
 
     if (url.protocol !== "http:" && url.protocol !== "https:") return;
 
-    return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(
+    // DuckDuckGo knows subdomains Google's service misses (Sonner, Vaul).
+    return `https://icons.duckduckgo.com/ip3/${encodeURIComponent(
       url.hostname
-    )}&sz=64`;
+    )}.ico`;
   } catch {
     return;
   }
