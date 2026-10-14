@@ -98,7 +98,21 @@ export function SiteShell({
                 ))}
                 <div className="nav-tint" />
               </Dialog.Backdrop>
-              <Dialog.Popup className="nav-reveal fixed inset-y-0 left-0 z-50 flex w-72 max-w-full flex-col outline-none lg:hidden">
+              {/* Full width so the list scrolls from anywhere on screen. That
+                  covers the backdrop, so taps on empty space (anything but a
+                  link, button or disabled row) close the menu instead. */}
+              <Dialog.Popup
+                onClick={(e) => {
+                  if (
+                    !(e.target as Element).closest(
+                      "a, button, [aria-disabled]"
+                    )
+                  ) {
+                    setMobileOpen(false);
+                  }
+                }}
+                className="nav-reveal fixed inset-0 z-50 flex flex-col outline-none lg:hidden"
+              >
                 <Dialog.Title className="sr-only">Navigation</Dialog.Title>
                 {/* Sits exactly where the menu button was, so it reads as the
                     same control flipping to close. Raised above the nav, which
