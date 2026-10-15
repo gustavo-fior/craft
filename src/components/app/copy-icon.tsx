@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircleIcon } from "@phosphor-icons/react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
@@ -16,6 +16,8 @@ export function CopyIcon({
   icon: ReactNode;
   className?: string;
 }) {
+  const reduceMotion = useReducedMotion();
+
   // `relative` so the exiting (position: absolute, via popLayout) icon is pinned
   // directly over the entering one instead of momentarily stacking below it.
   return (
@@ -27,7 +29,11 @@ export function CopyIcon({
           initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
           animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
           exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
-          transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+          transition={
+            reduceMotion
+              ? { duration: 0 }
+              : { type: "spring", duration: 0.3, bounce: 0 }
+          }
         >
           {copied ? (
             <CheckCircleIcon

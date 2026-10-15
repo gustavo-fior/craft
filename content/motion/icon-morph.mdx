@@ -11,6 +11,9 @@ resources:
   - url: https://rauno.me/craft/interaction-design
     title: Invisible details of interaction design
     description: Rauno Freiberg on transitions that explain state changes instead of just decorating them.
+  - url: https://benji.org/morphing-icons-with-claude
+    title: Morphing icons with Claude
+    description: Benji Taylor building a 21-icon set that morphs between any pair, and rotating the ones that are the same shape at a different angle.
   - url: https://emilkowal.ski/ui/great-animations
     title: Great animations
     description: Why blur helps a crossfade read as one object changing rather than two objects swapping.
@@ -35,26 +38,55 @@ being swapped. The whole move takes about 300ms.
 
 ## Tuning it
 
-There are two numbers that matter: how much blur, and how small the icon
-starts. Drag the sliders and keep toggling.
+Four numbers shape the move: how much blur, how small the icon starts, and
+the two that describe the spring. Drag the sliders and keep toggling.
 
 <IconMorphTuningDemo />
 
 With no blur the crossfade shows both icons at once for a few frames, and
 that overlap is the mushy look you are trying to avoid. Around `4px` the
-overlap disappears. A start scale near `0.25` gives the new icon somewhere
-to come from. At `1` it is only a fade, at `0` the icon grows from nothing,
+two shapes stop being legible at the same time, so the overlap reads as one
+icon in motion. A start scale near `0.25` gives the new icon somewhere to
+come from. At `1` it is only a fade, at `0` the icon grows from nothing,
 which looks like an effect.
 
-The spring has `bounce: 0`, so it is critically damped. Icon swaps want
-snap, not wobble. A duration of `0.3` on a spring is the time it takes to
-settle, which is what you want to reason about.
+Duration on a spring is not a keyframe length. It is the time the spring
+takes to settle, which is the thing you actually want to reason about.
+`300ms` is the sweet spot. Push it past `500ms` and the button stops feeling
+connected to the click.
+
+Bounce is the one to leave alone. At `0` the spring is critically damped and
+the icon lands without overshooting. Raise it and the icon wobbles into
+place, which is charming once and grating on the fortieth copy. Icon swaps
+want snap, not personality.
+
+One caveat on the blur, since it is the part doing the most work. `transform`
+and `opacity` the compositor can carry on its own. `filter` it cannot, so
+every frame of that blur costs real paint. On one button nobody will ever
+measure it. On a table where forty rows each morph an icon at once, they
+will. [Performance is design](/performance-is-design) covers why that is not
+a separate concern from this one.
 
 ## When the shapes are related
 
-Some pairs share geometry. A hamburger and a close icon are both made of
-lines, so you can move the lines instead of crossfading the icons. The top
-and bottom bars rotate into an X while the middle one shrinks away.
+Some pairs share geometry, and then you can move the shape instead of
+trading one for another.
+
+The cheapest case by far is a plain rotation. A plus turned 45 degrees is
+already a close icon. A chevron turned 180 is already the other chevron. No
+second icon, no `AnimatePresence`, no crossfade to tune, just one element and
+one number.
+
+<RotationMorphDemo />
+
+The crossfade on the left is good. The rotation on the right is better, and
+it is less code, because there was never a moment where two things existed.
+Reach for this first on plus and close, on any chevron or caret that flips,
+and on a disclosure arrow.
+
+Lines can move too, if not as cheaply. A hamburger and a close icon are both
+made of bars, so the top and bottom rotate into an X while the middle one
+shrinks away.
 
 <HamburgerMorphDemo />
 
@@ -69,27 +101,65 @@ crossfade gets you most of the effect for a fraction of the effort.
     {
       label: "React",
       language: "tsx",
-      code: `import { AnimatePresence, motion } from "motion/react";
+      code: `import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 
-<span className="relative inline-flex">
-    <AnimatePresence mode="popLayout" initial={false}>
+function MorphIcon({ id, children }) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <span className="relative inline-flex">
+      <AnimatePresence mode="popLayout" initial={false}>
         <motion.span
-            key={copied ? "check" : "copy"}
-            initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
-            transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+          key={id}
+          className="inline-flex"
+          initial={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          exit={{ opacity: 0, scale: 0.25, filter: "blur(4px)" }}
+          transition={
+            reduceMotion
+              ? { duration: 0 }
+              : { type: "spring", duration: 0.3, bounce: 0 }
+          }
         >
-            {copied ? <CheckIcon /> : <CopyIcon />}
+          {children}
         </motion.span>
-    </AnimatePresence>
-</span>`,
+      </AnimatePresence>
+    </span>
+  );
+}
+
+<button aria-label={copied ? "Copied" : "Copy link"}>
+  <MorphIcon id={copied ? "check" : "copy"}>
+    {copied ? <CheckIcon /> : <CopyIcon />}
+  </MorphIcon>
+</button>`,
     },
   ]}
 />
 
-Two details to keep. `mode="popLayout"` takes the leaving icon out of the
-layout so the two overlap instead of stacking, which is why the wrapper is
-`relative`. And `initial={false}` stops the animation from running on the
-first render, when there is nothing to morph from. The copy link button in
-this site's header is exactly this component.
+Four details to keep.
+
+`mode="popLayout"` takes the leaving icon out of the layout so the two
+overlap instead of stacking, which is why the wrapper is `relative`. One
+consequence worth knowing: the icon on its way out is out of flow, so the
+incoming one alone decides how wide the button is. If your two icons can
+differ in size, give the wrapper a fixed one and center inside it, or the
+button will twitch every time it changes.
+
+`initial={false}` stops the animation from running on the first render, when
+there is nothing to morph from.
+
+`useReducedMotion` collapses the spring to nothing for anyone who asked the
+system for less movement. They still get the icon change. They just get it
+the way it would have arrived without any of this.
+
+And the `aria-label` moves with the state. The morph is the whole story for
+someone watching the button and none of it for someone listening to it, so
+the label has to carry the same news the icon does.
+
+The copy link button in this site's header is exactly this component.
+
+If you want the longer version of either half: the `AnimatePresence` here is
+doing the same job it does in [exit animations](/exit-animations), and the
+spring is the one from [interruptibility](/interruptibility), which is why
+you can mash the button and never catch it mid-flight.

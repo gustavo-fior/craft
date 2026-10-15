@@ -50,6 +50,7 @@ import {
   HamburgerMorphDemo,
   IconMorphDemo,
   IconMorphTuningDemo,
+  RotationMorphDemo,
 } from "@/components/demos/icon-morph";
 import {
   IconMixDemo,
@@ -306,6 +307,7 @@ const components: MDXComponents = {
   PressAmountDemo,
   PressEverywhereDemo,
   RadiusCalculatorDemo,
+  RotationMorphDemo,
   ScaleEntrancesDemo,
   ScrollFadesDemo,
   ScrollFadesEdgeDemo,
