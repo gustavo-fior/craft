@@ -189,7 +189,7 @@ blockquote {
 
 - Section: Typography
 - URL: https://craft.gustavofior.com/font-smoothing
-- Published: 2026-07-16
+- Published: 2026-10-14
 - Source: https://github.com/gustavo-fior/craft/blob/main/content/typography/font-smoothing.mdx
 
 Put white text on a dark surface and look closely. On a Mac, it comes out a

@@ -135,7 +135,7 @@ that token should change with it.
 
 - Section: Layout
 - URL: https://craft.gustavofior.com/scroll-fades
-- Published: 2026-07-16
+- Published: 2026-10-14
 - Source: https://github.com/gustavo-fior/craft/blob/main/content/layout/scroll-fades.mdx
 
 A scroll container with a hard edge looks like a list that ends. A **scroll fade** dissolves the rows at the edge into the background, so the reader understands there is more to see without a scrollbar telling them.

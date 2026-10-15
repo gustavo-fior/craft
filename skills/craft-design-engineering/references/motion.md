@@ -6,7 +6,7 @@
 
 - Section: Motion
 - URL: https://craft.gustavofior.com/button-press
-- Published: 2026-07-15
+- Published: 2026-10-14
 - Source: https://github.com/gustavo-fior/craft/blob/main/content/motion/button-press.mdx
 
 A real button moves when you push it. A button on screen can borrow that with
@@ -101,7 +101,7 @@ button.addEventListener("touchstart", () => {}, { passive: true });
 
 - Section: Motion
 - URL: https://craft.gustavofior.com/interruptibility
-- Published: 2026-07-15
+- Published: 2026-10-14
 - Source: https://github.com/gustavo-fior/craft/blob/main/content/motion/interruptibility.mdx
 
 Open a sheet, then close it before it finishes arriving. What should happen?
