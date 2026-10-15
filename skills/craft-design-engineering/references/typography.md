@@ -201,6 +201,11 @@ MacOS smooths text in browsers by **thickening the edges of every glyph**, a
 leftover from the days of subpixel rendering on low resolution screens. On
 dark backgrounds that extra thickness reads as bloom.
 
+Every demo on this page only changes on a Mac. Windows renders with ClearType
+and ignores the property, Linux never had it, and iOS Safari does not do
+subpixel antialiasing at all. If you are reading this anywhere but macOS,
+nothing below will look any different.
+
 > **Interactive demo: Font Smoothing.** Open https://craft.gustavofior.com/font-smoothing to try it.
 
 The property is `-webkit-font-smoothing: antialiased`. It tells the browser to
@@ -234,12 +239,31 @@ a pixel wide. So if you set body text at 300 or below on dark surfaces, give
 it a look on a 1x display before turning this on everywhere. If you stick to
 400 and up, like most products do, you are fine.
 
+### The other two values
+
+The property takes four values, and the two nobody reaches for are worth
+knowing.
+
+> **Interactive demo: Font Smoothing Values.** Open https://craft.gustavofior.com/font-smoothing to try it.
+
+`none` turns antialiasing off entirely. Edges go hard and stepped, the way
+type looked before any of this existed. There is no real use for it in a
+product, but it is the fastest way to see how much work antialiasing is doing.
+
+`subpixel-antialiased` is the one you might actually want one day. It forces
+the default back on, which matters because the recommendation below is a
+global rule on `body`. Once that is in place you have no way to exempt a
+region without this value.
+
 ### Usage
 
 **Tailwind**
 
 ```html
 <body class="antialiased">
+  <!-- ...and one region that wants the default back -->
+  <div class="subpixel-antialiased">...</div>
+</body>
 ```
 
 **CSS**
@@ -248,6 +272,12 @@ it a look on a 1x display before turning this on everywhere. If you stick to
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/_ Opt a region back into the browser default. _/
+.light-panel {
+-webkit-font-smoothing: subpixel-antialiased;
+-moz-osx-font-smoothing: auto;
 }
 ```
 

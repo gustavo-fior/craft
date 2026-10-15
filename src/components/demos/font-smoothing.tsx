@@ -7,11 +7,19 @@ import { Demo } from "@/components/app/demo";
 import { SegmentedControl } from "@/components/app/segmented-control";
 import { cn } from "@/lib/utils";
 
-type Smoothing = "auto" | "antialiased";
+type Smoothing = "auto" | "antialiased" | "subpixel-antialiased" | "none";
 
 const SMOOTHING_OPTIONS = [
   { value: "auto", label: "Default" },
   { value: "antialiased", label: "Antialiased" },
+] as const;
+
+/** Every legal value of the property, for the reference demo. */
+const ALL_SMOOTHING_OPTIONS = [
+  { value: "auto", label: "Auto" },
+  { value: "antialiased", label: "Antialiased" },
+  { value: "subpixel-antialiased", label: "Subpixel" },
+  { value: "none", label: "None" },
 ] as const;
 
 const smoothingStyles: Record<Smoothing, React.CSSProperties> = {
@@ -20,20 +28,26 @@ const smoothingStyles: Record<Smoothing, React.CSSProperties> = {
     WebkitFontSmoothing: "antialiased",
     MozOsxFontSmoothing: "grayscale",
   },
+  // No `-moz-` equivalent exists for either of these, so Firefox falls back to
+  // its own default. Both are macOS-only in any case.
+  "subpixel-antialiased": { WebkitFontSmoothing: "subpixel-antialiased" },
+  none: { WebkitFontSmoothing: "none" },
 };
 
 function SmoothingControl({
   value,
   onChange,
+  options = SMOOTHING_OPTIONS,
 }: {
   value: Smoothing;
   onChange: (value: Smoothing) => void;
+  options?: readonly { value: Smoothing; label: string }[];
 }) {
   return (
     <SegmentedControl
       ariaLabel="Font smoothing"
       onChange={onChange}
-      options={SMOOTHING_OPTIONS}
+      options={options}
       value={value}
     />
   );
@@ -296,6 +310,26 @@ export function FontSmoothingWeightsDemo() {
           </div>
         </CompareSlider>
       </div>
+    </Demo>
+  );
+}
+
+export function FontSmoothingValuesDemo() {
+  const [mode, setMode] = useState<Smoothing>("auto");
+
+  return (
+    <Demo className="gap-8">
+      <div
+        className="w-full max-w-sm rounded-xl bg-neutral-800 p-6 shadow-(--custom-shadow) dark:bg-neutral-900"
+        style={smoothingStyles[mode]}
+      >
+        <ReleaseNote tone="dark" />
+      </div>
+      <SmoothingControl
+        onChange={setMode}
+        options={ALL_SMOOTHING_OPTIONS}
+        value={mode}
+      />
     </Demo>
   );
 }

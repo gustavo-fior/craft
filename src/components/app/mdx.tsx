@@ -33,6 +33,7 @@ import {
   FontSmoothingCompareDemo,
   FontSmoothingContrastDemo,
   FontSmoothingDemo,
+  FontSmoothingValuesDemo,
   FontSmoothingWeightsDemo,
 } from "@/components/demos/font-smoothing";
 import {
@@ -260,6 +261,7 @@ const components: MDXComponents = {
   FontSmoothingCompareDemo,
   FontSmoothingContrastDemo,
   FontSmoothingDemo,
+  FontSmoothingValuesDemo,
   FontSmoothingWeightsDemo,
   HamburgerMorphDemo,
   HangingPunctuationDemo,
