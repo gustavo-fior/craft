@@ -33,6 +33,7 @@ import {
   FontSmoothingCompareDemo,
   FontSmoothingContrastDemo,
   FontSmoothingDemo,
+  FontSmoothingValuesDemo,
   FontSmoothingWeightsDemo,
 } from "@/components/demos/font-smoothing";
 import {
@@ -50,6 +51,7 @@ import {
   HamburgerMorphDemo,
   IconMorphDemo,
   IconMorphTuningDemo,
+  RotationMorphDemo,
 } from "@/components/demos/icon-morph";
 import {
   IconMixDemo,
@@ -259,6 +261,7 @@ const components: MDXComponents = {
   FontSmoothingCompareDemo,
   FontSmoothingContrastDemo,
   FontSmoothingDemo,
+  FontSmoothingValuesDemo,
   FontSmoothingWeightsDemo,
   HamburgerMorphDemo,
   HangingPunctuationDemo,
@@ -306,6 +309,7 @@ const components: MDXComponents = {
   PressAmountDemo,
   PressEverywhereDemo,
   RadiusCalculatorDemo,
+  RotationMorphDemo,
   ScaleEntrancesDemo,
   ScrollFadesDemo,
   ScrollFadesEdgeDemo,

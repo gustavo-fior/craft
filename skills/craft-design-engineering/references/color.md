@@ -203,4 +203,4 @@ img {
 - [Details that make interfaces feel better](https://jakub.kr/writing/details-that-make-interfaces-feel-better): Jakub Krehel's list of small touches, including the inset image outline this page is about.
 - [outline-offset](https://developer.mozilla.org/en-US/docs/Web/CSS/outline-offset): The property that pulls an outline inside the box instead of around it.
 - [box-shadow](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow): The inset form is the other way to draw the same line, with full support for rounded corners.
-- [color-mix()](https://developer.mozilla.org/en-US/docs/Web/CSS/color-mix): Handy for mixing the outline color into the current text color so it adapts to any theme.
+- [color-mix()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix): Handy for mixing the outline color into the current text color so it adapts to any theme.

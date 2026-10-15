@@ -181,3 +181,116 @@ blockquote {
 - [Details that make interfaces feel better](https://jakub.kr/writing/details-that-make-interfaces-feel-better): A short list of fixes, several of which are optical adjustments like these.
 - [hanging-punctuation](https://www.w3.org/TR/css-inline-3/#hanging-punctuation-property): The CSS spec for letting quotes hang outside the text box.
 - [Inter features](https://rsms.me/inter/#features): What the optical size axis of Inter actually changes.
+
+
+## Font Smoothing
+
+> Light text on dark renders heavier.
+
+- Section: Typography
+- URL: https://craft.gustavofior.com/font-smoothing
+- Published: 2026-10-14
+- Source: https://github.com/gustavo-fior/craft/blob/main/content/typography/font-smoothing.mdx
+
+Put white text on a dark surface and look closely. On a Mac, it comes out a
+little bolder and a little fuzzier than the same text on white.
+
+> **Interactive demo: Font Smoothing Compare.** Open https://craft.gustavofior.com/font-smoothing to try it.
+
+MacOS smooths text in browsers by **thickening the edges of every glyph**, a
+leftover from the days of subpixel rendering on low resolution screens. On
+dark backgrounds that extra thickness reads as bloom.
+
+Every demo on this page only changes on a Mac. Windows renders with ClearType
+and ignores the property, Linux never had it, and iOS Safari does not do
+subpixel antialiasing at all. If you are reading this anywhere but macOS,
+nothing below will look any different.
+
+> **Interactive demo: Font Smoothing.** Open https://craft.gustavofior.com/font-smoothing to try it.
+
+The property is `-webkit-font-smoothing: antialiased`. It tells the browser to
+skip the thickening and use plain **grayscale antialiasing**, which renders the
+glyph at its true weight.
+
+### Where it shows
+
+The difference is easy to see on dark backgrounds and a bit harder to see on light
+ones.
+
+> **Interactive demo: Font Smoothing Contrast.** Open https://craft.gustavofior.com/font-smoothing to try it.
+
+That is why this mostly comes up when a product ships a dark mode. Everything
+looks fine in light mode, then the dark theme arrives and every heading feels
+half a weight heavier than the design file.
+
+### Thin weights
+
+The thickening the default rendering adds is the same for every weight, but it
+is not felt the same way. A bold heading barely needs it, while a light weight often
+relies on it: sometimes 300 only looks readable on a dark background because the
+renderer has been quietly fattening it.
+
+> **Interactive demo: Font Smoothing Weights.** Open https://craft.gustavofior.com/font-smoothing to try it.
+
+From 400 up, the antialiased side just looks cleaner. At 300 the text comes
+out lighter than you meant, and at 200 the strokes start to fall apart. Thin
+text gets even thinner on a non-Retina screen, where a stroke can be less than
+a pixel wide. So if you set body text at 300 or below on dark surfaces, give
+it a look on a 1x display before turning this on everywhere. If you stick to
+400 and up, like most products do, you are fine.
+
+### The other two values
+
+The property takes four values, and the two nobody reaches for are worth
+knowing.
+
+> **Interactive demo: Font Smoothing Values.** Open https://craft.gustavofior.com/font-smoothing to try it.
+
+`none` turns antialiasing off entirely. Edges go hard and stepped, the way
+type looked before any of this existed. There is no real use for it in a
+product, but it is the fastest way to see how much work antialiasing is doing.
+
+`subpixel-antialiased` is the one you might actually want one day. It forces
+the default back on, which matters because the recommendation below is a
+global rule on `body`. Once that is in place you have no way to exempt a
+region without this value.
+
+### Usage
+
+**Tailwind**
+
+```html
+<body class="antialiased">
+  <!-- ...and one region that wants the default back -->
+  <div class="subpixel-antialiased">...</div>
+</body>
+```
+
+**CSS**
+
+```css
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/_ Opt a region back into the browser default. _/
+.light-panel {
+-webkit-font-smoothing: subpixel-antialiased;
+-moz-osx-font-smoothing: auto;
+}
+```
+
+Both properties are non-standard and only do anything on macOS. Windows,
+Linux, iOS and Android ignore them, which is fine, because the bloom is a
+macOS problem. Since Firefox 128, Firefox on macOS treats the WebKit property
+as its own, so the `-moz-osx-font-smoothing` line is only there for older
+versions.
+
+### Resources
+
+- [font-smooth](https://developer.mozilla.org/en-US/docs/Web/CSS/font-smooth): MDN on the non-standard smoothing properties and their browser support.
+- [Details that make interfaces feel better](https://jakub.kr/writing/details-that-make-interfaces-feel-better): A practical collection of small interface improvements, including this one.
+- [What is -webkit-font-smoothing?](https://dbushell.com/2024/11/05/webkit-font-smoothing/): David Bushell on what the property changes, where it has no effect, and why the Firefox prefix is no longer needed.
+- [Laissez-faire font smoothing and anti-aliasing](https://www.zachleat.com/web/font-smooth/): Zach Leatherman on what the property does and the case against using it blindly.
+- [Font smoothing in Tailwind](https://tailwindcss.com/docs/font-smoothing): The antialiased and subpixel-antialiased utilities.
