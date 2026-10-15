@@ -127,3 +127,148 @@ that token should change with it.
 - [Canvas backgrounds](https://www.w3.org/TR/css-backgrounds-3/#special-backgrounds): How browsers paint the document canvas from the root or body.
 - [overscroll-behavior](https://developer.mozilla.org/en-US/docs/Web/CSS/overscroll-behavior): Control what happens when scrolling reaches a boundary.
 - [theme-color](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meta/name/theme-color): Match supported browser chrome to the page background.
+
+
+## Scroll Fades
+
+> Fade the edge that has more to scroll.
+
+- Section: Layout
+- URL: https://craft.gustavofior.com/scroll-fades
+- Published: 2026-07-16
+- Source: https://github.com/gustavo-fior/craft/blob/main/content/layout/scroll-fades.mdx
+
+A scroll container with a hard edge looks like a list that ends. A **scroll fade** dissolves the rows at the edge into the background, so the reader understands there is more to see without a scrollbar telling them.
+
+> **Interactive demo: Scroll Fades.** Open https://craft.gustavofior.com/scroll-fades to try it.
+
+The fade comes from `mask-image` with a linear gradient. A mask is not a layer on top. It sets how visible each part of the element is: where the gradient is opaque the content shows, where it is transparent the content disappears. Because it is a mask and not an overlay, it works over any background, including images and gradients, and it never blocks clicks.
+
+### Only fade the side that can scroll
+
+The obvious version is a static mask on both ends. It has one flaw: it fades the first row when you are at the top, and the last row when you are at the bottom. At the bottom this is actively misleading. The final item looks half hidden, as if something is still below it.
+
+> **Interactive demo: Scroll Fades Edge.** Open https://craft.gustavofior.com/scroll-fades to try it.
+
+The right list only fades the edge that still has content behind it. The trick is that the two fade sizes are custom properties, and a **scroll-driven animation** moves them. The top fade grows from `0` to its full size over the first `3rem` of scrolling, the bottom fade shrinks back to `0` over the last `3rem`.
+
+### Horizontal rows
+
+The same idea applies sideways. A row of chips or tabs that overflows should fade at the edge that can still scroll, which also hints at the gesture.
+
+> **Interactive demo: Scroll Fades Horizontal.** Open https://craft.gustavofior.com/scroll-fades to try it.
+
+I like to hide the scrollbar on rows like this. I know that we lose the indication of how much is left to scroll, but a horizontal bar under a row of chips is just too much visual noise.
+
+### Usage
+
+**Tailwind**
+
+```html
+<!-- scroll-fade-y and scroll-fade-x come from the CSS tab -->
+
+<!-- Vertical -->
+<div class="h-44 overflow-y-auto scroll-fade-y">
+  ...
+</div>
+
+<!-- Horizontal, and hide the scrollbar -->
+<div class="flex overflow-x-auto scroll-fade-x scrollbar-none">
+  ...
+</div>
+```
+
+**CSS**
+
+```css
+/* The fade sizes. Registered so they can animate. */
+@property --fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes fade-start {
+  from {
+    --fade-start: 0px;
+  }
+  to {
+    --fade-start: 2.5rem;
+  }
+}
+
+@keyframes fade-end {
+  from {
+    --fade-end: 2.5rem;
+  }
+  to {
+    --fade-end: 0px;
+  }
+}
+
+.scroll-fade-y,
+.scroll-fade-x {
+  mask-image: linear-gradient(
+    var(--fade-direction),
+    transparent,
+    black var(--fade-start),
+    black calc(100% - var(--fade-end)),
+    transparent
+  );
+}
+
+.scroll-fade-y {
+  --fade-direction: to bottom;
+}
+
+.scroll-fade-x {
+  --fade-direction: to right;
+}
+
+/* Let the scroll position drive both fades. */
+@supports (animation-timeline: scroll()) {
+  .scroll-fade-y,
+  .scroll-fade-x {
+    animation:
+      fade-start 1ms linear both,
+      fade-end 1ms linear both;
+    animation-range:
+      0 3rem,
+      calc(100% - 3rem) 100%;
+  }
+
+  /* After the shorthand, which resets the timeline. */
+  .scroll-fade-y {
+    animation-timeline: scroll(self y);
+  }
+
+  .scroll-fade-x {
+    animation-timeline: scroll(self x);
+  }
+}
+
+/* No scroll timelines: fade both ends all the time. */
+@supports not (animation-timeline: scroll()) {
+  .scroll-fade-y,
+  .scroll-fade-x {
+    --fade-start: 2.5rem;
+    --fade-end: 2.5rem;
+  }
+}
+```
+
+One thing to know: the mask applies to the whole scroll container, scrollbar included, so a visible scrollbar fades out at both ends too. Either hide it, as above, or move the mask to an inner wrapper and let the outer element scroll.
+
+### Resources
+
+- [Scroll Fade in shadcn/ui](https://ui.shadcn.com/docs/utils/scroll-fade): A CSS-only utility that fades the edges of a scroll container and reveals them as you reach the end. The approach this article follows.
+- [mask-image on MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/mask-image): The property that does the fading, with the gradient and image forms it accepts.
+- [Scroll-driven animations](https://developer.chrome.com/docs/css-ui/scroll-driven-animations): How animation-timeline and animation-range tie an animation to a scroll position instead of time.
+- [@property on MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/@property): Registering a custom property so the browser can animate it, which the edge aware fade relies on.
+- [Building the Next.js website](https://rauno.me/craft/nextjs): Rauno Freiberg on the small layout details of a real site, including masking the edges of decorative elements.

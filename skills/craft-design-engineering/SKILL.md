@@ -46,6 +46,7 @@ React to do it. The live site pairs every concept with an interactive demo.
 
 - **Tabular Numbers**: Steady digits for values that change. ([reference](references/typography.md#tabular-numbers), [demo](https://craft.gustavofior.com/tabular-numbers))
 - **Optical Alignment**: Center for the eye, not the math. ([reference](references/typography.md#optical-alignment), [demo](https://craft.gustavofior.com/optical-alignment))
+- **Font Smoothing**: Light text on dark renders heavier. ([reference](references/typography.md#font-smoothing), [demo](https://craft.gustavofior.com/font-smoothing))
 
 ### Color
 
@@ -56,9 +57,12 @@ React to do it. The live site pairs every concept with an interactive demo.
 
 - **Nested Border Radius**: Inner radius is outer minus padding. ([reference](references/layout.md#nested-border-radius), [demo](https://craft.gustavofior.com/nested-border-radius))
 - **HTML Background**: Paint the canvas behind your page. ([reference](references/layout.md#html-background), [demo](https://craft.gustavofior.com/html-background))
+- **Scroll Fades**: Fade the edge that has more to scroll. ([reference](references/layout.md#scroll-fades), [demo](https://craft.gustavofior.com/scroll-fades))
 
 ### Motion
 
+- **Button Press**: Scale down on press so it feels real. ([reference](references/motion.md#button-press), [demo](https://craft.gustavofior.com/button-press))
+- **Interruptibility**: Let people change their mind mid-motion. ([reference](references/motion.md#interruptibility), [demo](https://craft.gustavofior.com/interruptibility))
 - **Hover Restraint**: Frequent interactions should be instant. ([reference](references/motion.md#hover-restraint), [demo](https://craft.gustavofior.com/hover-restraint))
 <!-- concepts:end -->
 

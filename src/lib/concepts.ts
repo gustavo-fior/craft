@@ -6,6 +6,10 @@ const LAUNCH_CONCEPT_SLUGS = new Set([
   "html-background",
   "hover-restraint",
   "image-outlines",
+  "button-press",
+  "interruptibility",
+  "scroll-fades",
+  "font-smoothing",
 ]);
 
 /** True only for concepts that are live in production. */
@@ -23,12 +27,7 @@ export function isConceptAvailable(slug: string) {
 // Concepts currently being written or revised. Shown with a "work in
 // progress" marker in development; everything else unlaunched gets the
 // plain "not published" marker.
-const WIP_CONCEPT_SLUGS = new Set([
-  "button-press",
-  "interruptibility",
-  "scroll-fades",
-  "font-smoothing",
-]);
+const WIP_CONCEPT_SLUGS = new Set<string>([]);
 
 export type LocalStatus = "launched" | "draft" | "wip";
 
