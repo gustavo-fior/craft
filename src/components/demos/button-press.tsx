@@ -30,7 +30,7 @@ export function ButtonPressDemo() {
     <Demo className="gap-7 px-4 sm:px-8">
       <Compare>
         <CompareItem verdict="wrong">
-          <div className="grid h-28 w-full place-items-center rounded-xl bg-card shadow-(--custom-shadow)">
+          <div className="grid h-28 w-full place-items-center rounded-xl sm:bg-card sm:shadow-(--custom-shadow)">
             <Button className="transition-none active:scale-100">
               <PaperPlaneTiltIcon aria-hidden="true" weight="fill" />
               Send message
@@ -38,7 +38,7 @@ export function ButtonPressDemo() {
           </div>
         </CompareItem>
         <CompareItem verdict="right">
-          <div className="grid h-28 w-full place-items-center rounded-xl bg-card shadow-(--custom-shadow)">
+          <div className="grid h-28 w-full place-items-center rounded-xl sm:bg-card sm:shadow-(--custom-shadow)">
             <Button className="transition-transform duration-100 ease-out hover:duration-100 active:scale-[0.97] motion-reduce:transition-none">
               <PaperPlaneTiltIcon aria-hidden="true" weight="fill" />
               Send message
