@@ -87,3 +87,8 @@ Design is the act of looking at them together.
 So the best loading state is often the one you deleted. Cache the data. Render
 it on the server. Prefetch on hover. Then the interface gets to do the most
 confident thing it can do, which is to just show the thing.
+
+## Artificial Slowdowns
+
+Sometimes, on rare occasions, slower is better. Users expect difficult, complex tasks to take longer, and inhumanly fast systems can [confuse users or break their expectations](https://pubsonline.informs.org/doi/epdf/10.1287/mnsc.1110.1376). Turbotax famously [used a fake progress bar](https://www.theatlantic.com/technology/archive/2017/02/why-some-apps-use-fake-progress-bars/517233) to build user trust.
+Use this technique sparingly when users may otherwise believe a system to be faulty.
